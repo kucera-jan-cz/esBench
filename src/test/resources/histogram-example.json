@@ -20,12 +20,12 @@
 	//Alternative to "contributors.name"
 	"Object.fields" : {
 		"" : {
-			"String.fields" : {}
+			"String.fields" : {},
 			"Integer.fields" : {}
 		}
 	},
 	"Integer.fields" : {
-		"visits" : {"from" : 0, "to" : 100, "increment" : 1}
+		"visits" : {"from" : 0, "to" : 100, "increment" : 1},
 		"visits" : [ {"to" : 100}, {"from" : 500, "to" : 1000, "increment" : 1}, {}]
 	},
 	"Date.fields" : {
@@ -40,7 +40,7 @@
 		"controversial_alternative" : { "true" : 80, "false" : 20},
 	},
 	"IP.fields" : {
-		"ipv4" : {"127.0.0.1/30"}
+		"ipv4" : {"127.0.0.1/30"},
 		"ipv4_multiple" : ["127.0.0.0/30", "192.168.0.0/30"]
 	}
 	
