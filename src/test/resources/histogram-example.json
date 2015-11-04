@@ -5,10 +5,9 @@
 		"index" : "wikipedia_index",
 		//Default configuration for field types, if any value in *.fields is ommited, it's used from this configuration 
 		"default" : {
-			"String" : {"strategy" : "sequence"},			
 			"Boolean" : {"TICK_TOCK"},
-			"Integer" : {"from" : 0, "to" : 100, "increment" : 1, "strategy" : "sequence"},
-			"Date" : {"from" : "1970-01-01T00:00:00", "to" : "now", "increment" : "1 Minutes", "strategy" : "sequence"}
+			"Integer" : {"from" : 0, "to" : 100, "increment" : 1},
+			"Date" : {"from" : "1970-01-01T00:00:00", "to" : "now", "increment" : "1 Minutes"}
 		}
 	},
 	
@@ -29,9 +28,8 @@
 		}
 	},
 	"Integer.fields" : {
-		"visits" : {"from" : 0, "to" : 100, "increment" : 1, "strategy" : "sequence"},
-		"visits_random" : {"from" : 0, "to" : 100, "strategy" : "random"},
-		"visits_custom" : [ {"to" : 100}, {"from" : 500, "to" : 1000, "increment" : 5}, {}]
+		"visits" : {"from" : 0, "to" : 100, "increment" : 1},
+		"visits" : [ {"to" : 100}, {"from" : 500, "to" : 1000, "increment" : 5}, {}]
 	},
 	//Generate dates in custom range where gap between dates are 5 minutes
 	"Date.fields" : {
