@@ -1,0 +1,47 @@
+{
+	//General configuration for index
+	"general":{
+		"cache_tokens" : 100,
+		"index" : "wikipedia_index",
+		//Default configuration for field types, if any value in *.fields is ommited, it's used from this configuration 
+		"default" : {
+			"Boolean" : {"TICK_TOCK"},
+			"Integer" : {"from" : 0, "to" : 100, "increment" : 1},
+			"Date" : {"from" : "1970-01-01T00:00:00", "to" : "now", "increment" : "1 Minutes"}
+		}
+	},
+	
+	//Concrete fields usage
+	"String.fields" : {
+		"title" : "A::3135;;B::3000;;C::594",
+		"category" : "Literature::50;;Arithmetic::20",
+		"contributors.name" : "Bill::10;;Alex::5",
+	},
+	//Alternative to "contributors.name"
+	"Object.fields" : {
+		"" : {
+			"String.fields" : {}
+			"Integer.fields" : {}
+		}
+	},
+	"Integer.fields" : {
+		"visits" : {"from" : 0, "to" : 100, "increment" : 1}
+		"visits" : [ {"to" : 100}, {"from" : 500, "to" : 1000, "increment" : 1}, {}]
+	},
+	"Date.fields" : {
+		"published" : {"from" : "2015-01-01T00:00:00", "to" : "2015-01-10T00:00:00", "increment" : "5 Minutes"},
+		"published" : {"from" : "2015-01-01T00:00:00", "to" : "2015-01-10T00:00:00", "increment" : "5 Minutes"},
+		"published_alternative" : {"range": "<2015-01-01T00:00:00,2015-01-10T00:00:00>", "increment" : "5 Minutes"},
+		
+	},
+	"Boolean.fields" : {
+		"controversial" : {"TRUE"},
+		"controversial_other" : {"TICK_TOCK"},
+		"controversial_alternative" : { "true" : 80, "false" : 20},
+	},
+	"IP.fields" : {
+		"ipv4" : {"127.0.0.1/30"}
+		"ipv4_multiple" : ["127.0.0.0/30", "192.168.0.0/30"]
+	}
+	
+}
