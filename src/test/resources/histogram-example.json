@@ -11,11 +11,14 @@
 		}
 	},
 	
-	//Concrete fields usage
+	//Concrete fields are named as *.fields
+	//=====================================
+	
+	//Generate strings containing 1 or 2 words from defined vocabulary called "tokens"
 	"String.fields" : {
-		"title" : "A::3135;;B::3000;;C::594",
-		"category" : "Literature::50;;Arithmetic::20",
-		"contributors.name" : "Bill::10;;Alex::5",
+		"title" : {"words" : 2, "tokens" : {"A::3135;;B::3000;;C::594"}},
+		"category" : {"words" : 1, "tokens" : {"Literature::50;;Arithmetic::20"}},
+		"contributors.name" : {"words" : 1, "tokens" : {"Bill::10;;Alex::5"}},
 	},
 	//Alternative to "contributors.name"
 	"Object.fields" : {
@@ -26,8 +29,9 @@
 	},
 	"Integer.fields" : {
 		"visits" : {"from" : 0, "to" : 100, "increment" : 1},
-		"visits" : [ {"to" : 100}, {"from" : 500, "to" : 1000, "increment" : 1}, {}]
+		"visits" : [ {"to" : 100}, {"from" : 500, "to" : 1000, "increment" : 5}, {}]
 	},
+	//Generate dates in custom range where gap between dates are 5 minutes
 	"Date.fields" : {
 		"published" : {"from" : "2015-01-01T00:00:00", "to" : "2015-01-10T00:00:00", "increment" : "5 Minutes"},
 		"published" : {"from" : "2015-01-01T00:00:00", "to" : "2015-01-10T00:00:00", "increment" : "5 Minutes"},
@@ -37,8 +41,10 @@
 	"Boolean.fields" : {
 		"controversial" : {"TRUE"},
 		"controversial_other" : {"TICK_TOCK"},
+		//In 100 values 80 will be set to true and 20 to false 
 		"controversial_alternative" : { "true" : 80, "false" : 20},
 	},
+	//Generate IP addresses using CIDR notation
 	"IP.fields" : {
 		"ipv4" : {"127.0.0.1/30"},
 		"ipv4_multiple" : ["127.0.0.0/30", "192.168.0.0/30"]
