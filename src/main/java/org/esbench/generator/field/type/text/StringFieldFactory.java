@@ -13,10 +13,11 @@ import org.esbench.generator.field.AbstractFieldFactory;
  * 1:       X X X
  */
 public class StringFieldFactory extends AbstractFieldFactory<String> {
+	private final int tokensPerField;
 	private final String[] tokens;
 
 	public StringFieldFactory(int numOfTokens, String... tokens) {
-		super(numOfTokens);
+		this.tokensPerField = numOfTokens;
 		this.tokens = tokens.clone();
 	}
 
@@ -27,11 +28,11 @@ public class StringFieldFactory extends AbstractFieldFactory<String> {
 	@Override
 	public String newInstance(int uniqueId) {
 		StringBuilder buffer = new StringBuilder();
-		long tokenPointer = uniqueId * getTokensPerField();
+		long tokenPointer = uniqueId * tokensPerField;
 		int id = (int) tokenPointer % tokens.length;
 		buffer.append(tokens[id]);
 
-		for(int i = 1; i < getTokensPerField(); i++) {
+		for(int i = 1; i < tokensPerField; i++) {
 			int index = (id + i) % tokens.length;
 			buffer.append(StringUtils.SPACE).append(tokens[index]);
 		}

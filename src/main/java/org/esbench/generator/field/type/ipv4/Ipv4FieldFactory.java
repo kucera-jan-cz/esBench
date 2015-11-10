@@ -1,72 +1,46 @@
 package org.esbench.generator.field.type.ipv4;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.esbench.generator.field.AbstractFieldFactory;
-import org.esbench.generator.field.FieldConstants;
+import org.esbench.generator.field.FiniteValueFieldFactory;
+import org.esbench.generator.field.type.numeric.LongFieldFactory;
+import org.esbench.generator.field.utils.AddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Ipv4FieldFactory extends AbstractFieldFactory<String> {
+public class Ipv4FieldFactory extends AbstractFieldFactory<String> implements FiniteValueFieldFactory<String> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Ipv4FieldFactory.class);
-	private static final int MAXIMUM_CACHED_IPS = 1_000_000;
-	// Represents CIDR address with only one IP, f.e 127.0.0.1/32
-	private static final String HIGHEST_CIDR_NETMASK = "255.255.255.255";
-	private final String[] addresses;
+	private final String address;
+	private final LongFieldFactory longFactory;
 
-	public Ipv4FieldFactory(String... cidrAddresses) {
-		super(FieldConstants.SINGLE_TOKEN);
-		addresses = convertToAddresses(cidrAddresses);
+	public Ipv4FieldFactory(String address) {
+		this.address = address;
+		this.longFactory = cidrToLongFactory(address);
 	}
 
 	@Override
 	public String newInstance(int uniqueId) {
-		return addresses[uniqueId % addresses.length];
+		return AddressUtils.longToIpv4(longFactory.newInstance(uniqueId));
 	}
 
-	private String[] convertToAddresses(String[] cidrAddresses) {
-		SubnetInfo[] subnets = translateToSubnets(cidrAddresses);
-		validateSubnets(MAXIMUM_CACHED_IPS, subnets);
-
-		List<String> addressesAsList = new ArrayList<>();
-		for(SubnetInfo subnet : subnets) {
-			addressesAsList.add(subnet.getNetworkAddress());
-			addressesAsList.addAll(Arrays.asList(subnet.getAllAddresses()));
-			if(!HIGHEST_CIDR_NETMASK.equals(subnet.getNetmask())) {
-				addressesAsList.add(subnet.getBroadcastAddress());
-			}
-		}
-		return addressesAsList.toArray(new String[0]);
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append(address).build();
 	}
 
-	private void validateSubnets(int maximumAllowedIps, SubnetInfo[] subnets) {
-		int totalIps = calculateTotal(subnets);
-		if(maximumAllowedIps < totalIps) {
-			LOGGER.error("Limit exceeded for {}", Arrays.toString(subnets));
-			throw new IllegalArgumentException(String.format("Only %d addresses allowed (counted %d)", maximumAllowedIps, totalIps));
-		}
+	private LongFieldFactory cidrToLongFactory(String cidrAddress) {
+		SubnetInfo info = new SubnetUtils(cidrAddress).getInfo();
+		long lowestAddrAsLong = AddressUtils.ipv4ToLong(info.getNetworkAddress());
+		long modulo = AddressUtils.numberOfAddress(cidrAddress);
+		LongFieldFactory factory = new LongFieldFactory(lowestAddrAsLong, 1L, modulo);
+		return factory;
 	}
 
-	private SubnetInfo[] translateToSubnets(String[] cidrAddresses) {
-		SubnetInfo[] infos = new SubnetInfo[cidrAddresses.length];
-		for(int i = 0; i < cidrAddresses.length; i++) {
-			String cidrAddress = cidrAddresses[i];
-			infos[i] = new SubnetUtils(cidrAddress).getInfo();
-		}
-		return infos;
-	}
-
-	private int calculateTotal(SubnetInfo[] addresses) {
-		int totalUniqueAddresses = 0;
-		for(SubnetInfo info : addresses) {
-			totalUniqueAddresses += HIGHEST_CIDR_NETMASK.equals(info.getNetmask()) ? 1 : 2;
-			totalUniqueAddresses += info.getAddressCount();
-		}
-		return totalUniqueAddresses;
+	@Override
+	public long uniqueValues() {
+		return longFactory.getModulo();
 	}
 
 }
