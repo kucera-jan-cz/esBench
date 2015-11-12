@@ -47,7 +47,6 @@
 					{"type" : "ipv4",  "cidr" : "192.168.0.0/30"}	
 				]
 				
-				
 				//Objects and nested
 				"authors.name" : [
 					{"type": "string", "words" : 2, "tokens" : {"Rod::3135;;Johnson::3000;;Joshua::600;;Bloch::594"}},
