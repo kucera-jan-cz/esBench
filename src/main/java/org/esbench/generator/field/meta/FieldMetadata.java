@@ -35,10 +35,6 @@ public abstract class FieldMetadata {
 		return classType;
 	}
 
-	public Class<?> getType() {
-		return classType;
-	}
-
 	public int getValuesPerDocument() {
 		return valuesPerDocument;
 	}

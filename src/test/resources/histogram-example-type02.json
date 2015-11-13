@@ -35,7 +35,7 @@
 					{"type" : "date", "from" : "2016-01-01T00:00:00", "to" : "2016-01-04T00:00:00", "step" : "5 Minutes"},	
 				],
 				"controversial" : [
-					{"type" : "boolean", "tokens" : "TRUE"},
+					{"type" : "boolean", "tokens" : "ALWAYS_TRUE"},
 					{"type" : "boolean", "tokens" : "TICK_TOCK"},
 					//In 100 values 80 will be set to true and 20 to false 
 					{"type" : "boolean", "tokens" : { "true" : 80, "false" : 20}},	

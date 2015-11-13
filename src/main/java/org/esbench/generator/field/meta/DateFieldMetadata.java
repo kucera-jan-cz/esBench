@@ -6,8 +6,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Locale;
 
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,12 +25,14 @@ public class DateFieldMetadata extends FieldMetadata {
 
 	public DateFieldMetadata(String name, int valuesPerDoc, Instant from, Instant to, long step, ChronoUnit unit, String pattern) {
 		super(name, Date.class, valuesPerDoc);
+		Validate.isTrue(from.isBefore(to), String.format("From (%s) must be earlier than than to (%s) for field %s", from, to, name));
+		Validate.inclusiveBetween(1, Long.MAX_VALUE, step, "Step can't be negative for field " + name);
 		this.from = from;
 		this.to = to;
 		this.step = step;
 		this.unit = unit;
 		this.pattern = pattern;
-		this.formatter = DateTimeFormatter.ofPattern(pattern).withLocale(Locale.getDefault()).withZone(ZoneId.systemDefault());
+		this.formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("UTC"));
 	}
 
 	public Instant getFrom() {
@@ -43,6 +45,10 @@ public class DateFieldMetadata extends FieldMetadata {
 
 	public long getStep() {
 		return step;
+	}
+
+	public String getPattern() {
+		return pattern;
 	}
 
 	public ChronoUnit getUnit() {
