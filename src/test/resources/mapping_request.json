@@ -1,5 +1,6 @@
 {
 	"typeA":{
+		"dynamic": "strict",	
 		"properties":{
 			"fString":{
 				"type":"string"
@@ -47,7 +48,15 @@
 					},
 					"nString":{
 						"type":"string"
-					}
+					},
+                    "nNested" : {
+                      "type" : "nested",
+                      "properties": {
+                        	"nString" : {"type" : "string"},
+                        	"nInteger" : { "type" : "integer"},
+                			"nIp": { "type":"ip" }
+                        }
+                    }
 				}
 			},
 			"fObject":{

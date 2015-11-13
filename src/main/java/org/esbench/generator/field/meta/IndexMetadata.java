@@ -7,9 +7,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class IndexMetadata {
 	private String name;
-	private List<ObjectTypeMetadata> types;
+	private List<IndexTypeMetadata> types;
 
-	public IndexMetadata(String name, List<ObjectTypeMetadata> types) {
+	public IndexMetadata(String name, List<IndexTypeMetadata> types) {
 		this.name = name;
 		this.types = types;
 	}
@@ -18,7 +18,7 @@ public class IndexMetadata {
 		return name;
 	}
 
-	public List<ObjectTypeMetadata> getTypes() {
+	public List<IndexTypeMetadata> getTypes() {
 		return types;
 	}
 

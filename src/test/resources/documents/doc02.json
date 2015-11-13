@@ -2,5 +2,10 @@
 	"fString":"Welcome to the desert of our reality",
 	"fBoolean":false,
 	"fDate":"2015-11-10T23:59:59",
-	"fIp": "192.168.5.123"
+	"fIp": "192.168.5.123",
+	"fNested" : {
+		"nNested" : {
+			"nIp" : "127.0.0.101"
+		}
+	}
 }

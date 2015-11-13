@@ -14,6 +14,8 @@ public class DateStatsParser implements NumericStatsParser<DateFieldMetadata> {
 	public DateFieldMetadata parse(FieldInfo info, ExtendedStats stats, int valuesPerDocument) {
 		Instant from = Instant.ofEpochMilli(Math.round(stats.getMin()));
 		Instant to = Instant.ofEpochMilli(Math.round(stats.getMax()));
+
+		// @TODO - Elastic support multiple formats
 		String pattern = info.getJson().path(FORMAT_PROP).asText(MetadataConstants.DEFAULT_DATE_PATTERN);
 		ChronoUnit unit = calculateTimeStep(from, to, stats.getCount());
 		long increment = unit.between(from, to);

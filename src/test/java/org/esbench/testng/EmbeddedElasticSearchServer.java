@@ -14,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EmbeddedElasticSearchServer {
+	private static final String INDEX_STORE_TYPE_PROP = "index.store.type";
+	private static final String INDEX_GATEWAY_TYPE_PROP = "index.gateway.type";
+	private static final String PATH_HOME_PROP = "path.home";
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedElasticSearchServer.class);
 	private static final String PATH_DATA_PROP = "path.data";
 	private static final String HTTP_ENABLED_PROP = "http.enabled";
@@ -31,8 +34,9 @@ public class EmbeddedElasticSearchServer {
 			Files.createDirectories(parentDataDir);
 			Path dataDir = Files.createTempDirectory(parentDataDir, "cluster");
 			Settings settings = Settings.settingsBuilder()
-					.put("path.home", "target")
+					.put(PATH_HOME_PROP, "target")
 					.put(HTTP_ENABLED_PROP, "false")
+					.put(INDEX_GATEWAY_TYPE_PROP, "none")
 					.put(PATH_DATA_PROP, dataDir.toString())
 					.build();
 			node = nodeBuilder().local(true).settings(settings).node();

@@ -6,5 +6,12 @@
 	"fObject" : {
 		"oString" : "A B C",
 		"oIp" : "192.168.44.10"
+	},
+	"fNested" : {
+		"nString" : "XY Z",
+		"nNested" : {
+			"nString" : "K L M N"
+		}
 	}
+	
 }

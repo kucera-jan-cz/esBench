@@ -8,25 +8,19 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.esbench.generator.field.FieldConstants;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
 public class ObjectTypeMetadata extends FieldMetadata {
 	private List<FieldMetadata> innerMetadata;
-	@Deprecated
-	private final boolean isRoot;
 
-	public ObjectTypeMetadata(String name, boolean isRoot, List<FieldMetadata> innerMetadata) {
+	public ObjectTypeMetadata(String name, List<FieldMetadata> innerMetadata) {
 		super(name, Object.class, FieldConstants.SINGLE_VALUE);
-		this.isRoot = isRoot;
 		this.innerMetadata = new ArrayList<>(innerMetadata);
 		Collections.sort(this.innerMetadata, (a, b) -> a.getFullPath().compareTo(b.getFullPath()));
-	}
-
-	@Deprecated
-	public boolean isRoot() {
-		return isRoot;
 	}
 
 	public List<FieldMetadata> getInnerMetadata() {
@@ -45,13 +39,7 @@ public class ObjectTypeMetadata extends FieldMetadata {
 
 	@Override
 	public String toString() {
-		StringBuilder buff = new StringBuilder();
-		buff.append("Object [name=").append(getName()).append('\n');
-		for(FieldMetadata meta : innerMetadata) {
-			buff.append('\t').append(meta).append('\n');
-		}
-		buff.append("]\n");
-		return buff.toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 
 	@Override
