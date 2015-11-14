@@ -11,10 +11,10 @@ public class IntegerFieldFactory extends AbstractFieldFactory<Integer> {
 	private final int step;
 	private final int modulo;
 
-	public IntegerFieldFactory(int from, int step, int modulo) {
-		this.from = from;
-		this.step = step;
-		this.modulo = modulo;
+	public IntegerFieldFactory(Number from, Number to, Number step) {
+		this.from = from.intValue();
+		this.step = step.intValue();
+		this.modulo = ((to.intValue() - this.from) / this.step) + 1;
 	}
 
 	@Override

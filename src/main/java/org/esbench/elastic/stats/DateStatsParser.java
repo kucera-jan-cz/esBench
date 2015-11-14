@@ -7,7 +7,7 @@ import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStat
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
 
-public class DateStatsParser implements NumericStatsParser<DateFieldMetadata> {
+public class DateStatsParser implements ExtendedStatsParser<DateFieldMetadata> {
 	private static final String FORMAT_PROP = "format";
 
 	@Override

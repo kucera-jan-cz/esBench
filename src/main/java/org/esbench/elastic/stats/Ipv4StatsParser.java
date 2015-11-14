@@ -4,7 +4,7 @@ import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStat
 import org.esbench.generator.field.meta.IPv4FieldMetadata;
 import org.esbench.generator.field.utils.AddressUtils;
 
-public class Ipv4StatsParser implements NumericStatsParser<IPv4FieldMetadata> {
+public class Ipv4StatsParser implements ExtendedStatsParser<IPv4FieldMetadata> {
 
 	@Override
 	public IPv4FieldMetadata parse(FieldInfo info, ExtendedStats stats, int valuesPerDocument) {

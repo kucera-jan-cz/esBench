@@ -5,19 +5,10 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.esbench.generator.document.DocumentFactory;
-import org.esbench.generator.field.FieldFactory;
-import org.esbench.generator.field.meta.BooleanFieldMetadata;
-import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.FieldMetadata;
-import org.esbench.generator.field.meta.IPv4FieldMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
-import org.esbench.generator.field.meta.ObjectTypeMetadata;
-import org.esbench.generator.field.meta.StringFieldMetadata;
-import org.esbench.generator.field.type.bool.BooleanFieldFactory;
-import org.esbench.generator.field.type.date.DateFieldFactory;
-import org.esbench.generator.field.type.ipv4.Ipv4FieldFactory;
-import org.esbench.generator.field.type.text.StringFieldFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +22,7 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 	private List<JsonBuilder> builders = new ArrayList<>();
 
 	public SimpleDocumentFactory(IndexTypeMetadata indexTypeMetadata) {
+		Validate.notNull(indexTypeMetadata);
 		this.factory.enable(JsonParser.Feature.ALLOW_COMMENTS);
 		builders.addAll(initBuilders(indexTypeMetadata.getFields()));
 	}
@@ -55,55 +47,11 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 
 	private List<JsonBuilder> initBuilders(List<? extends FieldMetadata> metadata) {
 		List<JsonBuilder> builders = new ArrayList<>();
+		JsonBuilderFactory jsonBuilderFactory = new JsonBuilderFactory();
 		for(FieldMetadata meta : metadata) {
-			builders.add(createBuilder(meta));
+			builders.add(jsonBuilderFactory.newInstance(meta));
 		}
 		return builders;
 	}
 
-	// @TODO - consider split functionality to two classes
-	public JsonBuilder createBuilder(FieldMetadata metadata) {
-		if(metadata instanceof StringFieldMetadata) {
-			return newInstance((StringFieldMetadata) metadata);
-		} else if(metadata instanceof BooleanFieldMetadata) {
-			return newInstance((BooleanFieldMetadata) metadata);
-		} else if(metadata instanceof DateFieldMetadata) {
-			return newInstance((DateFieldMetadata) metadata);
-		} else if(metadata instanceof ObjectTypeMetadata) {
-			return newInstance((ObjectTypeMetadata) metadata);
-		} else if(metadata instanceof IPv4FieldMetadata) {
-			return newInstance((IPv4FieldMetadata) metadata);
-		} else {
-			throw new IllegalStateException("Unknown metadata: " + metadata);
-		}
-	}
-
-	private JsonBuilder newInstance(IPv4FieldMetadata meta) {
-		FieldFactory<String> factory = new Ipv4FieldFactory(meta.getCidrAddress());
-		return new StringFieldBuilder(meta, factory);
-	}
-
-	private JsonBuilder newInstance(BooleanFieldMetadata metadata) {
-		FieldFactory<Boolean> factory = BooleanFieldFactory.valueOf(metadata.getType().name());
-		BooleanFieldBuilder builder = new BooleanFieldBuilder(metadata, factory);
-		return builder;
-	}
-
-	private ObjectTypeBuilder newInstance(ObjectTypeMetadata meta) {
-		List<JsonBuilder> builders = initBuilders(meta.getInnerMetadata());
-		ObjectTypeBuilder builder = new ObjectTypeBuilder(meta, builders);
-		return builder;
-	}
-
-	private StringFieldBuilder newInstance(StringFieldMetadata meta) {
-		StringFieldFactory factory = new StringFieldFactory(meta.getTokensPerValue(), meta.getTokens());
-		return new StringFieldBuilder(meta, factory);
-	}
-
-	private DateFieldBuilder newInstance(DateFieldMetadata meta) {
-		long units = meta.getFrom().until(meta.getTo(), meta.getUnit());
-		int modulo = (int) (units / meta.getStep());
-		DateFieldFactory factory = new DateFieldFactory(meta.getFrom(), meta.getStep(), meta.getUnit(), modulo);
-		return new DateFieldBuilder(meta, factory);
-	}
 }

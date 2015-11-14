@@ -15,11 +15,11 @@ public class DateFieldBuilderTest extends AbstractFieldBuilderTest {
 
 	@Test
 	public void writeSingleValue() throws IOException {
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(emptyIndexMeta);
+		JsonBuilderFactory factory = new JsonBuilderFactory();
 		Instant from = Instant.parse("2015-10-01T10:00:00.00Z");
 		Instant to = from.plus(10, ChronoUnit.MINUTES);
 		DateFieldMetadata metadata = new DateFieldMetadata("date", 1, from, to, 5, ChronoUnit.MINUTES, MetadataConstants.DEFAULT_DATE_PATTERN);
-		JsonBuilder builder = factory.createBuilder(metadata);
+		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"date\":\"2015-10-01T10:00:00\"}", createJson(builder, 0));
 		JsonAssert.assertJsonEquals("{\"date\":\"2015-10-01T10:05:00\"}", createJson(builder, 1));
@@ -28,11 +28,11 @@ public class DateFieldBuilderTest extends AbstractFieldBuilderTest {
 
 	@Test
 	public void writeArrayValue() throws IOException {
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(emptyIndexMeta);
+		JsonBuilderFactory factory = new JsonBuilderFactory();
 		Instant from = Instant.parse("2015-10-01T10:00:00.00Z");
 		Instant to = from.plus(20, ChronoUnit.MINUTES);
 		DateFieldMetadata metadata = new DateFieldMetadata("date", 2, from, to, 5, ChronoUnit.MINUTES, MetadataConstants.DEFAULT_DATE_PATTERN);
-		JsonBuilder builder = factory.createBuilder(metadata);
+		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"date\": [\"2015-10-01T10:00:00\", \"2015-10-01T10:05:00\"]}", createJson(builder, 0));
 		JsonAssert.assertJsonEquals("{\"date\": [\"2015-10-01T10:10:00\", \"2015-10-01T10:15:00\"]}", createJson(builder, 1));
@@ -49,11 +49,11 @@ public class DateFieldBuilderTest extends AbstractFieldBuilderTest {
 
 	@Test(dataProvider = "timezoneDataProvider")
 	public void timezone(String format, String expected) throws IOException {
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(emptyIndexMeta);
+		JsonBuilderFactory factory = new JsonBuilderFactory();
 		Instant from = Instant.parse("2015-10-01T10:00:00.00Z");
 		Instant to = from.plus(20, ChronoUnit.MINUTES);
 		DateFieldMetadata metadata = new DateFieldMetadata("date", 1, from, to, 5, ChronoUnit.MINUTES, format);
-		JsonBuilder builder = factory.createBuilder(metadata);
+		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals(expected, createJson(builder, 0));
 	}

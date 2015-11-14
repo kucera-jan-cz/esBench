@@ -19,8 +19,8 @@ public class StringFieldBuilderTest extends AbstractFieldBuilderTest {
 		int tokenPerValue = 2;
 		List<String> tokens = Arrays.asList("A", "B", "C", "D");
 		StringFieldMetadata meta = new StringFieldMetadata("text", 1, tokenPerValue, tokens);
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(emptyIndexMeta);
-		JsonBuilder builder = factory.createBuilder(meta);
+		JsonBuilderFactory factory = new JsonBuilderFactory();
+		JsonBuilder builder = factory.newInstance(meta);
 
 		LOGGER.info("JSON: {}", createJson(builder, 0));
 		JsonAssert.assertJsonEquals("{\"text\":\"A B\"}", createJson(builder, 0));
@@ -31,8 +31,8 @@ public class StringFieldBuilderTest extends AbstractFieldBuilderTest {
 		int tokenPerValue = 2;
 		List<String> tokens = Arrays.asList("A", "B", "C", "D");
 		StringFieldMetadata meta = new StringFieldMetadata("text", 2, tokenPerValue, tokens);
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(emptyIndexMeta);
-		JsonBuilder builder = factory.createBuilder(meta);
+		JsonBuilderFactory factory = new JsonBuilderFactory();
+		JsonBuilder builder = factory.newInstance(meta);
 
 		LOGGER.info("JSON: {}", createJson(builder, 0));
 

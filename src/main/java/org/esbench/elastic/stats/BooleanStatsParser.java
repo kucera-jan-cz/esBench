@@ -5,7 +5,7 @@ import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BooleanStatsParser implements NumericStatsParser<BooleanFieldMetadata> {
+public class BooleanStatsParser implements ExtendedStatsParser<BooleanFieldMetadata> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BooleanStatsParser.class);
 
 	@Override

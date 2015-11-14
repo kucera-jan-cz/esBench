@@ -3,6 +3,8 @@
 	"fBoolean":true,
 	"fDate":"2015-11-08T00:00:00",
 	"fIp": "192.168.1.0",
+	"fInteger": "0",
+	"fLong": "2147483647",
 	"fObject" : {
 		"oString" : "A B C",
 		"oIp" : "192.168.44.10"

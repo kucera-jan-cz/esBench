@@ -11,9 +11,9 @@ public class BooleanFieldBuilderTest extends AbstractFieldBuilderTest {
 
 	@Test
 	public void writeSingleValue() throws IOException {
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(emptyIndexMeta);
+		JsonBuilderFactory factory = new JsonBuilderFactory();
 		BooleanFieldMetadata metadata = new BooleanFieldMetadata("boolean");
-		JsonBuilder builder = factory.createBuilder(metadata);
+		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"boolean\":true}", createJson(builder, 0));
 		JsonAssert.assertJsonEquals("{\"boolean\":false}", createJson(builder, 1));
@@ -22,9 +22,9 @@ public class BooleanFieldBuilderTest extends AbstractFieldBuilderTest {
 
 	@Test
 	public void writeArrayValue() throws IOException {
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(emptyIndexMeta);
+		JsonBuilderFactory factory = new JsonBuilderFactory();
 		BooleanFieldMetadata metadata = new BooleanFieldMetadata("boolean", 2, BooleanFieldMetadata.Type.ALWAYS_TRUE);
-		JsonBuilder builder = factory.createBuilder(metadata);
+		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"boolean\": [true, true]}", createJson(builder, 0));
 		JsonAssert.assertJsonEquals("{\"boolean\": [true, true]}", createJson(builder, 1));

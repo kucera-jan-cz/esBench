@@ -24,6 +24,9 @@
 			"fInteger":{
 				"type":"integer"
 			},
+			"fLong":{
+				"type":"long"
+			},
 			"fNested":{
 				"type":"nested",
 				"properties":{

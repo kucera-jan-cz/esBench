@@ -106,7 +106,7 @@ public class StatsCollector {
 			JsonNode fieldJson = typeProp.path(name);
 			JsonNode fieldTypeJson = fieldJson.path(TYPE_PROP);
 			String fieldType = fieldTypeJson.textValue();
-			FieldInfo info = new FieldInfo(fullFieldName, nested, typeProp);
+			FieldInfo info = new FieldInfo(fullFieldName, nested, fieldJson);
 
 			if(fieldTypeJson.isMissingNode() || NESTED_TYPE.equals(fieldType)) {
 				boolean fieldNested = nested || NESTED_TYPE.equals(fieldType);
@@ -127,10 +127,12 @@ public class StatsCollector {
 		meta.addAll(collectNumericData(fieldsByteType.get("date"), new DateStatsParser()));
 		meta.addAll(collectNumericData(fieldsByteType.get("boolean"), new BooleanStatsParser()));
 		meta.addAll(collectNumericData(fieldsByteType.get("ip"), new Ipv4StatsParser()));
+		meta.addAll(collectNumericData(fieldsByteType.get("integer"), new NumericStatsParser()));
+		meta.addAll(collectNumericData(fieldsByteType.get("long"), new NumericStatsParser()));
 		return meta;
 	}
 
-	private <T extends FieldMetadata> List<FieldMetadata> collectNumericData(Collection<FieldInfo> fields, NumericStatsParser<T> parser) {
+	private <T extends FieldMetadata> List<FieldMetadata> collectNumericData(Collection<FieldInfo> fields, ExtendedStatsParser<T> parser) {
 		List<FieldMetadata> metadata = new ArrayList<>(fields.size());
 		SearchRequestBuilder builder = createNumericSearchBuilder(fields);
 		SearchResponse response = client.search(builder.request()).actionGet();

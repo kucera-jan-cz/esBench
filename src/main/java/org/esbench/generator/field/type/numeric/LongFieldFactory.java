@@ -11,10 +11,10 @@ public class LongFieldFactory extends AbstractFieldFactory<Long> {
 	private final long step;
 	private final long modulo;
 
-	public LongFieldFactory(long from, long step, long modulo) {
-		this.from = from;
-		this.step = step;
-		this.modulo = modulo;
+	public LongFieldFactory(Number from, Number to, Number step) {
+		this.from = from.longValue();
+		this.step = step.longValue();
+		this.modulo = ((to.longValue() - this.from) / this.step) + 1L;
 	}
 
 	@Override
