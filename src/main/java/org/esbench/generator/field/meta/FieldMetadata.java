@@ -1,25 +1,41 @@
 package org.esbench.generator.field.meta;
 
-import java.io.IOException;
-
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.esbench.config.ConfigurationConstants;
+import org.esbench.config.json.databind.FieldMetadataTypeIdResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 
-//@TODO - Look at PropertyUtilsBean in commons beanutils
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = ConfigurationConstants.TYPE_PROP, visible = true)
+@JsonTypeIdResolver(FieldMetadataTypeIdResolver.class)
+@JsonPropertyOrder(value = { ConfigurationConstants.TYPE_PROP, ConfigurationConstants.ARRAY_PROP }, alphabetic = true)
 public abstract class FieldMetadata {
-	private final String name;
-	private final String fullPath;
-	private final Class<?> classType;
-	private final int valuesPerDocument;
+	private static final Logger LOGGER = LoggerFactory.getLogger(FieldMetadata.class);
+	@JsonIgnore
+	private String name;
+	@JsonIgnore
+	private String fullPath;
+	@JsonProperty(value = ConfigurationConstants.TYPE_PROP)
+	private MetaType metaType;
+	@JsonProperty(value = ConfigurationConstants.ARRAY_PROP)
+	private Integer valuesPerDocument;
+	private Strategy strategy = Strategy.SEQUENCE;
 
-	public FieldMetadata(String fullPath, Class<?> classType, int valuesPerDoc) {
+	public FieldMetadata() {
+	}
+
+	public FieldMetadata(String fullPath, MetaType metaType, int valuesPerDoc) {
 		Validate.notNull(fullPath);
-		this.name = fullPath.substring(fullPath.lastIndexOf('.') + 1);
-		this.fullPath = fullPath;
-		this.classType = classType;
+		setFullPath(fullPath);
+		this.metaType = metaType;
 		this.valuesPerDocument = valuesPerDoc;
 	}
 
@@ -27,16 +43,48 @@ public abstract class FieldMetadata {
 		return name;
 	}
 
+	@JsonIgnore
 	public String getFullPath() {
 		return fullPath;
 	}
 
-	public Class<?> getClassType() {
-		return classType;
+	@JsonIgnore
+	public MetaType getMetaType() {
+		return metaType;
 	}
 
-	public int getValuesPerDocument() {
+	public Integer getValuesPerDocument() {
 		return valuesPerDocument;
+	}
+
+	public Strategy getStrategy() {
+		return strategy;
+	}
+
+	void setName(String name) {
+		this.name = name;
+	}
+
+	@JsonProperty(value = ConfigurationConstants.NAME_PROP)
+	public void setFullPath(String value) {
+		if(value == null) {
+			LOGGER.warn("Trying to set null fullpath");
+			return;
+		}
+		this.fullPath = value;
+		this.name = fullPath.substring(fullPath.lastIndexOf('.') + 1);
+	}
+
+	public void setMetaType(MetaType metaType) {
+		this.metaType = metaType;
+	}
+
+	public void setValuesPerDocument(Integer valuesPerDocument) {
+		this.valuesPerDocument = valuesPerDocument;
+	}
+
+	public void setStrategy(Strategy strategy) {
+		this.strategy = strategy;
 	}
 
 	@Override
@@ -47,15 +95,5 @@ public abstract class FieldMetadata {
 	@Override
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	public abstract void specificMetadataToJSON(JsonGenerator generator) throws IOException;
-
-	public void toJSON(JsonGenerator generator) throws IOException {
-		generator.writeObjectFieldStart(fullPath);
-		generator.writeStringField("type", classType.getSimpleName().toLowerCase());
-		generator.writeNumberField("array", valuesPerDocument);
-		specificMetadataToJSON(generator);
-		generator.writeEndObject();
 	}
 }

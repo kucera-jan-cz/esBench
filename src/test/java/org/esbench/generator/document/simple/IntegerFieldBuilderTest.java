@@ -2,8 +2,8 @@ package org.esbench.generator.document.simple;
 
 import java.io.IOException;
 
+import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
-import org.esbench.generator.field.meta.NumericFieldMetadata.Type;
 import org.testng.annotations.Test;
 
 import net.javacrumbs.jsonunit.JsonAssert;
@@ -12,7 +12,7 @@ public class IntegerFieldBuilderTest extends AbstractFieldBuilderTest {
 	@Test
 	public void writeSingleValue() throws IOException {
 		JsonBuilderFactory factory = new JsonBuilderFactory();
-		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 1, Type.INTEGER, 0, 10, 2);
+		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 1, MetaType.INTEGER, 0, 10, 2);
 		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"int\":0}", createJson(builder, 0));
@@ -25,7 +25,7 @@ public class IntegerFieldBuilderTest extends AbstractFieldBuilderTest {
 	@Test
 	public void writeArrayValue() throws IOException {
 		JsonBuilderFactory factory = new JsonBuilderFactory();
-		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 2, Type.INTEGER, 0, 10, 3);
+		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 2, MetaType.INTEGER, 0, 10, 3);
 		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"int\": [0, 3]}", createJson(builder, 0));
@@ -36,7 +36,7 @@ public class IntegerFieldBuilderTest extends AbstractFieldBuilderTest {
 	@Test
 	public void negativeToZero() throws IOException {
 		JsonBuilderFactory factory = new JsonBuilderFactory();
-		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 1, Type.INTEGER, -3, 0, 1);
+		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 1, MetaType.INTEGER, -3, 0, 1);
 		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"int\": -3}", createJson(builder, 0));
@@ -49,7 +49,7 @@ public class IntegerFieldBuilderTest extends AbstractFieldBuilderTest {
 	@Test
 	public void negativeToPositive() throws IOException {
 		JsonBuilderFactory factory = new JsonBuilderFactory();
-		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 1, Type.INTEGER, -2, 2, 1);
+		NumericFieldMetadata metadata = new NumericFieldMetadata("int", 1, MetaType.INTEGER, -2, 2, 1);
 		JsonBuilder builder = factory.newInstance(metadata);
 
 		JsonAssert.assertJsonEquals("{\"int\": -2}", createJson(builder, 0));

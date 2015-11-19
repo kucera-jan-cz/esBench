@@ -1,11 +1,9 @@
 package org.esbench.generator.field.meta;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,18 +11,23 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DateFieldMetadata extends FieldMetadata {
 	private Instant from;
 	private Instant to;
-	private long step;
+	private Long step;
 	private ChronoUnit unit;
 	private String pattern;
+
 	private transient DateTimeFormatter formatter;
 
+	public DateFieldMetadata() {
+
+	}
+
 	public DateFieldMetadata(String name, int valuesPerDoc, Instant from, Instant to, long step, ChronoUnit unit, String pattern) {
-		super(name, Date.class, valuesPerDoc);
+		super(name, MetaType.DATE, valuesPerDoc);
 		Validate.isTrue(from.isBefore(to), String.format("From (%s) must be earlier than than to (%s) for field %s", from, to, name));
 		Validate.inclusiveBetween(1, Long.MAX_VALUE, step, "Step can't be negative for field " + name);
 		this.from = from;
@@ -43,7 +46,7 @@ public class DateFieldMetadata extends FieldMetadata {
 		return to;
 	}
 
-	public long getStep() {
+	public Long getStep() {
 		return step;
 	}
 
@@ -55,6 +58,7 @@ public class DateFieldMetadata extends FieldMetadata {
 		return unit;
 	}
 
+	@JsonIgnore
 	public DateTimeFormatter getFormatter() {
 		return formatter;
 	}
@@ -71,21 +75,36 @@ public class DateFieldMetadata extends FieldMetadata {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE).append("from", from.toString())
-				.append("to", to.toString())
+		return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE).append("from", String.valueOf(from))
+				.append("to", String.valueOf(to))
 				.append("step", step)
-				.append("unit", unit.toString())
+				.append("unit", String.valueOf(unit))
 				.append("pattern", pattern)
 				.build();
-
 	}
 
-	@Override
-	public void specificMetadataToJSON(JsonGenerator generator) throws IOException {
-		// "published" : {"from" : "2015-01-01T00:00:00", "to" : "2015-01-10T00:00:00", "step" : "5 Minutes"},
-		generator.writeStringField("from", formatter.format(from));
-		generator.writeStringField("to", formatter.format(to));
-		generator.writeStringField("step", step + " " + unit);
+	public void setFrom(Instant from) {
+		this.from = from;
+	}
+
+	public void setTo(Instant to) {
+		this.to = to;
+	}
+
+	public void setStep(Long step) {
+		this.step = step;
+	}
+
+	public void setUnit(ChronoUnit unit) {
+		this.unit = unit;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
+	public void setFormatter(DateTimeFormatter formatter) {
+		this.formatter = formatter;
 	}
 
 }

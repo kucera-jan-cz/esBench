@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 public class NumericFieldBuilder {
 
 	public static JsonBuilder newInstance(NumericFieldMetadata meta, FieldFactory<? extends Number> factory) {
-		switch(meta.getType()) {
+		switch(meta.getMetaType()) {
 		case INTEGER:
 			return new JsonBuilder() {
 				@Override
@@ -60,7 +60,7 @@ public class NumericFieldBuilder {
 				}
 			};
 		default:
-			throw new IllegalArgumentException("Unknown type: " + meta.getType());
+			throw new IllegalArgumentException("Unknown type: " + meta.getMetaType());
 		}
 	}
 }

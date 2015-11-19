@@ -56,7 +56,6 @@ public class StatsCollector {
 	// Mapping constants
 	private static final String TYPE_PROP = "type";
 	private static final String PROPERTIES_PROP = "properties";
-	private static final String INDEX_NAME = "types";
 	// Search constants
 	private static final int ZERO_ITEMS = 0;
 	private static final int MAX_ITEMS_SIZE = 0;
@@ -67,30 +66,32 @@ public class StatsCollector {
 	private static final String TERMS_AGG = "tokens";
 	private static final String NESTED_AGG = "nested_";
 
-	private Client client;
+	private final Client client;
+	private final String indexName;
 
-	public StatsCollector(Client client) {
+	public StatsCollector(Client client, String indexName) {
 		this.client = client;
+		this.indexName = indexName;
 	}
 
 	public IndexMetadata collectMapping() throws IOException {
-		GetMappingsResponse response = new GetMappingsRequestBuilder(client, GetMappingsAction.INSTANCE, INDEX_NAME).get();
-		ImmutableOpenMap<String, MappingMetaData> mapping = response.getMappings().get(INDEX_NAME);
+		GetMappingsResponse response = new GetMappingsRequestBuilder(client, GetMappingsAction.INSTANCE, indexName).get();
+		ImmutableOpenMap<String, MappingMetaData> mapping = response.getMappings().get(indexName);
 		String[] indexTypes = mapping.keys().toArray(String.class);
 		ObjectMapper mapper = new ObjectMapper();
 		List<IndexTypeMetadata> typesMetadata = new ArrayList<>();
 		for(String indexType : indexTypes) {
 			MappingMetaData meta = mapping.get(indexType);
-			LOGGER.info("Index: {} Type: {}", INDEX_NAME, indexType);
+			LOGGER.info("Index: {} Type: {}", indexName, indexType);
 			String mappingsAsJson = meta.source().string();
 			LOGGER.info("JSON:\n{}", mappingsAsJson);
 
 			JsonNode root = mapper.readValue(mappingsAsJson, JsonNode.class);
 			JsonNode typeProp = root.path(indexType).path(PROPERTIES_PROP);
 			ObjectTypeMetadata typeMeta = parseConfiguration(indexType, typeProp, StringUtils.EMPTY, false);
-			typesMetadata.add(new IndexTypeMetadata(INDEX_NAME, indexType, typeMeta.getInnerMetadata()));
+			typesMetadata.add(new IndexTypeMetadata(indexName, indexType, typeMeta.getInnerMetadata()));
 		}
-		IndexMetadata indexMeta = new IndexMetadata(INDEX_NAME, typesMetadata);
+		IndexMetadata indexMeta = new IndexMetadata(indexName, typesMetadata);
 		return indexMeta;
 	}
 
@@ -189,7 +190,7 @@ public class StatsCollector {
 			FilterAggregationBuilder filterBuilder = AggregationBuilders.filter(FILTER_AGG + info.getFullPath()).filter(filter).subAggregation(countBuilder);
 			builder.addAggregation(createNestedIfNecessary(info, filterBuilder));
 		}
-		builder.setIndices(INDEX_NAME).setSize(ZERO_ITEMS);
+		builder.setIndices(indexName).setSize(ZERO_ITEMS);
 		return builder;
 	}
 

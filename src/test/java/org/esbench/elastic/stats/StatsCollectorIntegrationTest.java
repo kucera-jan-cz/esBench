@@ -9,9 +9,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.flush.FlushRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingAction;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
@@ -25,21 +27,22 @@ import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IPv4FieldMetadata;
 import org.esbench.generator.field.meta.IndexMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
+import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.MetadataConstants;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
-import org.esbench.generator.field.meta.NumericFieldMetadata.Type;
 import org.esbench.generator.field.meta.ObjectTypeMetadata;
 import org.esbench.generator.field.meta.StringFieldMetadata;
-import org.esbench.testng.AbstractElasticSearchIntegrationTest;
+import org.esbench.testng.AbstractSharedElasticSearchIntegrationTest;
 import org.esbench.testng.ResourcesUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.unitils.reflectionassert.ReflectionAssert;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
 
-public class StatsCollectorIntegrationTest extends AbstractElasticSearchIntegrationTest {
+public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIntegrationTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(StatsCollectorIntegrationTest.class);
 	private static final String INDEX_TYPE = "typeA";
 	private static final String INDEX_NAME = "types";
@@ -48,8 +51,8 @@ public class StatsCollectorIntegrationTest extends AbstractElasticSearchIntegrat
 	private StringFieldMetadata fStringMeta = new StringFieldMetadata("fString", 1, 5,
 			Arrays.asList("welcome", "to", "esbench", "the", "desert", "of", "our", "reality"));
 	private BooleanFieldMetadata fBooleanMeta = new BooleanFieldMetadata("fBoolean");
-	private NumericFieldMetadata fIntegerMeta = new NumericFieldMetadata("fInteger", 1, Type.INTEGER, 0, 10, 1);
-	private NumericFieldMetadata fLongMeta = new NumericFieldMetadata("fLong", 1, Type.LONG, 2147483647L, Integer.MAX_VALUE + 10L, 1L);
+	private NumericFieldMetadata fIntegerMeta = new NumericFieldMetadata("fInteger", 1, MetaType.INTEGER, 0, 10, 1);
+	private NumericFieldMetadata fLongMeta = new NumericFieldMetadata("fLong", 1, MetaType.LONG, 2147483647L, Integer.MAX_VALUE + 10L, 1L);
 	private DateFieldMetadata fDateMeta = new DateFieldMetadata("fDate", 1, Instant.parse("2015-11-08T00:00:00Z"), Instant.parse("2015-11-10T23:59:59Z"), 5,
 			ChronoUnit.HALF_DAYS, MetadataConstants.DEFAULT_DATE_PATTERN);
 	private IPv4FieldMetadata fIpMeta = new IPv4FieldMetadata("fIp", 1, "192.168.0.0/21");
@@ -67,7 +70,6 @@ public class StatsCollectorIntegrationTest extends AbstractElasticSearchIntegrat
 
 	@BeforeClass
 	public void initCluster() throws IOException {
-		super.startServer();
 		client = getClient();
 
 		CreateIndexRequest indexRequest = new CreateIndexRequest(INDEX_NAME);
@@ -86,9 +88,14 @@ public class StatsCollectorIntegrationTest extends AbstractElasticSearchIntegrat
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();
 	}
 
+	@AfterClass
+	public void deleteIndex() throws InterruptedException, ExecutionException {
+		client.admin().indices().delete(new DeleteIndexRequest(INDEX_NAME)).get();
+	}
+
 	@Test
 	public void init() throws IOException {
-		StatsCollector collector = new StatsCollector(client);
+		StatsCollector collector = new StatsCollector(client, INDEX_NAME);
 		IndexMetadata indexMeta = collector.collectMapping();
 		assertEquals(indexMeta.getName(), INDEX_NAME);
 		assertEquals(indexMeta.getTypes().size(), 1);

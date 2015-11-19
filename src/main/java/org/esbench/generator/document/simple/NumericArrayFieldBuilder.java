@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 public class NumericArrayFieldBuilder {
 
 	public static JsonBuilder newInstance(NumericFieldMetadata meta, FieldFactory<? extends Number> factory) {
-		switch(meta.getType()) {
+		switch(meta.getMetaType()) {
 		case INTEGER:
 			return new NumericArrayJsonBuilder(meta) {
 
@@ -68,7 +68,7 @@ public class NumericArrayFieldBuilder {
 
 			};
 		default:
-			throw new IllegalArgumentException("Unknown type: " + meta.getType());
+			throw new IllegalArgumentException("Unknown type: " + meta.getMetaType());
 		}
 	}
 
@@ -77,7 +77,7 @@ public class NumericArrayFieldBuilder {
 
 		public NumericArrayJsonBuilder(FieldMetadata meta) {
 			this.meta = meta;
-			Validate.inclusiveBetween(2, Integer.MAX_VALUE, meta.getValuesPerDocument());
+			Validate.inclusiveBetween(2, Integer.MAX_VALUE, meta.getValuesPerDocument().intValue());
 		}
 
 		@Override

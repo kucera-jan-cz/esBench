@@ -1,0 +1,18 @@
+{
+	"index":"i",
+	"type":"t",
+	"fields":{
+		"a":{
+			"type":"STRING",
+			"tokens":[
+				"a",
+				"b",
+				"c"
+			]
+		},
+		"fBoolean":{
+			"type":"BOOLEAN",
+			"tokens":"ALWAYS_TRUE"
+		}
+	}
+}

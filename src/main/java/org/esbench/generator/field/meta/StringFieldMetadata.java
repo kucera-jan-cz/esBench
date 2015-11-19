@@ -1,6 +1,5 @@
 package org.esbench.generator.field.meta;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,22 +9,30 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.esbench.config.ConfigurationConstants;
 
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class StringFieldMetadata extends FieldMetadata {
-	private final int tokensPerValue;
-	private final List<String> tokens;
+	@JsonProperty(value = ConfigurationConstants.WORDS_PROP)
+	private Integer tokensPerValue;
+	@JsonProperty(value = ConfigurationConstants.TOKENS_PROP)
+	private List<String> tokens;
+
+	@JsonCreator
+	public StringFieldMetadata() {
+	}
 
 	public StringFieldMetadata(String name, int valuesPerDoc, int tokenPerValue, List<String> tokens) {
-		super(name, String.class, valuesPerDoc);
-		Validate.notEmpty(tokens);
+		super(name, MetaType.STRING, valuesPerDoc);
+		Validate.notNull(tokens);
 		this.tokens = new ArrayList<>(tokens);
 		Collections.sort(this.tokens);
 		this.tokensPerValue = tokenPerValue;
 	}
 
-	public int getTokensPerValue() {
+	public Integer getTokensPerValue() {
 		return tokensPerValue;
 	}
 
@@ -48,12 +55,12 @@ public class StringFieldMetadata extends FieldMetadata {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
 	}
 
-	@Override
-	public void specificMetadataToJSON(JsonGenerator generator) throws IOException {
-		// "title" : {"words" : 2, "tokens" : {"A::3135;;B::3000;;C::594"}},
-		generator.writeNumberField("words", tokensPerValue);
-		// @TODO
-		generator.writeStringField("tokens", "TODO");
+	public void setTokensPerValue(Integer tokensPerValue) {
+		this.tokensPerValue = tokensPerValue;
+	}
+
+	public void setTokens(List<String> tokens) {
+		this.tokens = tokens;
 	}
 
 }

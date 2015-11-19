@@ -44,7 +44,7 @@ public class JsonBuilderFactory {
 	}
 
 	private JsonBuilder build(BooleanFieldMetadata metadata) {
-		FieldFactory<Boolean> factory = BooleanFieldFactory.valueOf(metadata.getType().name());
+		FieldFactory<Boolean> factory = BooleanFieldFactory.valueOf(metadata.getBooleanType().name());
 		BooleanFieldBuilder builder = new BooleanFieldBuilder(metadata, factory);
 		return builder;
 	}
@@ -70,13 +70,13 @@ public class JsonBuilderFactory {
 	}
 
 	private FieldFactory<? extends Number> buildNumericFactory(NumericFieldMetadata meta) {
-		switch(meta.getType()) {
+		switch(meta.getMetaType()) {
 		case INTEGER:
 			return new IntegerFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
 		case LONG:
 			return new LongFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
 		default:
-			throw new IllegalArgumentException("Unknown type: " + meta.getType());
+			throw new IllegalArgumentException("Unsupported type: " + meta.getMetaType());
 		}
 	}
 
@@ -88,6 +88,7 @@ public class JsonBuilderFactory {
 	}
 
 	private List<JsonBuilder> build(List<? extends FieldMetadata> metadata) {
+		// @TODO - implement dedup here
 		List<JsonBuilder> builders = new ArrayList<>();
 		for(FieldMetadata meta : metadata) {
 			builders.add(newInstance(meta));

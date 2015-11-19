@@ -1,6 +1,7 @@
 package org.esbench.elastic.stats;
 
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
+import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 
 public class NumericStatsParser implements ExtendedStatsParser<NumericFieldMetadata> {
@@ -8,7 +9,7 @@ public class NumericStatsParser implements ExtendedStatsParser<NumericFieldMetad
 	@Override
 	public NumericFieldMetadata parse(FieldInfo info, ExtendedStats stats, int valuesPerDocument) {
 		String typeAsText = info.getJson().path("type").asText();
-		NumericFieldMetadata.Type type = NumericFieldMetadata.Type.valueOf(typeAsText.toUpperCase());
+		MetaType type = MetaType.valueOf(typeAsText.toUpperCase());
 
 		switch(type) {
 		case INTEGER:

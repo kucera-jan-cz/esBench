@@ -33,8 +33,8 @@ public class Ipv4FieldFactory extends AbstractFieldFactory<String> implements Fi
 	private LongFieldFactory cidrToLongFactory(String cidrAddress) {
 		SubnetInfo info = new SubnetUtils(cidrAddress).getInfo();
 		long lowestAddrAsLong = AddressUtils.ipv4ToLong(info.getNetworkAddress());
-		long modulo = AddressUtils.numberOfAddress(cidrAddress);
-		LongFieldFactory factory = new LongFieldFactory(lowestAddrAsLong, 1L, modulo);
+		long highestAddrAsLong = lowestAddrAsLong + AddressUtils.numberOfAddress(cidrAddress) - 1;
+		LongFieldFactory factory = new LongFieldFactory(lowestAddrAsLong, highestAddrAsLong, 1L);
 		return factory;
 	}
 

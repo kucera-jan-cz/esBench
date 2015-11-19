@@ -1,8 +1,8 @@
 {
 	//General configuration for index
 	"general":{
-		"cache_tokens" : 100,
-		"index" : "wikipedia_index",
+		"version" : "0.1",		
+		//TODO - "cache_tokens" : 100,
 		//Default configuration for field types, if any value in *.fields is ommited, it's used from this configuration 
 		"default" : {
 			"string" : {},				
@@ -17,12 +17,34 @@
 		 	"type" : "TYPE",
 		 	"fields" : {
 			//Generate strings containing 1 or 2 words from defined vocabulary called "tokens"
+				{"name" : "title", "type" : "string", "tokens" : []},
+				{"name" : "title", "type" : "string", "tokens" : []},
+				{"name" : "title", "type" : "string", "tokens" : []},
+				{"name" : "category", "type" : "string", "tokens" : []},
+							
+				"string" : [
+					{"name" : "title", "tokens" : []},
+					{"name" : "title", "tokens" : []},
+					{"name" : "title", "tokens" : []},	
+				]							
+				"string" : {"name" : "title", "tokens" : []},
+				"string" : {"name" : "title", "tokens" : []},
+							
 				"title" : [
 					//Produces 2 string array whose values will have 2 tokens(words)
 					{"type": "string", "array": 3, "words" : 2, "tokens" : {"A::3135;;B::3000;;C::594"}},
 					//Produces single string whose values will have 3 tokens(words)
 					{"type": "string", "words" : 3, "tokens" : {"A::3135;;B::3000;;C::594"}}
 				],
+				"authors" : {"type" : "object", "array" : 2},
+				"authors.name" : {}
+				"authors.name" : { "type" : "convert", "toType" : "string"
+					"tokens" : [
+						{"type" : "boolean", "tokens" : "ALWAYS_TRUE"},
+					]
+				}
+				"authors.name" : {}
+				
 				"category" : {"type": "string", "words" : 1, "tokens" : {"Literature::50;;Arithmetic::20"}},
 				"visits" : [
 					{"type" : "integer", "from" : 0, "to" : 100, "step" : 1, "strategy" : "sequence"},

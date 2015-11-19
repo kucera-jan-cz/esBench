@@ -12,6 +12,7 @@
 		<elastic.version>2.0.0</elastic.version>
 		<commons.lang3.version>3.4</commons.lang3.version>
 		<commons.net.version>3.2</commons.net.version>
+		<commons.beanutils.version>1.9.2</commons.beanutils.version>
 	</properties>
 
 	<dependencies>
@@ -21,6 +22,11 @@
 			<version>5.0.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons.beanutils.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>

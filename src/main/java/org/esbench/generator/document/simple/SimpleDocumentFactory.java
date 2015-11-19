@@ -5,7 +5,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.esbench.generator.document.DocumentFactory;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;

@@ -1,0 +1,22 @@
+{
+	"index":"NAME",
+	"type":"TYPE",
+	"fields":{
+		"fBoolean":{
+			"type":"BOOLEAN",
+			"tokens":"ALWAYS_TRUE"
+		},
+		"fString":{
+			"type":"STRING",
+			"array":2,
+			"words":2,
+			"tokens":[
+				"a",
+				"b",
+				"c"
+			]
+			
+		}
+		
+	}
+}

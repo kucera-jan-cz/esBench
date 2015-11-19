@@ -1,34 +1,32 @@
 package org.esbench.generator.field.meta;
 
-import java.io.IOException;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NumericFieldMetadata extends FieldMetadata {
 	public enum Type {
 		BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE
 	}
 
-	private Type type;
-	private final Number from;
-	private final Number to;
-	private final Number step;
+	private Number from;
+	private Number to;
+	private Number step;
 
-	public NumericFieldMetadata(String fullPath, int valuesPerDoc, Type type, Number from, Number to, Number step) {
-		super(fullPath, Number.class, valuesPerDoc);
-		this.type = type;
+	@JsonCreator
+	public NumericFieldMetadata(@JsonProperty("type") MetaType type) {
+		setMetaType(type);
+	}
+
+	public NumericFieldMetadata(String fullPath, int valuesPerDoc, MetaType metaType, Number from, Number to, Number step) {
+		super(fullPath, metaType, valuesPerDoc);
 		this.from = from;
 		this.to = to;
 		this.step = step;
-	}
-
-	public Type getType() {
-		return type;
 	}
 
 	public Number getFrom() {
@@ -41,6 +39,18 @@ public class NumericFieldMetadata extends FieldMetadata {
 
 	public Number getStep() {
 		return step;
+	}
+
+	public void setFrom(Number from) {
+		this.from = from;
+	}
+
+	public void setTo(Number to) {
+		this.to = to;
+	}
+
+	public void setStep(Number step) {
+		this.step = step;
 	}
 
 	@Override
@@ -56,14 +66,5 @@ public class NumericFieldMetadata extends FieldMetadata {
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
-	}
-
-	@Override
-	public void specificMetadataToJSON(JsonGenerator generator) throws IOException {
-		// @TODO - decide whether to use numeric or string
-		// generator.writeNumberField("from", from);
-		// generator.writeStringField("to", to);
-		// generator.writeStringField("step", step);
-
 	}
 }
