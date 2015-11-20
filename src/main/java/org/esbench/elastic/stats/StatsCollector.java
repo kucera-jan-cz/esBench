@@ -3,6 +3,7 @@ package org.esbench.elastic.stats;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,6 +75,27 @@ public class StatsCollector {
 		this.indexName = indexName;
 	}
 
+	public List<IndexTypeMetadata> collectIndex() throws IOException {
+		GetMappingsResponse response = new GetMappingsRequestBuilder(client, GetMappingsAction.INSTANCE, indexName).get();
+		ImmutableOpenMap<String, MappingMetaData> mapping = response.getMappings().get(indexName);
+		String[] indexTypes = mapping.keys().toArray(String.class);
+		ObjectMapper mapper = new ObjectMapper();
+		List<IndexTypeMetadata> typesMetadata = new ArrayList<>();
+		for(String indexType : indexTypes) {
+			MappingMetaData meta = mapping.get(indexType);
+			LOGGER.info("Index: {} Type: {}", indexName, indexType);
+			String mappingsAsJson = meta.source().string();
+			LOGGER.info("JSON:\n{}", mappingsAsJson);
+
+			JsonNode root = mapper.readValue(mappingsAsJson, JsonNode.class);
+			JsonNode typeProp = root.path(indexType).path(PROPERTIES_PROP);
+			ObjectTypeMetadata typeMeta = parseConfiguration(indexType, typeProp, StringUtils.EMPTY, false);
+			typesMetadata.add(new IndexTypeMetadata(indexName, indexType, typeMeta.getInnerMetadata()));
+		}
+		return typesMetadata;
+	}
+
+	@Deprecated
 	public IndexMetadata collectMapping() throws IOException {
 		GetMappingsResponse response = new GetMappingsRequestBuilder(client, GetMappingsAction.INSTANCE, indexName).get();
 		ImmutableOpenMap<String, MappingMetaData> mapping = response.getMappings().get(indexName);
@@ -134,6 +156,9 @@ public class StatsCollector {
 	}
 
 	private <T extends FieldMetadata> List<FieldMetadata> collectNumericData(Collection<FieldInfo> fields, ExtendedStatsParser<T> parser) {
+		if(fields.isEmpty()) {
+			return Collections.emptyList();
+		}
 		List<FieldMetadata> metadata = new ArrayList<>(fields.size());
 		SearchRequestBuilder builder = createNumericSearchBuilder(fields);
 		SearchResponse response = client.search(builder.request()).actionGet();
@@ -154,6 +179,9 @@ public class StatsCollector {
 	}
 
 	private List<StringFieldMetadata> collectStrings(Collection<FieldInfo> fields) {
+		if(fields.isEmpty()) {
+			return Collections.emptyList();
+		}
 		SearchRequestBuilder builder = createStringSearchBuilder(fields);
 		List<StringFieldMetadata> metadata = new ArrayList<>(fields.size());
 		SearchResponse response = client.search(builder.request()).actionGet();
@@ -222,7 +250,7 @@ public class StatsCollector {
 			FilterAggregationBuilder aggregation = AggregationBuilders.filter(FILTER_AGG + info.getFullPath()).filter(filter).subAggregation(stats);
 			builder.addAggregation(createNestedIfNecessary(info, aggregation));
 		}
-		builder.setSize(ZERO_ITEMS);
+		builder.setIndices(indexName).setSize(ZERO_ITEMS);
 		return builder;
 	}
 

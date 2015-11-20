@@ -8,6 +8,7 @@ import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IPv4FieldMetadata;
+import org.esbench.generator.field.meta.MultiFieldMetadata;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 import org.esbench.generator.field.meta.ObjectTypeMetadata;
 import org.esbench.generator.field.meta.StringFieldMetadata;
@@ -33,9 +34,20 @@ public class JsonBuilderFactory {
 			return build((IPv4FieldMetadata) metadata);
 		} else if(metadata instanceof NumericFieldMetadata) {
 			return build((NumericFieldMetadata) metadata);
+		} else if(metadata instanceof MultiFieldMetadata) {
+			return build((MultiFieldMetadata) metadata);
 		} else {
 			throw new IllegalStateException("Unknown metadata: " + metadata);
 		}
+	}
+
+	private JsonBuilder build(MultiFieldMetadata metadata) {
+		List<JsonBuilder> builders = new ArrayList<>();
+		for(FieldMetadata fieldMeta : metadata.getFields()) {
+			builders.add(newInstance(fieldMeta));
+		}
+		MultiFieldBuilder multiBuilder = new MultiFieldBuilder(builders);
+		return multiBuilder;
 	}
 
 	private JsonBuilder build(IPv4FieldMetadata meta) {

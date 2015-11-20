@@ -1,0 +1,40 @@
+{
+  "version":"0.1",
+  "defaults":{
+    "BOOLEAN":{"type":"BOOLEAN", "array":1, "strategy":"SEQUENCE", "tokens":"TICK_TOCK"},
+    "STRING":{"type":"STRING", "array":1, "words":1, "strategy":"SEQUENCE", "tokens":[ ]},
+    "DATE":{"type":"DATE", "array":1, "strategy":"SEQUENCE", "from":"1970-01-01T00:00:00", "pattern":"yyyy-MM-dd'T'HH:mm:ss", "step":1, "to":"2015-12-31T23:59:59", "unit":"SECONDS"},
+    "INTEGER":{"type":"INTEGER", "array":1, "strategy":"SEQUENCE", "from":0, "step":1, "to":100},
+    "LONG":{"type":"LONG", "array":1, "strategy":"SEQUENCE", "from":0, "step":1, "to":1024},
+    "IP":{"type":"IP", "array":1, "strategy":"SEQUENCE", "cidrAddress":"192.168.0.0/24"},
+    "OBJECT":{"name":"object", "type":"OBJECT", "array":1, "fields":{ }}
+  },
+  "histogram":[ {
+    "index":"games_v04",
+    "type":"game",
+    "fields":{
+      "name":{"type":"STRING", "words":3, "tokens":[ "1", "2", "3", "4", "5", "a", "adventure", "age", "all", "american", "and", "at", "attack", "baseball", "battle", "battles", "battletech", "big", "black", "board", "box", "campaign", "card", "cards", "challenge", "city", "dark", "das", "day", "de", "death", "deck", "der", "des", "dice", "die", "dragon", "dungeon", "edition", "el", "expansion", "fire", "first", "football", "for", "from", "game", "games", "go", "great", "heroes", "high", "i", "ii", "in", "it", "junior", "king", "la", "last", "le", "lord", "monopoly", "n", "new", "no", "of", "on", "one", "operation", "or", "pack", "party", "pocket", "promo", "quest", "quiz", "race", "rings", "rules", "sea", "second", "set", "spiel", "star", "tactics", "the", "to", "trivia", "und", "uno", "up", "vs", "war", "wars", "with", "world", "you", "your", "zombie" ]},
+      "categories":{"type":"STRING", "words":2, "tokens":[ "Abstract Strategy", "Action / Dexterity", "Adventure", "Age of Reason", "American Civil War", "American Indian Wars", "American Revolutionary War", "American West", "Ancient", "Animals", "Arabian", "Aviation / Flight", "Bluffing", "Book", "Card Game", "Children's Game", "City Building", "Civil War", "Civilization", "Collectible Components", "Comic Book / Strip", "Deduction", "Dice", "Economic", "Educational", "Electronic", "Environmental", "Expansion for Base-game", "Exploration", "Fan Expansion", "Fantasy", "Farming", "Fighting", "Game System", "Horror", "Humor", "Industry / Manufacturing", "Korean War", "Mafia", "Math", "Mature / Adult", "Maze", "Medical", "Medieval", "Memory", "Miniatures", "Modern Warfare", "Movies / TV / Radio theme", "Murder/Mystery", "Music", "Mythology", "Napoleonic", "Nautical", "Negotiation", "Novel-based", "Number", "Party Game", "Pike and Shot", "Pirates", "Political", "Post-Napoleonic", "Prehistoric", "Print & Play", "Puzzle", "Racing", "Real-time", "Religious", "Renaissance", "Science Fiction", "Space Exploration", "Spies/Secret Agents", "Sports", "Territory Building", "Trains", "Transportation", "Travel", "Trivia", "Video Game Theme", "Vietnam War", "Wargame", "Word Game", "World War I", "World War II", "Zombies" ]},
+      "description":{"type":"STRING", "words":84, "tokens":[ "1", "2", "3", "4", "6", "a", "about", "all", "also", "an", "and", "any", "are", "as", "at", "based", "be", "board", "br", "but", "by", "can", "card", "cards", "dice", "different", "each", "end", "first", "for", "four", "from", "game", "games", "get", "has", "have", "his", "if", "in", "into", "is", "it", "make", "may", "more", "most", "move", "must", "new", "no", "not", "number", "of", "on", "one", "only", "or", "other", "out", "over", "play", "played", "player", "players", "playing", "points", "quot", "rules", "same", "set", "so", "some", "take", "that", "the", "their", "them", "then", "there", "these", "they", "this", "three", "time", "to", "turn", "two", "up", "use", "was", "when", "where", "which", "who", "will", "wins", "with", "you", "your" ]},
+      "designer":{"type":"STRING", "tokens":[ "a", "adam", "alan", "alex", "andreas", "andrew", "ben", "brian", "bruce", "c", "charles", "chris", "christian", "christopher", "craig", "d", "dan", "daniel", "dave", "david", "de", "e", "ed", "eric", "f", "frank", "g", "gary", "greg", "h", "heinz", "i", "ii", "j", "jackson", "james", "jason", "jean", "jeff", "jim", "john", "johnson", "jonathan", "joseph", "jr", "jürgen", "ken", "kevin", "klaus", "knizia", "kramer", "krassner", "l", "lang", "lloyd", "m", "marco", "mark", "markus", "martin", "matt", "matthew", "meister", "michael", "mike", "miller", "miranda", "p", "patrick", "paul", "peter", "petersen", "phil", "philip", "r", "ray", "reiner", "richard", "robert", "roberto", "rüttinger", "s", "schacht", "scott", "smith", "stefan", "stephen", "steve", "t", "terry", "teuber", "thomas", "tom", "uncredited", "uwe", "van", "w", "william", "wolfgang", "wrede" ]},
+      //Player numbers are <0,2000>, 'from' field is ommited since 'defaults' INTEGER has the same value   
+      "maxPlayers":{"type":"LONG", "to":2000},
+      //Player numbers are <1,6>, 99 is value when users don't fill value
+      "minPlayers": {"type": "MULTI", "fields" : [
+      		{"type":"LONG", "to":6},
+      		{"type":"LONG", "from": 99 "to":99}
+      ]},
+      "playingTime":{"type":"LONG", "to":60120},
+      
+      //Wraps object/nested fields with ability (also provides ability to create array of objects 
+      "statistics":{"name":"statistics", "type":"OBJECT", "fields":{
+          "statistics.commentCount":{"type":"LONG", "to":11027},
+          "statistics.owning":{"type":"LONG", "to":64906},
+          "statistics.rateCount":{"type":"LONG", "to":48593},
+          "statistics.trading":{"type":"LONG", "to":1110},
+          "statistics.wanting":{"type":"LONG", "to":1283}
+        }},
+      "yearPublished":{"type":"LONG", "from":-3500, "to":2016}
+    }
+  } ]
+}

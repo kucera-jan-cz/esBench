@@ -18,6 +18,7 @@ public final class ConfigurationConstants {
 	public static final String NAME_PROP = "name";
 	public static final String TYPE_PROP = "type";
 	public static final String ARRAY_PROP = "array";
+	public static final String STRATEGY_PROP = "strategy";
 
 	// Numeric and date properties
 	public static final String FROM_PROP = "from";

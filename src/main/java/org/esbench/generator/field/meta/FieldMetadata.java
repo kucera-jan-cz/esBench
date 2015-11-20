@@ -27,7 +27,7 @@ public abstract class FieldMetadata {
 	private MetaType metaType;
 	@JsonProperty(value = ConfigurationConstants.ARRAY_PROP)
 	private Integer valuesPerDocument;
-	private Strategy strategy = Strategy.SEQUENCE;
+	private Strategy strategy;
 
 	public FieldMetadata() {
 	}
@@ -37,6 +37,7 @@ public abstract class FieldMetadata {
 		setFullPath(fullPath);
 		this.metaType = metaType;
 		this.valuesPerDocument = valuesPerDoc;
+		this.strategy = Strategy.SEQUENCE;
 	}
 
 	public String getName() {

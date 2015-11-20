@@ -21,7 +21,7 @@ public class ConfigurationPrettyPrinter extends DefaultPrettyPrinter {
 	private List<Pattern> patterns;
 
 	public ConfigurationPrettyPrinter() {
-		this("/fields/[^/]*", "/defaults/[^/]*");
+		this("(/fields/[^/]*){1,}", "/defaults/[^/]*");
 	}
 
 	public ConfigurationPrettyPrinter(String... regexes) {

@@ -8,6 +8,7 @@ import org.esbench.generator.field.meta.IPv4FieldMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.MetadataConstants;
+import org.esbench.generator.field.meta.MultiFieldMetadata;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 import org.esbench.generator.field.meta.StringFieldMetadata;
 import org.slf4j.Logger;
@@ -38,8 +39,12 @@ public class AnnotationJsonTest {
 		NumericFieldMetadata longField = new NumericFieldMetadata("fLong", 1, MetaType.LONG, 0L, 1024L, 1L);
 		IPv4FieldMetadata ipMeta = new IPv4FieldMetadata("fIp", 1, "192.168.0.0/21");
 
-		IndexTypeMetadata meta = new IndexTypeMetadata("NAME", "TYPE",
-				Arrays.asList(stringField, MetadataConstants.DEFAULT_BOOLEAN_META, integerField, longField, ipMeta, MetadataConstants.DEFAULT_DATE_META));
+		StringFieldMetadata stringFieldA = new StringFieldMetadata("multiString", 1, 1, Arrays.asList("a", "b", "c"));
+		StringFieldMetadata stringFieldB = new StringFieldMetadata("multiString", 2, 2, Arrays.asList("x", "y", "z"));
+
+		MultiFieldMetadata multi = new MultiFieldMetadata("multiString", Arrays.asList(stringFieldA, stringFieldB));
+		IndexTypeMetadata meta = new IndexTypeMetadata("NAME", "TYPE", Arrays.asList(stringField, MetadataConstants.DEFAULT_BOOLEAN_META, integerField,
+				longField, ipMeta, MetadataConstants.DEFAULT_DATE_META, multi));
 		String json = mapper.writer(new ConfigurationPrettyPrinter()).writeValueAsString(meta);
 		LOGGER.info("\n{}", json);
 		IndexTypeMetadata metaCopy = mapper.readValue(json, IndexTypeMetadata.class);

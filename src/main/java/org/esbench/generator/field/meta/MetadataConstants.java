@@ -25,6 +25,8 @@ public final class MetadataConstants {
 
 	public static final ObjectTypeMetadata DEFAULT_OBJECT_META = new ObjectTypeMetadata("object", Collections.emptyList());
 
+	public static final MultiFieldMetadata DEFAULT_MULTI_META = new MultiFieldMetadata("multi", Collections.emptyList());
+
 	public static final ImmutableMap<MetaType, FieldMetadata> DEFAULT_META_BY_TYPE = ImmutableMap.<MetaType, FieldMetadata> builder()
 			.put(MetaType.BOOLEAN, DEFAULT_BOOLEAN_META)
 			.put(MetaType.STRING, DEFAULT_STRING_META)
@@ -33,6 +35,7 @@ public final class MetadataConstants {
 			.put(MetaType.LONG, DEFAULT_LONG_META)
 			.put(MetaType.IP, DEFAULT_IP_META)
 			.put(MetaType.OBJECT, DEFAULT_OBJECT_META)
+			.put(MetaType.MULTI, DEFAULT_MULTI_META)
 			.build();
 
 	private MetadataConstants() {

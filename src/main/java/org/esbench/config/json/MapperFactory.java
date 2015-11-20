@@ -7,7 +7,13 @@ import org.esbench.config.json.databind.IndexTypeDeserializer;
 import org.esbench.config.json.databind.IndexTypeSerializer;
 import org.esbench.config.json.databind.InstantDeserializer;
 import org.esbench.config.json.databind.InstantSerializer;
+import org.esbench.config.json.databind.MultiMetadataDeserializer;
+import org.esbench.config.json.databind.MultiMetadataSerializer;
+import org.esbench.config.json.databind.ObjectMetadataDeserializer;
+import org.esbench.config.json.databind.ObjectMetadataSerializer;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
+import org.esbench.generator.field.meta.MultiFieldMetadata;
+import org.esbench.generator.field.meta.ObjectTypeMetadata;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser;
@@ -22,12 +28,14 @@ public class MapperFactory {
 		SimpleModule module = new SimpleModule(MODULE_NAME, Version.unknownVersion());
 		DefaultFieldMetadataProvider defaultMetaProvider = new DefaultFieldMetadataProvider();
 		module.addSerializer(Instant.class, new InstantSerializer());
-		// module.addSerializer(ObjectTypeMetadata.class, new ObjectMetadataSerializer(defaultMetaProvider));
+		module.addSerializer(ObjectTypeMetadata.class, new ObjectMetadataSerializer(defaultMetaProvider));
 		module.addSerializer(IndexTypeMetadata.class, new IndexTypeSerializer(defaultMetaProvider));
+		module.addSerializer(MultiFieldMetadata.class, new MultiMetadataSerializer(defaultMetaProvider));
 
 		module.addDeserializer(Instant.class, new InstantDeserializer());
-		// module.addDeserializer(ObjectTypeMetadata.class, new ObjectMetadataDeserializer(defaultMetaProvider));
+		module.addDeserializer(ObjectTypeMetadata.class, new ObjectMetadataDeserializer(defaultMetaProvider));
 		module.addDeserializer(IndexTypeMetadata.class, new IndexTypeDeserializer(defaultMetaProvider));
+		module.addDeserializer(MultiFieldMetadata.class, new MultiMetadataDeserializer(defaultMetaProvider));
 		return module;
 	}
 

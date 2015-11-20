@@ -3,7 +3,6 @@ package org.esbench.config.json.databind;
 import java.io.IOException;
 
 import org.esbench.config.ConfigurationConstants;
-import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.ObjectTypeMetadata;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -13,10 +12,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 public class ObjectMetadataSerializer extends JsonSerializer<ObjectTypeMetadata> {
-	private final DefaultFieldMetadataProvider defaultMetaProvider;
+	private final FieldsParser listSerializer;
 
 	public ObjectMetadataSerializer(DefaultFieldMetadataProvider defaultMetaProvider) {
-		this.defaultMetaProvider = defaultMetaProvider;
+		this.listSerializer = new FieldsParser(defaultMetaProvider);
 	}
 
 	@Override
@@ -27,12 +26,8 @@ public class ObjectMetadataSerializer extends JsonSerializer<ObjectTypeMetadata>
 		if(value.getValuesPerDocument() != null) {
 			gen.writeNumberField(ConfigurationConstants.ARRAY_PROP, value.getValuesPerDocument());
 		}
+		listSerializer.serialize(value.getInnerMetadata(), gen, serializers);
 		gen.writeEndObject();
-
-		for(FieldMetadata field : value.getInnerMetadata()) {
-			FieldMetadata diff = defaultMetaProvider.getDiff(field);
-			serializers.defaultSerializeField(field.getFullPath(), diff, gen);
-		}
 	}
 
 	@Override
@@ -43,13 +38,10 @@ public class ObjectMetadataSerializer extends JsonSerializer<ObjectTypeMetadata>
 		if(value.getValuesPerDocument() != null) {
 			gen.writeNumberField(ConfigurationConstants.ARRAY_PROP, value.getValuesPerDocument());
 		}
-		typeSer.writeTypeSuffixForObject(value, gen);
 		if(value.getInnerMetadata() != null) {
-			for(FieldMetadata field : value.getInnerMetadata()) {
-				FieldMetadata diff = defaultMetaProvider.getDiff(field);
-				serializers.defaultSerializeField(field.getFullPath(), diff, gen);
-			}
+			listSerializer.serialize(value.getInnerMetadata(), gen, serializers);
 		}
+		typeSer.writeTypeSuffixForObject(value, gen);
 	}
 
 }
