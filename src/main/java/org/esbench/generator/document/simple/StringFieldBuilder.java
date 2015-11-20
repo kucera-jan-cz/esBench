@@ -17,9 +17,4 @@ public class StringFieldBuilder extends AbstractFieldBuilder<String> {
 	protected void writeValue(JsonGenerator gen, int instanceId) throws IOException {
 		gen.writeString(factory.newInstance(instanceId));
 	}
-
-	@Override
-	protected void writeValueWithName(JsonGenerator gen, int instanceId) throws IOException {
-		gen.writeStringField(meta.getName(), factory.newInstance(instanceId));
-	}
 }

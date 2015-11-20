@@ -62,11 +62,7 @@ public class JsonBuilderFactory {
 
 	private JsonBuilder build(NumericFieldMetadata meta) {
 		FieldFactory<? extends Number> factory = buildNumericFactory(meta);
-		if(meta.getValuesPerDocument() < 2) {
-			return NumericFieldBuilder.newInstance(meta, factory);
-		} else {
-			return NumericArrayFieldBuilder.newInstance(meta, factory);
-		}
+		return NumericFieldBuilder.newInstance(meta, factory);
 	}
 
 	private FieldFactory<? extends Number> buildNumericFactory(NumericFieldMetadata meta) {
@@ -76,6 +72,7 @@ public class JsonBuilderFactory {
 		case LONG:
 			return new LongFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
 		default:
+			// @TODO - implement rest of numeric factories
 			throw new IllegalArgumentException("Unsupported type: " + meta.getMetaType());
 		}
 	}

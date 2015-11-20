@@ -17,9 +17,4 @@ public class BooleanFieldBuilder extends AbstractFieldBuilder<Boolean> {
 	protected void writeValue(JsonGenerator gen, int instanceId) throws IOException {
 		gen.writeBoolean(factory.newInstance(instanceId));
 	}
-
-	@Override
-	protected void writeValueWithName(JsonGenerator gen, int instanceId) throws IOException {
-		gen.writeBooleanField(meta.getName(), factory.newInstance(instanceId));
-	}
 }

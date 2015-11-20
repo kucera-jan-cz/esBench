@@ -22,10 +22,4 @@ public class DateFieldBuilder extends AbstractFieldBuilder<Instant> {
 		Instant date = factory.newInstance(instanceId);
 		gen.writeString(formatter.format(date));
 	}
-
-	@Override
-	protected void writeValueWithName(JsonGenerator gen, int instanceId) throws IOException {
-		Instant date = factory.newInstance(instanceId);
-		gen.writeStringField(meta.getName(), formatter.format(date));
-	}
 }

@@ -16,6 +16,7 @@ public abstract class AbstractFieldBuilderTest {
 		builder.write(generator, instanceId);
 		generator.writeEndObject();
 		generator.flush();
-		return writer.toString();
+		String json = writer.toString();
+		return json;
 	}
 }

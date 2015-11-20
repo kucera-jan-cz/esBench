@@ -29,11 +29,10 @@ public abstract class AbstractFieldBuilder<T> implements JsonBuilder {
 			}
 			gen.writeEndArray();
 		} else {
-			writeValueWithName(gen, instanceId);
+			gen.writeFieldName(meta.getName());
+			writeValue(gen, instanceId);
 		}
 	}
 
 	protected abstract void writeValue(JsonGenerator gen, int instanceId) throws IOException;
-
-	protected abstract void writeValueWithName(JsonGenerator gen, int instanceId) throws IOException;
 }
