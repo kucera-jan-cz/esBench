@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -43,13 +42,6 @@ public class FieldsParser {
 			serializers.defaultSerializeField(fieldName, diff, gen);
 		}
 		gen.writeEndObject();
-	}
-
-	public List<FieldMetadata> deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
-		ObjectNode root = (ObjectNode) mapper.readTree(jsonParser);
-		List<FieldMetadata> fields = getFields(mapper, root);
-		return fields;
 	}
 
 	public List<FieldMetadata> getFields(ObjectMapper mapper, ObjectNode root) throws JsonParseException, IOException {

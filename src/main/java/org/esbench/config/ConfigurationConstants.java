@@ -5,8 +5,6 @@ public final class ConfigurationConstants {
 	public static final String CURRENT_VERSION = "0.1";
 	// Global
 	public static final String VERSION_PROP = "version";
-	@Deprecated
-	public static final String GENERAL_PROP = "general";
 	public static final String DEFAULTS_PROP = "defaults";
 
 	// Index related

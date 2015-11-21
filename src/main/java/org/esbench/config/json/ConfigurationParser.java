@@ -3,18 +3,10 @@ package org.esbench.config.json;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.esbench.config.Configuration;
 import org.esbench.config.ConfigurationConstants;
@@ -36,8 +28,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.io.Resources;
 
 /**
@@ -79,10 +69,6 @@ public class ConfigurationParser {
 		JavaType list = updatedMapper.getTypeFactory().constructCollectionType(List.class, IndexTypeMetadata.class);
 		JsonParser histogramParser = root.path(ConfigurationConstants.HISTOGRAM_PROP).traverse(updatedMapper);
 		List<IndexTypeMetadata> indiceTypes = updatedMapper.readValue(histogramParser, list);
-		// for(IndexTypeMetadata indexType : indiceTypes) {
-		// List<FieldMetadata> structuredFields = createObjectStructure(indexType.getFields());
-		// indexType.setFields(structuredFields);
-		// }
 
 		Configuration configuration = new Configuration(version, defaults, indiceTypes);
 		return configuration;
@@ -129,42 +115,6 @@ public class ConfigurationParser {
 		defaults.values().stream().forEach(m -> defaultMetaProvider.registerDefaultMetadata(m));
 		module.addDeserializer(IndexTypeMetadata.class, deserializer);
 		return module;
-	}
-
-	private List<FieldMetadata> createObjectStructure(List<FieldMetadata> fields) {
-		List<FieldMetadata> typesAsTree = new ArrayList<>();
-
-		Multimap<String, FieldMetadata> fieldByFullName = ArrayListMultimap.create();
-		fields.stream().forEach(m -> fieldByFullName.put(m.getFullPath(), m));
-
-		Predicate<FieldMetadata> simpleTypesFilter = m -> !MetaType.OBJECT.equals(m.getMetaType()) && !m.getFullPath().contains(".");
-		List<FieldMetadata> simpleRootFiels = fields.stream().filter(simpleTypesFilter).collect(Collectors.toList());
-		typesAsTree.addAll(simpleRootFiels);
-
-		LOGGER.debug("Simple: {}", simpleRootFiels.stream().map(m -> m.getFullPath()).collect(Collectors.joining(",")));
-
-		Pattern objPattern = Pattern.compile("([^\\.]*)\\.([^\\.]+)");
-
-		Predicate<FieldMetadata> objectTypeFilter = m -> objPattern.matcher(m.getFullPath()).matches();
-		List<FieldMetadata> objectFields = fields.stream().filter(objectTypeFilter).collect(Collectors.toList());
-		LOGGER.debug("Object fields: {}", objectFields.stream().map(m -> m.getFullPath()).collect(Collectors.joining(",")));
-
-		Comparator<String> sortByLevel = (a, b) -> StringUtils.countMatches(a, ".") - StringUtils.countMatches(b, ".");
-		Function<FieldMetadata, String> toFullName = m -> getParent(m.getFullPath());
-		Set<String> objectNames = objectFields.stream().map(toFullName).sorted(sortByLevel).collect(Collectors.toSet());
-		LOGGER.debug("Objects: {}", objectNames);
-
-		return typesAsTree;
-	}
-
-	@Deprecated
-	// @TODO - until further notice this method is prototype
-	private List<FieldMetadata> organizeObjects(Set<String> objectNames, Multimap<String, FieldMetadata> fieldByFullName) {
-		return null;
-	}
-
-	private String getParent(String value) {
-		return value.substring(0, value.lastIndexOf('.'));
 	}
 
 	private Map<MetaType, FieldMetadata> getDefaults(ObjectMapper mapper, JsonNode defaultsNode) throws IOException {

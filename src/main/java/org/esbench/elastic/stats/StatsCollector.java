@@ -89,7 +89,7 @@ public class StatsCollector {
 
 			JsonNode root = mapper.readValue(mappingsAsJson, JsonNode.class);
 			JsonNode typeProp = root.path(indexType).path(PROPERTIES_PROP);
-			ObjectTypeMetadata typeMeta = parseConfiguration(indexType, typeProp, StringUtils.EMPTY, false);
+			ObjectTypeMetadata typeMeta = parseConfiguration(typeProp, StringUtils.EMPTY, false);
 			typesMetadata.add(new IndexTypeMetadata(indexName, indexType, typeMeta.getInnerMetadata()));
 		}
 		return typesMetadata;
@@ -110,14 +110,14 @@ public class StatsCollector {
 
 			JsonNode root = mapper.readValue(mappingsAsJson, JsonNode.class);
 			JsonNode typeProp = root.path(indexType).path(PROPERTIES_PROP);
-			ObjectTypeMetadata typeMeta = parseConfiguration(indexType, typeProp, StringUtils.EMPTY, false);
+			ObjectTypeMetadata typeMeta = parseConfiguration(typeProp, StringUtils.EMPTY, false);
 			typesMetadata.add(new IndexTypeMetadata(indexName, indexType, typeMeta.getInnerMetadata()));
 		}
 		IndexMetadata indexMeta = new IndexMetadata(indexName, typesMetadata);
 		return indexMeta;
 	}
 
-	private ObjectTypeMetadata parseConfiguration(String parentName, JsonNode typeProp, String parentFullPath, boolean nested) {
+	private ObjectTypeMetadata parseConfiguration(JsonNode typeProp, String parentFullPath, boolean nested) {
 		Validate.isTrue(!typeProp.isMissingNode(), "Parsing of mapping failed to look 'properties'");
 		List<FieldMetadata> innerMetadata = new ArrayList<>();
 		Multimap<String, FieldInfo> fieldsByteType = ArrayListMultimap.create();
@@ -133,7 +133,7 @@ public class StatsCollector {
 
 			if(fieldTypeJson.isMissingNode() || NESTED_TYPE.equals(fieldType)) {
 				boolean fieldNested = nested || NESTED_TYPE.equals(fieldType);
-				ObjectTypeMetadata objectFields = parseConfiguration(name, fieldJson.path(PROPERTIES_PROP), fullFieldName, fieldNested);
+				ObjectTypeMetadata objectFields = parseConfiguration(fieldJson.path(PROPERTIES_PROP), fullFieldName, fieldNested);
 				innerMetadata.add(objectFields);
 			} else {
 				fieldsByteType.put(fieldType, info);
@@ -163,7 +163,6 @@ public class StatsCollector {
 		SearchRequestBuilder builder = createNumericSearchBuilder(fields);
 		SearchResponse response = client.search(builder.request()).actionGet();
 		for(FieldInfo info : fields) {
-			// InternalFilter filter = response.getAggregations().get(FILTER_AGG + info.getFullPath());
 			InternalFilter filter = getAggregation(response, info, FILTER_AGG);
 			ExtendedStats stats = (ExtendedStats) filter.getAggregations().get(EXTENDED_STATS_AGG + info.getFullPath());
 			LOGGER.debug("Field {} total: {} MAX: {} MIN: {}", info.getFullPath(), stats.getCount(), stats.getMaxAsString(), stats.getMinAsString());

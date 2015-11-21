@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 public abstract class AbstractFieldBuilder<T> implements JsonBuilder {
 	protected FieldMetadata meta;
 	protected FieldFactory<T> factory;
-	private boolean isArray;
+	private final boolean isArray;
 
 	public AbstractFieldBuilder(FieldMetadata meta, FieldFactory<T> factory) {
 		this.meta = meta;

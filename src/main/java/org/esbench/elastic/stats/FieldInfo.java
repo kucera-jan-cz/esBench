@@ -3,9 +3,9 @@ package org.esbench.elastic.stats;
 import com.fasterxml.jackson.databind.JsonNode;
 
 class FieldInfo {
-	private String fullPath;
-	private boolean nested;
-	private JsonNode json;
+	private final String fullPath;
+	private final boolean nested;
+	private final JsonNode json;
 
 	public FieldInfo(String fullFieldName, boolean nested, JsonNode json) {
 		this.fullPath = fullFieldName;
