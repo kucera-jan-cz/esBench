@@ -1,9 +1,13 @@
 package org.esbench.generator.field.meta;
 
+import static org.esbench.config.ConfigurationConstants.ARRAY_PROP;
+import static org.esbench.config.ConfigurationConstants.NAME_PROP;
+import static org.esbench.config.ConfigurationConstants.STRATEGY_PROP;
+import static org.esbench.config.ConfigurationConstants.TYPE_PROP;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.esbench.config.ConfigurationConstants;
 import org.esbench.config.json.databind.FieldMetadataTypeIdResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,18 +18,18 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = ConfigurationConstants.TYPE_PROP, visible = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CUSTOM, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = TYPE_PROP, visible = true)
 @JsonTypeIdResolver(FieldMetadataTypeIdResolver.class)
-@JsonPropertyOrder(value = { ConfigurationConstants.TYPE_PROP, ConfigurationConstants.ARRAY_PROP }, alphabetic = true)
+@JsonPropertyOrder(value = { TYPE_PROP, ARRAY_PROP, STRATEGY_PROP })
 public abstract class FieldMetadata {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldMetadata.class);
 	@JsonIgnore
 	private String name;
 	@JsonIgnore
 	private String fullPath;
-	@JsonProperty(value = ConfigurationConstants.TYPE_PROP)
+	@JsonProperty(value = TYPE_PROP)
 	private MetaType metaType;
-	@JsonProperty(value = ConfigurationConstants.ARRAY_PROP)
+	@JsonProperty(value = ARRAY_PROP)
 	private Integer valuesPerDocument;
 	private Strategy strategy;
 
@@ -66,7 +70,7 @@ public abstract class FieldMetadata {
 		this.name = name;
 	}
 
-	@JsonProperty(value = ConfigurationConstants.NAME_PROP)
+	@JsonProperty(value = NAME_PROP)
 	public void setFullPath(String value) {
 		if(value == null) {
 			LOGGER.warn("Trying to set null fullpath");

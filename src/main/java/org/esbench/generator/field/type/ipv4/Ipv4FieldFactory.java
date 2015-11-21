@@ -4,13 +4,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.esbench.generator.field.AbstractFieldFactory;
-import org.esbench.generator.field.FiniteValueFieldFactory;
 import org.esbench.generator.field.type.numeric.LongFieldFactory;
 import org.esbench.generator.field.utils.AddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Ipv4FieldFactory extends AbstractFieldFactory<String> implements FiniteValueFieldFactory<String> {
+public class Ipv4FieldFactory extends AbstractFieldFactory<String> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Ipv4FieldFactory.class);
 	private final String address;
 	private final LongFieldFactory longFactory;
@@ -36,11 +35,6 @@ public class Ipv4FieldFactory extends AbstractFieldFactory<String> implements Fi
 		long highestAddrAsLong = lowestAddrAsLong + AddressUtils.numberOfAddress(cidrAddress) - 1;
 		LongFieldFactory factory = new LongFieldFactory(lowestAddrAsLong, highestAddrAsLong, 1L);
 		return factory;
-	}
-
-	@Override
-	public long uniqueValues() {
-		return longFactory.getModulo();
 	}
 
 }
