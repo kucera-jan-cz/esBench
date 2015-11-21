@@ -1,0 +1,36 @@
+{
+	//General configuration for index
+	"version" : "0.1",		
+	//TODO - "cache_tokens" : 100,
+	//Default configuration for field types, if any value in *.fields is ommited, it's used from this configuration 
+	"defaults" : {
+		"BOOLEAN" : {"type": "BOOLEAN", "tokens" : "TICK_TOCK"},
+		"INTEGER" : {"type": "INTEGER", "from" : 0, "to" : 100, "step" : 5, "strategy" : "SEQUENCE"},
+		"DATE" : {"type": "DATE", "step" : 1, "unit": "MINUTES", "strategy" : "SEQUENCE"}
+	},
+	"histogram" : [
+		 {
+		 	"index" : "NAME",
+		 	"type" : "TYPE",
+		 	"fields" : {
+				//Generate strings containing 1 or 2 words from defined vocabulary called tokens
+				"title" : {"type": "MULTI", "fields" : [
+					//Produces 2 string array whose values will have 2 tokens(words)
+					{"type": "STRING", "array": 3, "words" : 2, "tokens" : ["a", "b", "c"]},
+					//Produces single string whose values will have 3 tokens(words)
+					{"type": "STRING", "words" : 3, "tokens" : ["x", "y", "z"]}	
+				  ]
+				},
+				"type" : {"type": "STRING", "words" : 3, "tokens" : ["x", "y", "z"]},
+				"controversial" :  {"type" : "BOOLEAN", "tokens" : "ALWAYS_TRUE"},
+				"latest" :  {"type" : "BOOLEAN"},
+				"page_views" : {"type" : "INTEGER", "from" : 50},
+			    "authors": {"name":"authors", "type":"OBJECT", "fields":{
+			    	"authors.likes":{"type":"LONG", "from":50, "step":5, "to":1000000},
+			        "authors.reviews":{"type":"STRING", "array":2, "tokens":[ "L1", "L2", "L3" ]}
+				  }},
+				"lastUpdate" : {"type" : "DATE", "from" : "2015-01-01T00:00:00", "to" : "2015-12-31T23:59:59", "step" : 5}
+			}
+		}
+	]		
+}

@@ -1,4 +1,4 @@
-package org.esbench.config.json;
+package org.esbench.elastic.stats;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -19,7 +19,7 @@ import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
 import org.esbench.config.Configuration;
 import org.esbench.config.ConfigurationConstants;
-import org.esbench.elastic.stats.StatsCollector;
+import org.esbench.config.json.ConfigurationParser;
 import org.esbench.generator.field.meta.IndexMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;

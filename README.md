@@ -1,5 +1,7 @@
 # esBench
 
+![alt text](https://travis-ci.org/kucera-jan-cz/esBench.svg?branch=master "Logo Title Text 1")
+
 esBench is performance and unit test tool for generating ElasticSearch documents based on existing data. 
 
 ##Example format of configuration
