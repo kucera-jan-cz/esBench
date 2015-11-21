@@ -1,5 +1,11 @@
 package org.esbench.generator.field.meta;
 
+import static org.esbench.config.ConfigurationConstants.ARRAY_PROP;
+import static org.esbench.config.ConfigurationConstants.STRATEGY_PROP;
+import static org.esbench.config.ConfigurationConstants.TOKENS_PROP;
+import static org.esbench.config.ConfigurationConstants.TYPE_PROP;
+import static org.esbench.config.ConfigurationConstants.WORDS_PROP;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,15 +15,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.esbench.config.ConfigurationConstants;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder(value = { TYPE_PROP, ARRAY_PROP, STRATEGY_PROP, WORDS_PROP, TOKENS_PROP })
 public class StringFieldMetadata extends FieldMetadata {
-	@JsonProperty(value = ConfigurationConstants.WORDS_PROP)
+	@JsonProperty(value = WORDS_PROP)
 	private Integer tokensPerValue;
-	@JsonProperty(value = ConfigurationConstants.TOKENS_PROP)
+	@JsonProperty(value = TOKENS_PROP)
 	private List<String> tokens;
 
 	@JsonCreator
