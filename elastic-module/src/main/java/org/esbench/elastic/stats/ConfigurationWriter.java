@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import org.elasticsearch.client.Client;
-import org.esbench.config.Configuration;
-import org.esbench.config.ConfigurationConstants;
-import org.esbench.config.json.ConfigurationParser;
 import org.esbench.generator.field.meta.IndexMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
+import org.esbench.workload.Workload;
+import org.esbench.workload.WorkloadConstants;
+import org.esbench.workload.json.WorkloadParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +28,8 @@ public class ConfigurationWriter {
 		IndexMetadata indexMetadata = collector.collectMapping();
 
 		StringWriter writer = new StringWriter();
-		ConfigurationParser parser = new ConfigurationParser();
-		Configuration config = new Configuration(ConfigurationConstants.CURRENT_VERSION, MetadataConstants.DEFAULT_META_BY_TYPE, indexMetadata.getTypes());
+		WorkloadParser parser = new WorkloadParser();
+		Workload config = new Workload(WorkloadConstants.CURRENT_VERSION, MetadataConstants.DEFAULT_META_BY_TYPE, indexMetadata.getTypes());
 		parser.parse(writer, config);
 
 		LOGGER.info("Configuration:\n{}", writer.toString());

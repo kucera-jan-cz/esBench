@@ -1,0 +1,6 @@
+esbench command [options]
+
+Commands:
+	collect		- Collects workload from elasticsearch
+	insert  	- Insert defined number of documents to elasticsearch
+Options:

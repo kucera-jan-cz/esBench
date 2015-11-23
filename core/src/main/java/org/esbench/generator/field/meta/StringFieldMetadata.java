@@ -1,10 +1,10 @@
 package org.esbench.generator.field.meta;
 
-import static org.esbench.config.ConfigurationConstants.ARRAY_PROP;
-import static org.esbench.config.ConfigurationConstants.STRATEGY_PROP;
-import static org.esbench.config.ConfigurationConstants.TOKENS_PROP;
-import static org.esbench.config.ConfigurationConstants.TYPE_PROP;
-import static org.esbench.config.ConfigurationConstants.WORDS_PROP;
+import static org.esbench.workload.WorkloadConstants.ARRAY_PROP;
+import static org.esbench.workload.WorkloadConstants.STRATEGY_PROP;
+import static org.esbench.workload.WorkloadConstants.TOKENS_PROP;
+import static org.esbench.workload.WorkloadConstants.TYPE_PROP;
+import static org.esbench.workload.WorkloadConstants.WORDS_PROP;
 
 import java.util.ArrayList;
 import java.util.Collections;

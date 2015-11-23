@@ -6,7 +6,7 @@
 		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>core</artifactId>
-	<description>Core library for building fields and documents for performance and integration testing.</description>
+	<description>Core library for building JSON documents for performance and integration testing.</description>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -22,10 +22,12 @@
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>

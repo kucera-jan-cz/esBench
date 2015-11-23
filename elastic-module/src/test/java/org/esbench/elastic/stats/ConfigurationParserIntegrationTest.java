@@ -17,14 +17,14 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuild
 import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
-import org.esbench.config.Configuration;
-import org.esbench.config.ConfigurationConstants;
-import org.esbench.config.json.ConfigurationParser;
 import org.esbench.generator.field.meta.IndexMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
 import org.esbench.testng.AbstractSharedElasticSearchIntegrationTest;
 import org.esbench.testng.ResourcesUtils;
+import org.esbench.workload.Workload;
+import org.esbench.workload.WorkloadConstants;
+import org.esbench.workload.json.WorkloadParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -69,8 +69,8 @@ public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSea
 		assertEquals(indexMeta.getName(), INDEX_NAME);
 		assertEquals(indexMeta.getTypes().size(), 1);
 		IndexTypeMetadata meta = indexMeta.getTypes().get(0);
-		Configuration config = new Configuration(ConfigurationConstants.CURRENT_VERSION, MetadataConstants.DEFAULT_META_BY_TYPE, Arrays.asList(meta));
-		ConfigurationParser parser = new ConfigurationParser();
+		Workload config = new Workload(WorkloadConstants.CURRENT_VERSION, MetadataConstants.DEFAULT_META_BY_TYPE, Arrays.asList(meta));
+		WorkloadParser parser = new WorkloadParser();
 		StringWriter writer = new StringWriter();
 		parser.parse(writer, config);
 		LOGGER.info("\n{}", writer.toString());

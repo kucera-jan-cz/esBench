@@ -5,8 +5,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.esbench.config.ConfigurationConstants;
 import org.esbench.generator.field.FieldConstants;
+import org.esbench.workload.WorkloadConstants;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,7 +16,7 @@ public class BooleanFieldMetadata extends FieldMetadata {
 		ALWAYS_TRUE, ALWAYS_FALSE, TICK_TOCK
 	};
 
-	@JsonProperty(value = ConfigurationConstants.TOKENS_PROP)
+	@JsonProperty(value = WorkloadConstants.TOKENS_PROP)
 	private Type booleanType;
 
 	public BooleanFieldMetadata() {

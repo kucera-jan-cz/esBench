@@ -1,14 +1,14 @@
 package org.esbench.generator.field.meta;
 
-import static org.esbench.config.ConfigurationConstants.ARRAY_PROP;
-import static org.esbench.config.ConfigurationConstants.NAME_PROP;
-import static org.esbench.config.ConfigurationConstants.STRATEGY_PROP;
-import static org.esbench.config.ConfigurationConstants.TYPE_PROP;
+import static org.esbench.workload.WorkloadConstants.ARRAY_PROP;
+import static org.esbench.workload.WorkloadConstants.NAME_PROP;
+import static org.esbench.workload.WorkloadConstants.STRATEGY_PROP;
+import static org.esbench.workload.WorkloadConstants.TYPE_PROP;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.esbench.config.json.databind.FieldMetadataTypeIdResolver;
+import org.esbench.workload.json.databind.FieldMetadataTypeIdResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
