@@ -40,7 +40,7 @@ public class EsBenchCommandLine {
 	private static final String CMD = "cmd";
 	private static final Logger LOGGER = LoggerFactory.getLogger(EsBenchCommandLine.class);
 
-	private void processArgs(String... args) throws IOException, InterruptedException {
+	private void processArgs(String... args) throws IOException {
 		if(args.length == 0) {
 			displayHelp(0);
 		}
@@ -57,7 +57,7 @@ public class EsBenchCommandLine {
 
 	}
 
-	private void executeCommand(String command, Properties properties) throws IOException, InterruptedException {
+	private void executeCommand(String command, Properties properties) throws IOException {
 		switch(command) {
 		case INSERT_CMD:
 			insert(properties);
@@ -70,7 +70,7 @@ public class EsBenchCommandLine {
 		}
 	}
 
-	private void insert(Properties properties) throws IOException, InterruptedException {
+	private void insert(Properties properties) throws IOException {
 		DefaultProperties props = new DefaultProperties(properties);
 		Client client = new ElasticClientBuilder().withProperties(props).build();
 		ClientSender sender = new ClientSender(client);
@@ -128,12 +128,11 @@ public class EsBenchCommandLine {
 	}
 
 	/**
-	 *
+	 * Executes appropriate action based on given args.
 	 * @param args arguments for main method
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException when configuration manipulation or internal issue appears
 	 */
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) throws IOException {
 		EsBenchCommandLine cmd = new EsBenchCommandLine();
 		cmd.processArgs(args);
 	}

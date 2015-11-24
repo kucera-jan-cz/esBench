@@ -8,6 +8,10 @@ import org.esbench.generator.field.meta.FieldMetadata;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
+/**
+ * Base abstract class for JSONBuilders which handles single value/array fields. 
+ * @param <T> defines type which given FieldFactory must produce. 
+ */
 public abstract class AbstractFieldBuilder<T> implements JsonBuilder {
 	protected FieldMetadata meta;
 	protected FieldFactory<T> factory;
@@ -34,5 +38,11 @@ public abstract class AbstractFieldBuilder<T> implements JsonBuilder {
 		}
 	}
 
-	protected abstract void writeValue(JsonGenerator gen, int instanceId) throws IOException;
+	/**
+	 * Writes only value (not field name or array) to Jackson's JSONGenerator generator.
+	 * @param generator for writing value to JSON
+	 * @param instanceId for creating unique field value
+	 * @throws IOException when serialization fails for any reason
+	 */
+	protected abstract void writeValue(JsonGenerator generator, int instanceId) throws IOException;
 }

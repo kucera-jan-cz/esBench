@@ -3,7 +3,7 @@ package org.esbench.generator.field;
 /**
  * Constant class for field package.
  */
-public class FieldConstants {
+public final class FieldConstants {
 	/**
 	 * Constant represents field with single value (ergo non-array field).
 	 */

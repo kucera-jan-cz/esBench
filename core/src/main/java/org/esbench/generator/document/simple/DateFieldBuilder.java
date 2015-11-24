@@ -9,6 +9,9 @@ import org.esbench.generator.field.meta.DateFieldMetadata;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
+/**
+ * Serializes Instant fields to JSON.
+ */
 public class DateFieldBuilder extends AbstractFieldBuilder<Instant> {
 	private final DateTimeFormatter formatter;
 

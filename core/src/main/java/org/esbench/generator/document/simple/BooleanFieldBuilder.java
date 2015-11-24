@@ -7,6 +7,9 @@ import org.esbench.generator.field.meta.BooleanFieldMetadata;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
+/**
+ * Serializes Boolean fields to JSON.
+ */
 public class BooleanFieldBuilder extends AbstractFieldBuilder<Boolean> {
 
 	public BooleanFieldBuilder(BooleanFieldMetadata meta, FieldFactory<Boolean> factory) {

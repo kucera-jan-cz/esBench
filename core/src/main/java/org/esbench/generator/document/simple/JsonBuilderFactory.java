@@ -3,6 +3,7 @@ package org.esbench.generator.document.simple;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.Validate;
 import org.esbench.generator.field.FieldFactory;
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.DateFieldMetadata;
@@ -15,13 +16,25 @@ import org.esbench.generator.field.meta.StringFieldMetadata;
 import org.esbench.generator.field.type.bool.BooleanFieldFactory;
 import org.esbench.generator.field.type.date.DateFieldFactory;
 import org.esbench.generator.field.type.ipv4.Ipv4FieldFactory;
+import org.esbench.generator.field.type.numeric.ByteFieldFactory;
+import org.esbench.generator.field.type.numeric.DoubleFieldFactory;
+import org.esbench.generator.field.type.numeric.FloatFieldFactory;
 import org.esbench.generator.field.type.numeric.IntegerFieldFactory;
 import org.esbench.generator.field.type.numeric.LongFieldFactory;
+import org.esbench.generator.field.type.numeric.ShortFieldFactory;
 import org.esbench.generator.field.type.text.StringFieldFactory;
 
+/**
+ * Creates implementation of JSONBuilders based on given FieldMetadata.
+ */
 public class JsonBuilderFactory {
-
+	/**
+	 * Based on ginve metadata creates appropriate JsonBuilder.
+	 * @param metadata for concrete type of document's field
+	 * @return JsonBuilder which corresponds to given metadata
+	 */
 	public JsonBuilder newInstance(FieldMetadata metadata) {
+		Validate.notNull(metadata);
 		if(metadata instanceof StringFieldMetadata) {
 			return build((StringFieldMetadata) metadata);
 		} else if(metadata instanceof BooleanFieldMetadata) {
@@ -83,6 +96,15 @@ public class JsonBuilderFactory {
 			return new IntegerFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
 		case LONG:
 			return new LongFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
+		case DOUBLE:
+			return new DoubleFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
+		case FLOAT:
+			return new FloatFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
+		case SHORT:
+			return new ShortFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
+		case BYTE:
+			return new ByteFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
+
 		default:
 			// @TODO - implement rest of numeric factories
 			throw new IllegalArgumentException("Unsupported type: " + meta.getMetaType());
@@ -97,7 +119,6 @@ public class JsonBuilderFactory {
 	}
 
 	private List<JsonBuilder> build(List<? extends FieldMetadata> metadata) {
-		// @TODO - implement dedup here
 		List<JsonBuilder> builders = new ArrayList<>();
 		for(FieldMetadata meta : metadata) {
 			builders.add(newInstance(meta));
