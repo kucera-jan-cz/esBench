@@ -22,7 +22,7 @@
       //Player numbers are <1,6>, 99 is value when users don't fill value
       "minPlayers": {"type": "MULTI", "fields" : [
       		{"type":"LONG", "to":6},
-      		{"type":"LONG", "from": 99 "to":99}
+      		{"type":"LONG", "from": 99, "to":99}
       ]},
       "playingTime":{"type":"LONG", "to":60120},
       
