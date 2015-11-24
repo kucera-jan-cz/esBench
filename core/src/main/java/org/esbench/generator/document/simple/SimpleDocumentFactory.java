@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonParser;
 public class SimpleDocumentFactory implements DocumentFactory<String> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleDocumentFactory.class);
 	private final JsonFactory factory = new JsonFactory();
-	private List<JsonBuilder> builders = new ArrayList<>();
+	private final List<JsonBuilder> builders = new ArrayList<>();
 
 	public SimpleDocumentFactory(IndexTypeMetadata indexTypeMetadata) {
 		Validate.notNull(indexTypeMetadata);

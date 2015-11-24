@@ -11,8 +11,6 @@ import org.esbench.generator.field.meta.MetadataConstants;
 import org.esbench.generator.field.meta.MultiFieldMetadata;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 import org.esbench.generator.field.meta.StringFieldMetadata;
-import org.esbench.workload.json.MapperFactory;
-import org.esbench.workload.json.WorkloadPrettyPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;

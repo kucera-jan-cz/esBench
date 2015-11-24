@@ -10,7 +10,7 @@ import org.esbench.generator.field.meta.DateFieldMetadata;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 public class DateFieldBuilder extends AbstractFieldBuilder<Instant> {
-	private DateTimeFormatter formatter;
+	private final DateTimeFormatter formatter;
 
 	public DateFieldBuilder(DateFieldMetadata meta, FieldFactory<Instant> factory) {
 		super(meta, factory);

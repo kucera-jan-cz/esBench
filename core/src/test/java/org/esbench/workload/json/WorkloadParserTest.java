@@ -26,7 +26,6 @@ import org.esbench.generator.field.meta.StringFieldMetadata;
 import org.esbench.testng.ResourcesUtils;
 import org.esbench.workload.Workload;
 import org.esbench.workload.WorkloadConstants;
-import org.esbench.workload.json.WorkloadParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;

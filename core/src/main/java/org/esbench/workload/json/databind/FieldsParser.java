@@ -89,8 +89,7 @@ public class FieldsParser {
 		TokenBuffer tb = new TokenBuffer(null, false);
 		JsonParser jp = fieldJson.traverse(mapper);
 
-		jp.nextToken(); // Get to Start TOKEN
-		JsonToken token = jp.getCurrentToken();
+		JsonToken token = jp.nextToken(); // Get to Start TOKEN
 		tb.writeStringField(NAME_PROP, fieldName);
 		do {
 			jp.nextToken();

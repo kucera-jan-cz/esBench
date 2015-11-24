@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.testng.ResourcesUtils;
-import org.esbench.workload.json.MapperFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;

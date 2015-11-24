@@ -11,7 +11,7 @@ import com.codahale.metrics.Timer;
 
 public class BulkListener implements Listener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BulkListener.class);
-	private Timer timer;
+	private final Timer timer;
 	private Timer.Context insert;
 
 	public BulkListener(MetricRegistry metrics) {

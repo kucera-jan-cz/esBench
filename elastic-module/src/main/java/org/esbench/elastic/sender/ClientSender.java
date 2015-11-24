@@ -12,6 +12,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
+import org.esbench.elastic.sender.exceptions.InsertionFailure;
 import org.esbench.generator.document.simple.SimpleDocumentFactory;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.workload.Workload;
@@ -31,13 +32,13 @@ public class ClientSender {
 			.convertRatesTo(TimeUnit.SECONDS)
 			.convertDurationsTo(TimeUnit.MILLISECONDS)
 			.build();
-	private Client client;
+	private final Client client;
 
 	public ClientSender(Client client) {
 		this.client = client;
 	}
 
-	public void send(InsertProperties properties) throws InterruptedException, IOException {
+	public void send(InsertProperties properties) throws IOException {
 		WorkloadParser parser = new WorkloadParser();
 		Reader reader = new FileReader(properties.getWorkloadLocation());
 		Workload configuration = parser.parse(reader);
@@ -48,16 +49,19 @@ public class ClientSender {
 		String type = indexType.getTypeName();
 		for(int i = 0; i < properties.getNumOfIterations(); i++) {
 			LOGGER.info("Iteration {}: Sending {} documents to /{}/{}", i, properties.getDocPerIteration(), index, type);
-			if(properties.getNumOfThreads() < 2) {
-				executeSingleThreaded(properties, indexType, factory);
-			} else {
-				execute(indexType, factory, properties);
+			try {
+				if(properties.getNumOfThreads() < 2) {
+					executeSingleThreaded(properties, indexType, factory);
+				} else {
+					execute(indexType, factory, properties);
+				}
+			} catch (InterruptedException ex) {
+				throw new InsertionFailure("Failed to send documents", ex);
 			}
 		}
 	}
 
-	private void executeSingleThreaded(InsertProperties properties, IndexTypeMetadata indexType, SimpleDocumentFactory factory)
-			throws InterruptedException, IOException {
+	private void executeSingleThreaded(InsertProperties properties, IndexTypeMetadata indexType, SimpleDocumentFactory factory) throws InterruptedException {
 		BulkProcessor bulkProcessor = BulkProcessor.builder(client, new BulkListener(metrics))
 				.setBulkActions(10_000)
 				.setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))

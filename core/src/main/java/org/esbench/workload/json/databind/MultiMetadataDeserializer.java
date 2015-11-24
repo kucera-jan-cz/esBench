@@ -13,7 +13,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class MultiMetadataDeserializer extends JsonDeserializer<MultiFieldMetadata> {
@@ -35,11 +34,4 @@ public class MultiMetadataDeserializer extends JsonDeserializer<MultiFieldMetada
 		MultiFieldMetadata multiField = new MultiFieldMetadata(name, fields);
 		return multiField;
 	}
-
-	@Override
-	public Object deserializeWithType(JsonParser p, DeserializationContext ctxt, TypeDeserializer typeDeserializer) throws IOException {
-		// TODO Auto-generated method stub
-		return super.deserializeWithType(p, ctxt, typeDeserializer);
-	}
-
 }

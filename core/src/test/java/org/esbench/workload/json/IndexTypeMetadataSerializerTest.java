@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.BooleanFieldMetadata.Type;
-import org.esbench.workload.json.MapperFactory;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.StringFieldMetadata;
@@ -19,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class IndexTypeMetadataSerializerTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(IndexTypeMetadataSerializerTest.class);
 
-	private ObjectMapper mapper = MapperFactory.initMapper();
+	private final ObjectMapper mapper = MapperFactory.initMapper();
 
 	@Test
 	public void serialize() throws JsonProcessingException {

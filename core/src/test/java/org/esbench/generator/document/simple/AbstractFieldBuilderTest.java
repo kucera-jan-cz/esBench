@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 public abstract class AbstractFieldBuilderTest {
-	private JsonFactory jsonFactory = new JsonFactory();
+	private final JsonFactory jsonFactory = new JsonFactory();
 
 	protected String createJson(JsonBuilder builder, int instanceId) throws IOException {
 		StringWriter writer = new StringWriter();

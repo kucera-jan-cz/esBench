@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 public class MultiFieldBuilder implements JsonBuilder {
-	private JsonBuilder[] builders;
+	private final JsonBuilder[] builders;
 	private final int numberOfbuilders;
 
 	public MultiFieldBuilder(List<JsonBuilder> buildersAsList) {

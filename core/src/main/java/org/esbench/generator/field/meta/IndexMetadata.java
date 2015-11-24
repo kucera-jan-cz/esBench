@@ -6,8 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class IndexMetadata {
-	private String name;
-	private List<IndexTypeMetadata> types;
+	private final String name;
+	private final List<IndexTypeMetadata> types;
 
 	public IndexMetadata(String name, List<IndexTypeMetadata> types) {
 		this.name = name;

@@ -9,7 +9,7 @@ import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.MetadataConstants;
 
 public class DefaultFieldMetadataProvider {
-	private Map<MetaType, FieldMetadata> defaultMetadataByType = new HashMap<>();
+	private final Map<MetaType, FieldMetadata> defaultMetadataByType = new HashMap<>();
 
 	public FieldMetadata getDefaultMetadata(MetaType metaType) {
 		FieldMetadata defaultMeta = defaultMetadataByType.get(metaType);

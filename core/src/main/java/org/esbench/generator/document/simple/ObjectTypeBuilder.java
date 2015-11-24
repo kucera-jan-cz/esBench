@@ -10,9 +10,9 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 public class ObjectTypeBuilder implements JsonBuilder {
 
-	private ObjectTypeMetadata meta;
-	private List<JsonBuilder> factories;
-	private boolean isArray;
+	private final ObjectTypeMetadata meta;
+	private final List<JsonBuilder> factories;
+	private final boolean isArray;
 
 	public ObjectTypeBuilder(ObjectTypeMetadata meta, List<JsonBuilder> factories) {
 		this.meta = meta;

@@ -36,8 +36,8 @@ public class NumericFieldBuilder {
 	}
 
 	private static class NumericJsonBuilder extends AbstractFieldBuilder<Number> {
-		private FieldFactory<? extends Number> factory;
-		private NumericConsumer writer;
+		private final FieldFactory<? extends Number> factory;
+		private final NumericConsumer writer;
 
 		public NumericJsonBuilder(FieldMetadata meta, FieldFactory<Number> factory, NumericConsumer writer) {
 			super(meta, factory);

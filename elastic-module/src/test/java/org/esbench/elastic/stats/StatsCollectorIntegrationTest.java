@@ -48,25 +48,26 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 	private static final String INDEX_NAME = "types";
 	private Client client;
 
-	private StringFieldMetadata fStringMeta = new StringFieldMetadata("fString", 1, 5,
+	private final StringFieldMetadata fStringMeta = new StringFieldMetadata("fString", 1, 5,
 			Arrays.asList("welcome", "to", "esbench", "the", "desert", "of", "our", "reality"));
-	private BooleanFieldMetadata fBooleanMeta = new BooleanFieldMetadata("fBoolean");
-	private NumericFieldMetadata fIntegerMeta = new NumericFieldMetadata("fInteger", 1, MetaType.INTEGER, 0, 10, 1);
-	private NumericFieldMetadata fLongMeta = new NumericFieldMetadata("fLong", 1, MetaType.LONG, 2147483647L, Integer.MAX_VALUE + 10L, 1L);
-	private DateFieldMetadata fDateMeta = new DateFieldMetadata("fDate", 1, Instant.parse("2015-11-08T00:00:00Z"), Instant.parse("2015-11-10T23:59:59Z"), 5,
-			ChronoUnit.HALF_DAYS, MetadataConstants.DEFAULT_DATE_PATTERN);
-	private IPv4FieldMetadata fIpMeta = new IPv4FieldMetadata("fIp", 1, "192.168.0.0/21");
-	private List<FieldMetadata> objectInnerMetadata = Arrays.asList(new StringFieldMetadata("fObject.oString", 1, 3, Arrays.asList("a", "b", "c")),
+	private final BooleanFieldMetadata fBooleanMeta = new BooleanFieldMetadata("fBoolean");
+	private final NumericFieldMetadata fIntegerMeta = new NumericFieldMetadata("fInteger", 1, MetaType.INTEGER, 0, 10, 1);
+	private final NumericFieldMetadata fLongMeta = new NumericFieldMetadata("fLong", 1, MetaType.LONG, 2147483647L, Integer.MAX_VALUE + 10L, 1L);
+	private final DateFieldMetadata fDateMeta = new DateFieldMetadata("fDate", 1, Instant.parse("2015-11-08T00:00:00Z"), Instant.parse("2015-11-10T23:59:59Z"),
+			5, ChronoUnit.HALF_DAYS, MetadataConstants.DEFAULT_DATE_PATTERN);
+	private final IPv4FieldMetadata fIpMeta = new IPv4FieldMetadata("fIp", 1, "192.168.0.0/21");
+	private final List<FieldMetadata> objectInnerMetadata = Arrays.asList(new StringFieldMetadata("fObject.oString", 1, 3, Arrays.asList("a", "b", "c")),
 			new IPv4FieldMetadata("fObject.oIp", 1, "192.168.44.10/32"));
-	private ObjectTypeMetadata fObjectMeta = new ObjectTypeMetadata("fObject", objectInnerMetadata);
+	private final ObjectTypeMetadata fObjectMeta = new ObjectTypeMetadata("fObject", objectInnerMetadata);
 
-	private IPv4FieldMetadata nnLongMeta = new IPv4FieldMetadata("fNested.nNested.nIp", 1, "127.0.0.101/32");
-	private IPv4FieldMetadata nnIpMeta = new IPv4FieldMetadata("fNested.nNested.nIp", 1, "127.0.0.101/32");
-	private StringFieldMetadata nnsStringField = new StringFieldMetadata("fNested.nNested.nString", 1, 4, Arrays.asList("k", "l", "m", "n"));
-	private ObjectTypeMetadata nNestedField = new ObjectTypeMetadata("fNested.nNested", Arrays.asList(nnsStringField, nnIpMeta));
+	private final IPv4FieldMetadata nnLongMeta = new IPv4FieldMetadata("fNested.nNested.nIp", 1, "127.0.0.101/32");
+	private final IPv4FieldMetadata nnIpMeta = new IPv4FieldMetadata("fNested.nNested.nIp", 1, "127.0.0.101/32");
+	private final StringFieldMetadata nnsStringField = new StringFieldMetadata("fNested.nNested.nString", 1, 4, Arrays.asList("k", "l", "m", "n"));
+	private final ObjectTypeMetadata nNestedField = new ObjectTypeMetadata("fNested.nNested", Arrays.asList(nnsStringField, nnIpMeta));
 
-	private List<FieldMetadata> nestedInnerMetadata = Arrays.asList(new StringFieldMetadata("fNested.nString", 1, 2, Arrays.asList("xy", "z")), nNestedField);
-	private ObjectTypeMetadata fNestedMeta = new ObjectTypeMetadata("fNested", nestedInnerMetadata);
+	private final List<FieldMetadata> nestedInnerMetadata = Arrays.asList(new StringFieldMetadata("fNested.nString", 1, 2, Arrays.asList("xy", "z")),
+			nNestedField);
+	private final ObjectTypeMetadata fNestedMeta = new ObjectTypeMetadata("fNested", nestedInnerMetadata);
 
 	@BeforeClass
 	public void initCluster() throws IOException {

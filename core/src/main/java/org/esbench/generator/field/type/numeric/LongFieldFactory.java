@@ -4,7 +4,7 @@ import org.esbench.generator.field.AbstractFieldFactory;
 
 /**
  * Constructs integer by adding _step_ to _from_.
- * Variable _modulo_ represents number of unique dates. 
+ * Variable _modulo_ represents number of unique dates.
  */
 public class LongFieldFactory extends AbstractFieldFactory<Long> {
 	private final long from;

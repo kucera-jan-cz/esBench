@@ -7,7 +7,7 @@ import org.esbench.generator.field.AbstractFieldFactory;
 
 /**
  * Constructs field by combining String tokens.
- * Example: tokens and 3 tokens per field: 
+ * Example: tokens and 3 tokens per field:
  * :: A B C D E A
  * 0: X X X
  * 1:       X X X

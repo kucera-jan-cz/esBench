@@ -7,7 +7,7 @@ import org.esbench.generator.field.AbstractFieldFactory;
 
 /**
  * Constructs dates by adding _step_ of time _unit_ to _from_.
- * Variable _modulo_ represents number of unique dates. 
+ * Variable _modulo_ represents number of unique dates.
  */
 public class DateFieldFactory extends AbstractFieldFactory<Instant> {
 	private final Instant from;

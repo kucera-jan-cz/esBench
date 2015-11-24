@@ -5,11 +5,11 @@ package org.esbench.generator.field;
  */
 public class FieldConstants {
 	/**
-	 * Constant represents field with single value (ergo non-array field). 
+	 * Constant represents field with single value (ergo non-array field).
 	 */
 	public static final int SINGLE_VALUE = 1;
 	/**
-	 * String related constant representing field which value is created from single token.  
+	 * String related constant representing field which value is created from single token.
 	 */
 	public static final int SINGLE_TOKEN = 1;
 

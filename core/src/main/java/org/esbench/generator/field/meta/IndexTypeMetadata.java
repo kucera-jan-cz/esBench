@@ -6,8 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class IndexTypeMetadata {
-	private String indexName;
-	private String typeName;
+	private final String indexName;
+	private final String typeName;
 	private List<FieldMetadata> fields;
 
 	public IndexTypeMetadata(String indexName, String typeName, List<FieldMetadata> fields) {

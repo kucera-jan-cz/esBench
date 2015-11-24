@@ -3,6 +3,9 @@ package org.esbench.cmd;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Constant class for basic properties used in command-line command esbench.
+ */
 public final class CommandPropsConstants {
 
 	// Commands
@@ -21,7 +24,7 @@ public final class CommandPropsConstants {
 
 	public static final String CLUSTER_OPT = "cluster.name";
 
-	public CommandPropsConstants() {
+	private CommandPropsConstants() {
 
 	}
 }

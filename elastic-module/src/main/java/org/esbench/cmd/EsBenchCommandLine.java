@@ -40,7 +40,7 @@ public class EsBenchCommandLine {
 	private static final String CMD = "cmd";
 	private static final Logger LOGGER = LoggerFactory.getLogger(EsBenchCommandLine.class);
 
-	private void processArgs(String[] args) throws IOException, InterruptedException {
+	private void processArgs(String... args) throws IOException, InterruptedException {
 		if(args.length == 0) {
 			displayHelp(0);
 		}
@@ -100,7 +100,7 @@ public class EsBenchCommandLine {
 		LOGGER.info("Workload sucessfully write to {}", workloadFilePath);
 	}
 
-	private Properties loadProperties(String[] args) throws IOException {
+	private Properties loadProperties(String... args) throws IOException {
 		SimpleCommandLinePropertySource cmdSource = new SimpleCommandLinePropertySource(CMD, args);
 		Properties defaultProps = ResourceUtils.asProperties("default.properties");
 		Properties properties = new Properties(defaultProps);
@@ -127,6 +127,12 @@ public class EsBenchCommandLine {
 		System.exit(returnCode);
 	}
 
+	/**
+	 *
+	 * @param args arguments for main method
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
 		EsBenchCommandLine cmd = new EsBenchCommandLine();
 		cmd.processArgs(args);

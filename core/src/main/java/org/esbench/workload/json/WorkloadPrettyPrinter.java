@@ -16,9 +16,9 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 public class WorkloadPrettyPrinter extends DefaultPrettyPrinter {
 	private static final long serialVersionUID = -8069251060423659883L;
 	private String path = StringUtils.EMPTY;
-	private LinkedList<Integer> pathIndices = new LinkedList<>();
+	private final LinkedList<Integer> pathIndices = new LinkedList<>();
 	private boolean isFieldProperties = false;
-	private List<Pattern> patterns;
+	private final List<Pattern> patterns;
 
 	public WorkloadPrettyPrinter() {
 		this("(/fields/[^/]*){1,}", "/defaults/[^/]*");
