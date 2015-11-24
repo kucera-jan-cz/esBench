@@ -3,7 +3,7 @@ package org.esbench.generator.document.simple;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.esbench.generator.field.FieldFactory;
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.DateFieldMetadata;
@@ -104,9 +104,7 @@ public class JsonBuilderFactory {
 			return new ShortFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
 		case BYTE:
 			return new ByteFieldFactory(meta.getFrom(), meta.getTo(), meta.getStep());
-
 		default:
-			// @TODO - implement rest of numeric factories
 			throw new IllegalArgumentException("Unsupported type: " + meta.getMetaType());
 		}
 	}

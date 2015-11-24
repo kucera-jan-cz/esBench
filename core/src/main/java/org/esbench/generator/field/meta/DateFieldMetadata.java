@@ -22,7 +22,10 @@ public class DateFieldMetadata extends FieldMetadata {
 
 	private transient DateTimeFormatter formatter;
 
-	public DateFieldMetadata() {
+	/**
+	 * Protected constructor for JSON serialization.
+	 */
+	protected DateFieldMetadata() {
 
 	}
 

@@ -38,7 +38,6 @@ import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCountBuilde
 import org.esbench.core.DefaultProperties;
 import org.esbench.generator.field.FieldConstants;
 import org.esbench.generator.field.meta.FieldMetadata;
-import org.esbench.generator.field.meta.IndexMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.ObjectTypeMetadata;
 import org.esbench.generator.field.meta.StringFieldMetadata;
@@ -100,28 +99,6 @@ public class StatsCollector {
 			typesMetadata.add(new IndexTypeMetadata(indexName, indexType, typeMeta.getInnerMetadata()));
 		}
 		return typesMetadata;
-	}
-
-	@Deprecated
-	public IndexMetadata collectMapping() throws IOException {
-		GetMappingsResponse response = new GetMappingsRequestBuilder(client, GetMappingsAction.INSTANCE, indexName).get();
-		ImmutableOpenMap<String, MappingMetaData> mapping = response.getMappings().get(indexName);
-		String[] indexTypes = mapping.keys().toArray(String.class);
-		ObjectMapper mapper = new ObjectMapper();
-		List<IndexTypeMetadata> typesMetadata = new ArrayList<>();
-		for(String indexType : indexTypes) {
-			MappingMetaData meta = mapping.get(indexType);
-			LOGGER.info("Index: {} Type: {}", indexName, indexType);
-			String mappingsAsJson = meta.source().string();
-			LOGGER.info("JSON:\n{}", mappingsAsJson);
-
-			JsonNode root = mapper.readValue(mappingsAsJson, JsonNode.class);
-			JsonNode typeProp = root.path(indexType).path(PROPERTIES_PROP);
-			ObjectTypeMetadata typeMeta = parseConfiguration(typeProp, StringUtils.EMPTY, false);
-			typesMetadata.add(new IndexTypeMetadata(indexName, indexType, typeMeta.getInnerMetadata()));
-		}
-		IndexMetadata indexMeta = new IndexMetadata(indexName, typesMetadata);
-		return indexMeta;
 	}
 
 	private ObjectTypeMetadata parseConfiguration(JsonNode typeProp, String parentFullPath, boolean nested) {

@@ -1,6 +1,7 @@
 package org.esbench.generator.field.meta;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -10,10 +11,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +28,7 @@ public final class FieldMetadataUtils {
 	@SuppressWarnings("unchecked")
 	public static <T extends FieldMetadata> T diff(T from, T to) throws IllegalStateException {
 		try {
-			T empty;
-			if(from instanceof NumericFieldMetadata) {
-				empty = (T) ConstructorUtils.invokeConstructor(from.getClass(), from.getMetaType());
-			} else {
-				empty = (T) ConstructorUtils.invokeConstructor(from.getClass());
-			}
+			T empty = (T) invokeConstructor(from.getClass());
 			List<PropertyDescriptor> descriptors = getDescriptors(from.getClass());
 
 			for(PropertyDescriptor descriptor : descriptors) {
@@ -50,13 +44,8 @@ public final class FieldMetadataUtils {
 	public static <T extends FieldMetadata> T merge(T from, T to) throws IllegalStateException {
 		try {
 			T clone;
-			if(from instanceof NumericFieldMetadata) {
-				clone = (T) ConstructorUtils.invokeConstructor(from.getClass(), from.getMetaType());
-				updateObject(to, clone);
-			} else {
-				clone = (T) BeanUtils.cloneBean(to);
-			}
-
+			clone = (T) invokeConstructor(from.getClass());
+			updateObject(to, clone);
 			updateObject(from, clone);
 			return clone;
 		} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
@@ -131,5 +120,12 @@ public final class FieldMetadataUtils {
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
 			throw new IllegalStateException("Failed to update property", ex);
 		}
+	}
+
+	private static <T> T invokeConstructor(final Class<T> clazz) throws NoSuchMethodException, SecurityException, InstantiationException,
+			IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		Constructor<?> constructor = clazz.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		return (T) constructor.newInstance();
 	}
 }

@@ -33,7 +33,10 @@ public abstract class FieldMetadata {
 	private Integer valuesPerDocument;
 	private Strategy strategy;
 
-	public FieldMetadata() {
+	/**
+	 * Protected constructor for JSON serialization.
+	 */
+	protected FieldMetadata() {
 	}
 
 	public FieldMetadata(String fullPath, MetaType metaType, int valuesPerDoc) {

@@ -1,5 +1,8 @@
 package org.esbench.workload;
 
+/**
+ * Constant class representing allowed fields in workload JSON format.
+ */
 public final class WorkloadConstants {
 	// Versions
 	public static final String CURRENT_VERSION = "0.1";

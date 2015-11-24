@@ -9,7 +9,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class IPv4FieldMetadata extends FieldMetadata {
 	private String cidrAddress;
 
-	public IPv4FieldMetadata() {
+	/**
+	 * Protected constructor for JSON serialization
+	 */
+	protected IPv4FieldMetadata() {
 
 	}
 

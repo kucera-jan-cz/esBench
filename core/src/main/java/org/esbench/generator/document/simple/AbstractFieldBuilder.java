@@ -1,6 +1,7 @@
 package org.esbench.generator.document.simple;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.esbench.generator.field.FieldConstants;
 import org.esbench.generator.field.FieldFactory;
@@ -12,19 +13,30 @@ import com.fasterxml.jackson.core.JsonGenerator;
  * Base abstract class for JSONBuilders which handles single value/array fields. 
  * @param <T> defines type which given FieldFactory must produce. 
  */
-public abstract class AbstractFieldBuilder<T> implements JsonBuilder {
+abstract class AbstractFieldBuilder<T> implements JsonBuilder {
 	protected FieldMetadata meta;
 	protected FieldFactory<T> factory;
+	protected List<JsonBuilder> factories;
 	private final boolean isArray;
+	private final InstanceIdTransformer idTransformation;
+
+	public AbstractFieldBuilder(FieldMetadata meta, List<JsonBuilder> factories) {
+		this.meta = meta;
+		this.factories = factories;
+		this.isArray = meta.getValuesPerDocument() > FieldConstants.SINGLE_VALUE;
+		this.idTransformation = InstanceIdTransformer.valueOf(meta.getStrategy());
+	}
 
 	public AbstractFieldBuilder(FieldMetadata meta, FieldFactory<T> factory) {
 		this.meta = meta;
 		this.factory = factory;
 		this.isArray = meta.getValuesPerDocument() > FieldConstants.SINGLE_VALUE;
+		this.idTransformation = InstanceIdTransformer.valueOf(meta.getStrategy());
 	}
 
 	@Override
-	public void write(JsonGenerator gen, int instanceId) throws IOException {
+	public final void write(JsonGenerator gen, int unique) throws IOException {
+		int instanceId = idTransformation.compute(unique);
 		if(isArray) {
 			gen.writeArrayFieldStart(meta.getName());
 			int id = instanceId * meta.getValuesPerDocument();

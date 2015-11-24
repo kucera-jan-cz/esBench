@@ -8,6 +8,9 @@ import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetaType;
 
+/**
+ * Represents data for generating documents.
+ */
 public class Workload {
 	private String version;
 	private Map<MetaType, FieldMetadata> defaults = new HashMap<>();

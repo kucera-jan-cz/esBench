@@ -7,7 +7,10 @@ import org.esbench.generator.field.FieldConstants;
 public class MultiFieldMetadata extends FieldMetadata {
 	private List<FieldMetadata> fields;
 
-	public MultiFieldMetadata() {
+	/**
+	 * Protected constructor for JSON serialization
+	 */
+	protected MultiFieldMetadata() {
 
 	}
 

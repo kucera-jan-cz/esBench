@@ -14,14 +14,21 @@ import org.esbench.generator.field.FieldConstants;
 public class ObjectTypeMetadata extends FieldMetadata {
 	private List<FieldMetadata> innerMetadata;
 
-	public ObjectTypeMetadata() {
+	/**
+	 * Protected constructor for JSON serialization
+	 */
+	protected ObjectTypeMetadata() {
 
 	}
 
-	public ObjectTypeMetadata(String name, List<FieldMetadata> innerMetadata) {
-		super(name, MetaType.OBJECT, FieldConstants.SINGLE_VALUE);
+	public ObjectTypeMetadata(String name, int valuesPerDoc, List<FieldMetadata> innerMetadata) {
+		super(name, MetaType.OBJECT, valuesPerDoc);
 		this.innerMetadata = new ArrayList<>(innerMetadata);
 		Collections.sort(this.innerMetadata, (a, b) -> a.getFullPath().compareTo(b.getFullPath()));
+	}
+
+	public ObjectTypeMetadata(String name, List<FieldMetadata> innerMetadata) {
+		this(name, FieldConstants.SINGLE_VALUE, innerMetadata);
 	}
 
 	public List<FieldMetadata> getInnerMetadata() {

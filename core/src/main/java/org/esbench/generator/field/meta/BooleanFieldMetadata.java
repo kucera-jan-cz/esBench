@@ -19,7 +19,10 @@ public class BooleanFieldMetadata extends FieldMetadata {
 	@JsonProperty(value = WorkloadConstants.TOKENS_PROP)
 	private Type booleanType;
 
-	public BooleanFieldMetadata() {
+	/**
+	 * Protected constructor for JSON serialization.
+	 */
+	protected BooleanFieldMetadata() {
 	}
 
 	public BooleanFieldMetadata(String name) {

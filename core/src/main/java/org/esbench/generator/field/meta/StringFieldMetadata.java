@@ -16,7 +16,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -27,8 +26,10 @@ public class StringFieldMetadata extends FieldMetadata {
 	@JsonProperty(value = TOKENS_PROP)
 	private List<String> tokens;
 
-	@JsonCreator
-	public StringFieldMetadata() {
+	/**
+	 * Protected constructor for JSON serialization
+	 */
+	protected StringFieldMetadata() {
 	}
 
 	public StringFieldMetadata(String name, int valuesPerDoc, int tokenPerValue, List<String> tokens) {

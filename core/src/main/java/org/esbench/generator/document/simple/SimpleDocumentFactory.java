@@ -16,6 +16,9 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
+/**
+ *	Basic JSON document factory which creates JSON documents as String. 
+ */
 public class SimpleDocumentFactory implements DocumentFactory<String> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleDocumentFactory.class);
 	private final JsonFactory factory = new JsonFactory();
@@ -40,16 +43,18 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 			generator.flush();
 			return writer.toString();
 		} catch (IOException e) {
+			// @TODO - consider better exception throw
 			throw new IllegalStateException(e);
 		}
-
 	}
 
 	private List<JsonBuilder> initBuilders(List<? extends FieldMetadata> metadata) {
 		List<JsonBuilder> builders = new ArrayList<>();
 		JsonBuilderFactory jsonBuilderFactory = new JsonBuilderFactory();
 		for(FieldMetadata meta : metadata) {
-			builders.add(jsonBuilderFactory.newInstance(meta));
+			JsonBuilder jsonBuilder = jsonBuilderFactory.newInstance(meta);
+			LOGGER.debug("Building {} for {}", jsonBuilder, meta.getFullPath());
+			builders.add(jsonBuilder);
 		}
 		return builders;
 	}

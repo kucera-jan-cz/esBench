@@ -25,7 +25,6 @@ import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IPv4FieldMetadata;
-import org.esbench.generator.field.meta.IndexMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.MetadataConstants;
@@ -97,11 +96,12 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 	@Test
 	public void init() throws IOException {
 		StatsCollector collector = new StatsCollector(client, INDEX_NAME);
-		IndexMetadata indexMeta = collector.collectMapping();
-		assertEquals(indexMeta.getName(), INDEX_NAME);
-		assertEquals(indexMeta.getTypes().size(), 1);
+		List<IndexTypeMetadata> types = collector.collectIndex();
 
-		IndexTypeMetadata typeMeta = indexMeta.getTypes().get(0);
+		assertEquals(types.size(), 1);
+
+		IndexTypeMetadata typeMeta = types.get(0);
+		assertEquals(typeMeta.getIndexName(), INDEX_NAME);
 		assertEquals(typeMeta.getTypeName(), INDEX_TYPE);
 		List<StringFieldMetadata> stringMetas = filterMetadata(typeMeta.getFields(), StringFieldMetadata.class);
 		assertEquals(stringMetas.size(), 1);

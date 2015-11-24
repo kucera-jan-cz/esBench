@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-public class MapperFactory {
+class MapperFactory {
 	private static final String MODULE_NAME = "SimpleModule";
 
 	public static SimpleModule initDefaultModule() {

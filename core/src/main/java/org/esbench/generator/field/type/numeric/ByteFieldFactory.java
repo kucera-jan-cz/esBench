@@ -18,7 +18,7 @@ public class ByteFieldFactory extends AbstractFieldFactory<Byte> {
 		Validate.inclusiveBetween(Byte.MIN_VALUE, Byte.MAX_VALUE, this.from);
 		Validate.inclusiveBetween(Byte.MIN_VALUE, Byte.MAX_VALUE, this.step);
 		Validate.isTrue(this.from < to.intValue(), "From can't be bigger than to");
-		this.modulo = ((to.intValue() - this.from) / this.step);
+		this.modulo = (to.intValue() - this.from) / this.step;
 		Validate.inclusiveBetween(Byte.MIN_VALUE, (Byte.MAX_VALUE * 2) + 1, this.modulo, "Range between from and to exceeded type capacity");
 	}
 

@@ -5,9 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class NumericFieldMetadata extends FieldMetadata {
 	public enum Type {
 		BYTE, SHORT, INTEGER, LONG, FLOAT, DOUBLE
@@ -17,9 +14,11 @@ public class NumericFieldMetadata extends FieldMetadata {
 	private Number to;
 	private Number step;
 
-	@JsonCreator
-	public NumericFieldMetadata(@JsonProperty("type") MetaType type) {
-		setMetaType(type);
+	/**
+	 * Protected constructor for JSON serialization
+	 */
+	protected NumericFieldMetadata() {
+
 	}
 
 	public NumericFieldMetadata(String fullPath, int valuesPerDoc, MetaType metaType, Number from, Number to, Number step) {

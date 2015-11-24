@@ -6,6 +6,7 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
@@ -17,7 +18,6 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuild
 import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
-import org.esbench.generator.field.meta.IndexMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
 import org.esbench.testng.AbstractSharedElasticSearchIntegrationTest;
@@ -65,10 +65,10 @@ public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSea
 	@Test
 	public void init() throws IOException {
 		StatsCollector collector = new StatsCollector(client, INDEX_NAME);
-		IndexMetadata indexMeta = collector.collectMapping();
-		assertEquals(indexMeta.getName(), INDEX_NAME);
-		assertEquals(indexMeta.getTypes().size(), 1);
-		IndexTypeMetadata meta = indexMeta.getTypes().get(0);
+		List<IndexTypeMetadata> indexList = collector.collectIndex();
+		assertEquals(indexList.size(), 1);
+		IndexTypeMetadata meta = indexList.get(0);
+		assertEquals(meta.getIndexName(), INDEX_NAME);
 		Workload config = new Workload(WorkloadConstants.CURRENT_VERSION, MetadataConstants.DEFAULT_META_BY_TYPE, Arrays.asList(meta));
 		WorkloadParser parser = new WorkloadParser();
 		StringWriter writer = new StringWriter();
