@@ -1,5 +1,10 @@
 @echo off
-set BENCH_CLASSPATH="lib\elastic-module-0.0.2-SNAPSHOT.jar"
+
+set SCRIPT_PATH=%~dp0
+for %%I in ("%SCRIPT_PATH%..") do set BENCH_HOME=%%~dpfI
+
+set BENCH_CLASSPATH="%BENCH_HOME%\lib\elastic-module.jar"
+
 if DEFINED JAVA_HOME GOTO home
 set JAVA_EXE="java"
 goto exec
@@ -8,5 +13,5 @@ goto exec
 set JAVA_EXE="%JAVA_HOME%\bin\java"
 
 :exec
-%JAVA_EXE% -cp %BENCH_CLASSPATH%  "org.esbench.cmd.EsBenchCommandLine" 
+%JAVA_EXE% -cp %BENCH_CLASSPATH%  "org.esbench.cmd.EsBenchCommandLine" %* 
 pause

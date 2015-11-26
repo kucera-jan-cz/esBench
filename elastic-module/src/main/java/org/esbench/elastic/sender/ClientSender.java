@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.elasticsearch.action.bulk.BulkProcessor;
-import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
@@ -41,37 +40,11 @@ public class ClientSender {
 		for(int i = 0; i < properties.getNumOfIterations(); i++) {
 			LOGGER.info("Iteration {}: Sending {} documents to /{}/{}", i, properties.getDocPerIteration(), index, type);
 			try {
-				if(properties.getNumOfThreads() < 2) {
-					executeSingleThreaded(properties, indexType, factory);
-				} else {
-					execute(indexType, factory, properties);
-				}
+				execute(indexType, factory, properties);
 			} catch (InterruptedException ex) {
 				throw new InsertionFailure("Failed to send documents", ex);
 			}
 		}
-	}
-
-	private void executeSingleThreaded(InsertProperties properties, IndexTypeMetadata indexType, SimpleDocumentFactory factory) throws InterruptedException {
-		BulkProcessor bulkProcessor = BulkProcessor.builder(client, new BulkListener(metrics))
-				.setBulkActions(10_000)
-				.setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
-				.setConcurrentRequests(4)
-				.build();
-
-		IndexRequest indexRequest = new IndexRequest(indexType.getIndexName(), indexType.getTypeName());
-		Timer.Context insert = metrics.timer("insert-single-total").time();
-		Timer.Context docCreation = metrics.timer("doc-creation").time();
-		for(int i = 0; i < properties.getDocPerIteration(); i++) {
-			String json = factory.newInstance(i);
-			bulkProcessor.add(indexRequest.source(json));
-			LOGGER.trace("JSON: {}", json);
-		}
-		docCreation.stop();
-		bulkProcessor.awaitClose(60, TimeUnit.SECONDS);
-		bulkProcessor.close();
-		insert.stop();
-		reporter.report();
 	}
 
 	private void execute(IndexTypeMetadata indexType, SimpleDocumentFactory factory, InsertProperties properties) throws InterruptedException {
@@ -80,16 +53,16 @@ public class ClientSender {
 		int from = 0;
 		int perThread = properties.getDocPerIteration() / threads;
 		int to = 0;
-		Timer.Context insert = metrics.timer("insert-threads-total").time();
+		Timer.Context insert = metrics.timer("insert-total").time();
 		for(int i = 0; i < threads; i++) {
 			BulkProcessor bulkProcessor = BulkProcessor.builder(client, new BulkListener(metrics))
-					.setBulkActions(20_000)
+					.setBulkActions(properties.getBulkActions())
 					.setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
-					.setConcurrentRequests(2)
+					.setConcurrentRequests(properties.getBulkThreads())
 					.build();
 			from = to;
 			to = from + perThread;
-			SenderAction action = new SenderAction(metrics, indexType, factory, bulkProcessor, from, to);
+			SenderAction action = new SenderAction(metrics, properties, factory, bulkProcessor, from, to);
 			service.execute(action);
 		}
 		service.shutdown();

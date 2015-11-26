@@ -144,6 +144,22 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+						<manifestEntries>
+							<Built-By>Jan Kucera</Built-By>
+							<url>https://github.com/kucera-jan-cz/esBench</url>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
@@ -179,7 +195,7 @@
 		<module>core</module>
 		<module>elastic-module</module>
 		<module>core-test</module>
-    <module>distribution</module>
+		<module>distribution</module>
 	</modules>
 	<profiles>
 		<profile>

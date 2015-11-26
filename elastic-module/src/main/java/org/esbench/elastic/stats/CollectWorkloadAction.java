@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.Client;
@@ -46,6 +47,8 @@ public class CollectWorkloadAction implements EsBenchAction {
 		}
 		if(types.length > 0) {
 			workloads = workloads.stream().filter(w -> ArrayUtils.contains(types, w.getTypeName())).collect(Collectors.toList());
+			String errMsg = String.format("None of defined types %s does not existing in index", ArrayUtils.toString(types));
+			Validate.notEmpty(workloads, errMsg);
 		}
 
 		Path workloadFilePath = Paths.get(props.getProperty(WORKLOAD_OPT));

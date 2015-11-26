@@ -7,6 +7,8 @@ import static org.esbench.cmd.CommandPropsConstants.PORT_OPT;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequestBuilder;
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
@@ -43,6 +45,10 @@ public class ElasticClientBuilder {
 		Node node = new NodeBuilder().clusterName(clusterName).settings(settings).client(true).node();
 
 		Client client = node.client();
+		ClusterHealthRequestBuilder healthRequest = client.admin().cluster().prepareHealth();
+		healthRequest.setIndices().setWaitForYellowStatus();
+		ClusterHealthResponse healthResponse = healthRequest.execute().actionGet();
+		LOGGER.debug("Status: {}", healthResponse.getStatus());
 		return client;
 	}
 
