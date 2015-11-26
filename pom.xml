@@ -179,6 +179,7 @@
 		<module>core</module>
 		<module>elastic-module</module>
 		<module>core-test</module>
+    <module>distribution</module>
 	</modules>
 	<profiles>
 		<profile>
