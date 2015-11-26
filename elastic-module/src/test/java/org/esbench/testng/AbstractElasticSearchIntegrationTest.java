@@ -8,7 +8,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.xml.XmlTest;
 
-//@TODO - test should share same instance of should be able to run in parallel
 public class AbstractElasticSearchIntegrationTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractElasticSearchIntegrationTest.class);
 	private EmbeddedElasticSearchServer embeddedServer;

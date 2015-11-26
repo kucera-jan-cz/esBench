@@ -53,7 +53,7 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 	private final NumericFieldMetadata fIntegerMeta = new NumericFieldMetadata("fInteger", 1, MetaType.INTEGER, 0, 10, 1);
 	private final NumericFieldMetadata fLongMeta = new NumericFieldMetadata("fLong", 1, MetaType.LONG, 2147483647L, Integer.MAX_VALUE + 10L, 1L);
 	private final DateFieldMetadata fDateMeta = new DateFieldMetadata("fDate", 1, Instant.parse("2015-11-08T00:00:00Z"), Instant.parse("2015-11-10T23:59:59Z"),
-			5, ChronoUnit.HALF_DAYS, MetadataConstants.DEFAULT_DATE_PATTERN);
+			2, ChronoUnit.HALF_DAYS, MetadataConstants.DEFAULT_DATE_PATTERN);
 	private final IPv4FieldMetadata fIpMeta = new IPv4FieldMetadata("fIp", 1, "192.168.0.0/21");
 	private final List<FieldMetadata> objectInnerMetadata = Arrays.asList(new StringFieldMetadata("fObject.oString", 1, 3, Arrays.asList("a", "b", "c")),
 			new IPv4FieldMetadata("fObject.oIp", 1, "192.168.44.10/32"));

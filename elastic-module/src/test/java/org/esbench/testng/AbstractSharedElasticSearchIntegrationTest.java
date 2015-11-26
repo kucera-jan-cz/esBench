@@ -12,7 +12,6 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.xml.XmlTest;
 
-//@TODO - test should share same instance of should be able to run in parallel
 public class AbstractSharedElasticSearchIntegrationTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSharedElasticSearchIntegrationTest.class);
 	private static EmbeddedElasticSearchServer embeddedServer;

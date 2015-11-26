@@ -10,7 +10,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.esbench.generator.field.FieldConstants;
 
-//@TODO - enable support for multiple documents
 public class ObjectTypeMetadata extends FieldMetadata {
 	private List<FieldMetadata> innerMetadata;
 
