@@ -26,9 +26,8 @@ esBench is performance and unit test tool for generating ElasticSearch documents
     } ]
 }
 ```
-h1. License
-
-<pre>
+#License
+```
 This software is licensed under the Apache License, version 2 ("ALv2"), quoted below.
 
 Copyright 2015 esBench <https://github.com/kucera-jan-cz/esBench/wiki>
@@ -44,4 +43,4 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
-</pre>
+```
