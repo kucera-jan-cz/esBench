@@ -24,6 +24,10 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 	private final JsonFactory factory = new JsonFactory();
 	private final List<JsonBuilder> builders = new ArrayList<>();
 
+	/**
+	 * Creates factory instances using given {@link IndexTypeMetadata}.
+	 * @param indexTypeMetadata metadata based on which factory create JSON documents 
+	 */
 	public SimpleDocumentFactory(IndexTypeMetadata indexTypeMetadata) {
 		Validate.notNull(indexTypeMetadata);
 		this.factory.enable(JsonParser.Feature.ALLOW_COMMENTS);

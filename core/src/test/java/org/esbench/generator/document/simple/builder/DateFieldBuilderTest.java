@@ -1,9 +1,11 @@
-package org.esbench.generator.document.simple;
+package org.esbench.generator.document.simple.builder;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+import org.esbench.generator.document.simple.JsonBuilder;
+import org.esbench.generator.document.simple.JsonBuilderFactory;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
 import org.testng.annotations.DataProvider;

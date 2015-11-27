@@ -1,4 +1,4 @@
-package org.esbench.generator.document.simple;
+package org.esbench.generator.document.simple.builder;
 
 import java.io.IOException;
 

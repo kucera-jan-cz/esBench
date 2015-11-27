@@ -1,6 +1,5 @@
 package org.esbench.core;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.commons.lang3.Validate;
@@ -38,6 +37,7 @@ public class DefaultProperties {
 		try {
 			return get(propertyName, type, userDefined);
 		} catch (IllegalArgumentException ex) {
+			LOGGER.trace("Failed to load {} from user defined properties: {}", propertyName, ex.getMessage());
 			return get(propertyName, type, defaultProperties);
 		}
 	}
@@ -47,6 +47,7 @@ public class DefaultProperties {
 		try {
 			return get(propertyName, type, userDefined);
 		} catch (IllegalArgumentException ex) {
+			LOGGER.trace("Failed to load {} from user defined properties: {}", propertyName, ex.getMessage());
 			return defaultValue;
 		}
 	}

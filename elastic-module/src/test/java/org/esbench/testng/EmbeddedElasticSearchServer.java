@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 public class EmbeddedElasticSearchServer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedElasticSearchServer.class);
-	private static final String NODE_NAME_PROP = "node.name";
 	private static final String CLUSTER_NAME_PROP = "cluster.name";
 	private static final String INDEX_GATEWAY_TYPE_PROP = "index.gateway.type";
 	private static final String PATH_HOME_PROP = "path.home";
