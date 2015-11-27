@@ -4,3 +4,8 @@ Commands:
 	collect		- Collects workload from elasticsearch
 	insert  	- Insert defined number of documents to elasticsearch
 Options:
+	--conf=FILE_A               - defines configuration property file where you can define all other optios [default '']
+	--host=VALUE                - defines elasticsearch address (IP or hostname) [default localhost]
+	--index=VALUE_A,VALUE_B     - defines index or indices for collection/insertion [default esbench]
+	--type=VALUE_A,VALUE_B      - defines index type(s) for collection/insertion [default '']
+	--workload=FILE_A           - defines file path for workload [default workloads/esbench.json]

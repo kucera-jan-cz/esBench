@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.index.IndexRequest;
 import org.esbench.generator.document.simple.SimpleDocumentFactory;
-import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,15 +14,15 @@ import com.codahale.metrics.Timer;
 public class SenderAction implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SenderAction.class);
 	private final MetricRegistry metrics;
-	private final IndexTypeMetadata indexType;
+	private final InsertProperties properties;
 	private final SimpleDocumentFactory factory;
 	private final BulkProcessor bulkProcessor;
 	private final int from;
 	private final int to;
 
-	public SenderAction(MetricRegistry metrics, IndexTypeMetadata indexType, SimpleDocumentFactory factory, BulkProcessor bulkProcessor, int from, int to) {
+	public SenderAction(MetricRegistry metrics, InsertProperties properties, SimpleDocumentFactory factory, BulkProcessor bulkProcessor, int from, int to) {
 		this.metrics = metrics;
-		this.indexType = indexType;
+		this.properties = properties;
 		this.factory = factory;
 		this.bulkProcessor = bulkProcessor;
 		this.from = from;
@@ -32,7 +31,7 @@ public class SenderAction implements Runnable {
 
 	@Override
 	public void run() {
-		IndexRequest indexRequest = new IndexRequest(indexType.getIndexName(), indexType.getTypeName());
+		IndexRequest indexRequest = new IndexRequest(properties.getIndex(), properties.getType());
 		Timer.Context insert = metrics.timer("insert-per-thread").time();
 		Timer.Context docCreation = metrics.timer("doc-creation").time();
 		try {

@@ -4,39 +4,23 @@ import static org.esbench.cmd.CommandPropsConstants.ALLOWED_CMDS;
 import static org.esbench.cmd.CommandPropsConstants.COLLECT_CMD;
 import static org.esbench.cmd.CommandPropsConstants.CONF_OPT;
 import static org.esbench.cmd.CommandPropsConstants.HELP_OPT;
-import static org.esbench.cmd.CommandPropsConstants.INDEX_OPT;
 import static org.esbench.cmd.CommandPropsConstants.INSERT_CMD;
-import static org.esbench.cmd.CommandPropsConstants.WORKLOAD_OPT;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
-import org.elasticsearch.client.Client;
 import org.esbench.core.DefaultProperties;
 import org.esbench.core.ResourceUtils;
-import org.esbench.elastic.sender.ClientSender;
-import org.esbench.elastic.sender.InsertProperties;
-import org.esbench.elastic.stats.CollectorProperties;
-import org.esbench.elastic.stats.StatsCollector;
-import org.esbench.generator.field.meta.IndexTypeMetadata;
-import org.esbench.generator.field.meta.MetadataConstants;
-import org.esbench.workload.Workload;
-import org.esbench.workload.WorkloadConstants;
-import org.esbench.workload.json.WorkloadParser;
+import org.esbench.elastic.sender.InsertDocsAction;
+import org.esbench.elastic.stats.CollectWorkloadAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 public class EsBenchCommandLine {
-	private static final String SEPARATOR = ",";
 	private static final String CMD = "cmd";
 	private static final Logger LOGGER = LoggerFactory.getLogger(EsBenchCommandLine.class);
 
@@ -53,51 +37,20 @@ public class EsBenchCommandLine {
 		if(properties.contains(HELP_OPT)) {
 			displayHelp(0);
 		}
-		executeCommand(command, properties);
-
+		DefaultProperties defaultProps = new DefaultProperties(properties);
+		EsBenchAction action = executeCommand(command);
+		action.perform(defaultProps);
 	}
 
-	private void executeCommand(String command, Properties properties) throws IOException {
+	private EsBenchAction executeCommand(String command) throws IOException {
 		switch(command) {
 		case INSERT_CMD:
-			insert(properties);
-			break;
+			return new InsertDocsAction();
 		case COLLECT_CMD:
-			collection(properties);
-			break;
+			return new CollectWorkloadAction();
 		default:
 			throw new IllegalArgumentException("Unknown command");
 		}
-	}
-
-	private void insert(Properties properties) throws IOException {
-		DefaultProperties props = new DefaultProperties(properties);
-		Client client = new ElasticClientBuilder().withProperties(props).build();
-		ClientSender sender = new ClientSender(client);
-		InsertProperties insProperties = new InsertProperties(props);
-		sender.send(insProperties);
-	}
-
-	private void collection(Properties properties) throws IOException {
-		DefaultProperties props = new DefaultProperties(properties);
-		Client client = new ElasticClientBuilder().withProperties(props).build();
-		String[] indices = props.getProperty(INDEX_OPT).split(SEPARATOR);
-
-		List<IndexTypeMetadata> types = new ArrayList<>();
-		for(String indexName : indices) {
-			CollectorProperties collectionProperties = new CollectorProperties(props);
-			StatsCollector collector = new StatsCollector(client, collectionProperties, indexName);
-			types.addAll(collector.collectIndex());
-		}
-
-		Path workloadFilePath = Paths.get(props.getProperty(WORKLOAD_OPT));
-		Files.createDirectories(workloadFilePath.getParent());
-		Writer writer = new FileWriter(workloadFilePath.toFile(), false);
-		WorkloadParser parser = new WorkloadParser();
-		Workload config = new Workload(WorkloadConstants.CURRENT_VERSION, MetadataConstants.DEFAULT_META_BY_TYPE, types);
-		parser.parse(writer, config);
-		writer.close();
-		LOGGER.info("Workload sucessfully write to {}", workloadFilePath);
 	}
 
 	private Properties loadProperties(String... args) throws IOException {

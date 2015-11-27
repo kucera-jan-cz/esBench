@@ -59,7 +59,6 @@ public class StatsCollector {
 	private static final String PROPERTIES_PROP = "properties";
 	// Search constants
 	private static final int ZERO_ITEMS = 0;
-	private static final int MAX_ITEMS_SIZE = 0;
 	// Aggregation constants
 	private static final String VALUE_COUNT_AGG = "field_stats";
 	private static final String EXTENDED_STATS_AGG = "extended_stats";
