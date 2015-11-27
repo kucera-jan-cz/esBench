@@ -91,7 +91,7 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 		assertTrue(client.index(indexBuilder.setId("2").setSource(doc02).request()).actionGet().isCreated());
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();
 		Properties props = new Properties();
-		props.put("tokens.string.min_occurence", 0);
+		props.put("tokens.string.min_occurence", "0");
 		defaultProperties = new DefaultProperties(props, ResourceUtils.asProperties("default.properties"));
 	}
 
