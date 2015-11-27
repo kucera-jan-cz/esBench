@@ -29,7 +29,6 @@ public abstract class FieldDeserializer<T extends FieldMetadata> extends JsonDes
 	@Override
 	public T deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
-
 		JsonNode node = mapper.readTree(jsonParser);
 
 		String fullFieldName = node.textValue();

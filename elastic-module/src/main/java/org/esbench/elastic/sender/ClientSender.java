@@ -10,8 +10,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.esbench.elastic.sender.exceptions.InsertionFailure;
-import org.esbench.generator.document.simple.SimpleDocumentFactory;
-import org.esbench.generator.field.meta.IndexTypeMetadata;
+import org.esbench.generator.document.DocumentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,21 +32,20 @@ public class ClientSender {
 		this.client = client;
 	}
 
-	public void send(IndexTypeMetadata indexType, InsertProperties properties) throws IOException {
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(indexType);
+	public void send(DocumentFactory<String> factory, InsertProperties properties) throws IOException {
 		String index = properties.getIndex();
 		String type = properties.getType();
 		for(int i = 0; i < properties.getNumOfIterations(); i++) {
 			LOGGER.info("Iteration {}: Sending {} documents to /{}/{}", i, properties.getDocPerIteration(), index, type);
 			try {
-				execute(indexType, factory, properties);
+				execute(factory, properties);
 			} catch (InterruptedException ex) {
 				throw new InsertionFailure("Failed to send documents", ex);
 			}
 		}
 	}
 
-	private void execute(IndexTypeMetadata indexType, SimpleDocumentFactory factory, InsertProperties properties) throws InterruptedException {
+	private void execute(DocumentFactory<String> factory, InsertProperties properties) throws InterruptedException {
 		final int threads = properties.getNumOfThreads();
 		ExecutorService service = Executors.newFixedThreadPool(threads);
 		int from = 0;

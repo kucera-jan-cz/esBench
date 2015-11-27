@@ -9,6 +9,7 @@ import org.elasticsearch.client.Client;
 import org.esbench.cmd.ElasticClientBuilder;
 import org.esbench.cmd.EsBenchAction;
 import org.esbench.core.DefaultProperties;
+import org.esbench.generator.document.simple.SimpleDocumentFactory;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.workload.Workload;
 import org.esbench.workload.json.WorkloadParser;
@@ -34,7 +35,8 @@ public class InsertDocsAction implements EsBenchAction {
 		Workload configuration = parser.parse(reader);
 		IndexTypeMetadata indexType = getIndexType(insProperties, configuration);
 		ClientSender sender = new ClientSender(client);
-		sender.send(indexType, insProperties);
+		SimpleDocumentFactory factory = new SimpleDocumentFactory(indexType);
+		sender.send(factory, insProperties);
 	}
 
 	IndexTypeMetadata getIndexType(InsertProperties properties, Workload configuration) {
