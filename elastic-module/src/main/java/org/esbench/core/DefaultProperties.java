@@ -1,5 +1,6 @@
 package org.esbench.core;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.commons.lang3.Validate;

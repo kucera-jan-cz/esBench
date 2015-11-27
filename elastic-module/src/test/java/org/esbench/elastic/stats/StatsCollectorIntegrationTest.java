@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,8 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuild
 import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
+import org.esbench.core.DefaultProperties;
+import org.esbench.core.ResourceUtils;
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.FieldMetadata;
@@ -67,6 +70,7 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 	private final List<FieldMetadata> nestedInnerMetadata = Arrays.asList(new StringFieldMetadata("fNested.nString", 1, 2, Arrays.asList("xy", "z")),
 			nNestedField);
 	private final ObjectTypeMetadata fNestedMeta = new ObjectTypeMetadata("fNested", nestedInnerMetadata);
+	private DefaultProperties defaultProperties;
 
 	@BeforeClass
 	public void initCluster() throws IOException {
@@ -86,6 +90,7 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 		assertTrue(client.index(indexBuilder.setId("1").setSource(doc01).request()).actionGet().isCreated());
 		assertTrue(client.index(indexBuilder.setId("2").setSource(doc02).request()).actionGet().isCreated());
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();
+		defaultProperties = new DefaultProperties(new Properties(), ResourceUtils.asProperties("default.properties"));
 	}
 
 	@AfterClass
@@ -95,7 +100,7 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 
 	@Test
 	public void init() throws IOException {
-		StatsCollector collector = new StatsCollector(client, INDEX_NAME);
+		StatsCollector collector = new StatsCollector(client, new CollectorProperties(defaultProperties), INDEX_NAME);
 		List<IndexTypeMetadata> types = collector.collectIndex();
 
 		assertEquals(types.size(), 1);

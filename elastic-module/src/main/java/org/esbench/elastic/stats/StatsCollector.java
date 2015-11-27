@@ -35,7 +35,6 @@ import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStat
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStatsBuilder;
 import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount;
 import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCountBuilder;
-import org.esbench.core.DefaultProperties;
 import org.esbench.generator.field.FieldConstants;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
@@ -69,10 +68,6 @@ public class StatsCollector {
 	private final Client client;
 	private final String indexName;
 	private final CollectorProperties props;
-
-	public StatsCollector(Client client, String indexName) {
-		this(client, new CollectorProperties(DefaultProperties.EMPTY), indexName);
-	}
 
 	public StatsCollector(Client client, CollectorProperties props, String indexName) {
 		this.client = client;
