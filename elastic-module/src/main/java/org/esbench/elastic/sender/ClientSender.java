@@ -1,22 +1,17 @@
 package org.esbench.elastic.sender;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.elasticsearch.action.bulk.BulkProcessor;
-import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.esbench.elastic.sender.exceptions.InsertionFailure;
 import org.esbench.generator.document.simple.SimpleDocumentFactory;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
-import org.esbench.workload.Workload;
-import org.esbench.workload.json.WorkloadParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,49 +33,18 @@ public class ClientSender {
 		this.client = client;
 	}
 
-	public void send(InsertProperties properties) throws IOException {
-		WorkloadParser parser = new WorkloadParser();
-		Reader reader = new FileReader(properties.getWorkloadLocation());
-		Workload configuration = parser.parse(reader);
-		IndexTypeMetadata indexType = getIndexType(properties, configuration);
+	public void send(IndexTypeMetadata indexType, InsertProperties properties) throws IOException {
 		SimpleDocumentFactory factory = new SimpleDocumentFactory(indexType);
-
-		String index = indexType.getIndexName();
-		String type = indexType.getTypeName();
+		String index = properties.getIndex();
+		String type = properties.getType();
 		for(int i = 0; i < properties.getNumOfIterations(); i++) {
 			LOGGER.info("Iteration {}: Sending {} documents to /{}/{}", i, properties.getDocPerIteration(), index, type);
 			try {
-				if(properties.getNumOfThreads() < 2) {
-					executeSingleThreaded(properties, indexType, factory);
-				} else {
-					execute(indexType, factory, properties);
-				}
+				execute(indexType, factory, properties);
 			} catch (InterruptedException ex) {
 				throw new InsertionFailure("Failed to send documents", ex);
 			}
 		}
-	}
-
-	private void executeSingleThreaded(InsertProperties properties, IndexTypeMetadata indexType, SimpleDocumentFactory factory) throws InterruptedException {
-		BulkProcessor bulkProcessor = BulkProcessor.builder(client, new BulkListener(metrics))
-				.setBulkActions(10_000)
-				.setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
-				.setConcurrentRequests(4)
-				.build();
-
-		IndexRequest indexRequest = new IndexRequest(indexType.getIndexName(), indexType.getTypeName());
-		Timer.Context insert = metrics.timer("insert-single-total").time();
-		Timer.Context docCreation = metrics.timer("doc-creation").time();
-		for(int i = 0; i < properties.getDocPerIteration(); i++) {
-			String json = factory.newInstance(i);
-			bulkProcessor.add(indexRequest.source(json));
-			LOGGER.trace("JSON: {}", json);
-		}
-		docCreation.stop();
-		bulkProcessor.awaitClose(60, TimeUnit.SECONDS);
-		bulkProcessor.close();
-		insert.stop();
-		reporter.report();
 	}
 
 	private void execute(IndexTypeMetadata indexType, SimpleDocumentFactory factory, InsertProperties properties) throws InterruptedException {
@@ -89,33 +53,21 @@ public class ClientSender {
 		int from = 0;
 		int perThread = properties.getDocPerIteration() / threads;
 		int to = 0;
-		Timer.Context insert = metrics.timer("insert-threads-total").time();
+		Timer.Context insert = metrics.timer("insert-total").time();
 		for(int i = 0; i < threads; i++) {
 			BulkProcessor bulkProcessor = BulkProcessor.builder(client, new BulkListener(metrics))
-					.setBulkActions(20_000)
+					.setBulkActions(properties.getBulkActions())
 					.setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
-					.setConcurrentRequests(2)
+					.setConcurrentRequests(properties.getBulkThreads())
 					.build();
 			from = to;
 			to = from + perThread;
-			SenderAction action = new SenderAction(metrics, indexType, factory, bulkProcessor, from, to);
+			SenderAction action = new SenderAction(metrics, properties, factory, bulkProcessor, from, to);
 			service.execute(action);
 		}
 		service.shutdown();
 		service.awaitTermination(60, TimeUnit.MINUTES);
 		insert.stop();
 		reporter.report();
-	}
-
-	private IndexTypeMetadata getIndexType(InsertProperties properties, Workload configuration) {
-		String indexName = properties.getIndex();
-		String type = properties.getType();
-		for(IndexTypeMetadata meta : configuration.getIndiceTypes()) {
-			if(indexName.equals(meta.getIndexName()) && type.equals(meta.getTypeName())) {
-				return meta;
-			}
-		}
-		String msg = String.format("Can't locate index %s and type %s in configuration", indexName, type);
-		throw new IllegalArgumentException(msg);
 	}
 }
