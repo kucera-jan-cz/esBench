@@ -43,7 +43,7 @@ public class FieldMetadataSerializerTest {
 
 	@Test
 	public void deserialize() throws JsonParseException, JsonMappingException, IOException {
-		String json = ResourcesUtils.loadAsString("configuration/test01.json");
+		String json = ResourcesUtils.loadAsString("configuration/index-meta-test01.json");
 		// mapper.enableDefaultTyping();
 		// IndexTypeMetadata metadata = mapper.readValue(json, IndexTypeMetadata.class);
 		IndexTypeMetadata metadata = mapper.readValue(json, IndexTypeMetadata.class);

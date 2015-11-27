@@ -33,11 +33,10 @@ public class EsBenchCommandLine {
 			LOGGER.error("Command is not defined or invalid, please read help");
 			displayHelp(10);
 		}
-		Properties properties = loadProperties(args);
-		if(properties.contains(HELP_OPT)) {
+		DefaultProperties defaultProps = loadProperties(args);
+		if(defaultProps.contains(HELP_OPT)) {
 			displayHelp(0);
 		}
-		DefaultProperties defaultProps = new DefaultProperties(properties);
 		EsBenchAction action = executeCommand(command);
 		action.perform(defaultProps);
 	}
@@ -53,7 +52,7 @@ public class EsBenchCommandLine {
 		}
 	}
 
-	private Properties loadProperties(String... args) throws IOException {
+	private DefaultProperties loadProperties(String... args) throws IOException {
 		SimpleCommandLinePropertySource cmdSource = new SimpleCommandLinePropertySource(CMD, args);
 		Properties defaultProps = ResourceUtils.asProperties("default.properties");
 		Properties properties = new Properties(defaultProps);
@@ -71,7 +70,8 @@ public class EsBenchCommandLine {
 			LOGGER.debug("Overriding {} to {}", name, value);
 			properties.put(name, value);
 		}
-		return properties;
+
+		return new DefaultProperties(properties, defaultProps);
 	}
 
 	private void displayHelp(int returnCode) throws IOException {
