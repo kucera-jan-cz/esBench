@@ -1,4 +1,4 @@
-package org.esbench.cmd;
+package org.esbench.elastic.utils;
 
 import static org.esbench.cmd.CommandPropsConstants.CLUSTER_OPT;
 import static org.esbench.cmd.CommandPropsConstants.HOST_OPT;

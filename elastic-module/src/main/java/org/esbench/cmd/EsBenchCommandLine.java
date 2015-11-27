@@ -1,6 +1,6 @@
 package org.esbench.cmd;
 
-import static org.esbench.cmd.CommandPropsConstants.ALLOWED_CMDS;
+import static org.esbench.cmd.CommandPropsConstants.*;
 import static org.esbench.cmd.CommandPropsConstants.COLLECT_CMD;
 import static org.esbench.cmd.CommandPropsConstants.CONF_OPT;
 import static org.esbench.cmd.CommandPropsConstants.HELP_OPT;
@@ -14,7 +14,9 @@ import java.util.Properties;
 
 import org.esbench.core.DefaultProperties;
 import org.esbench.core.ResourceUtils;
-import org.esbench.elastic.sender.InsertDocsAction;
+import org.esbench.elastic.sender.SimpleInsertAction;
+import org.esbench.elastic.sender.cluster.MasterNodeInsertAction;
+import org.esbench.elastic.sender.cluster.SlaveNodeInsertAction;
 import org.esbench.elastic.stats.CollectWorkloadAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +46,13 @@ public class EsBenchCommandLine {
 	private EsBenchAction executeCommand(String command) throws IOException {
 		switch(command) {
 		case INSERT_CMD:
-			return new InsertDocsAction();
+			return new SimpleInsertAction();
 		case COLLECT_CMD:
 			return new CollectWorkloadAction();
+		case INSERT_MASTER_CMD:
+			return new MasterNodeInsertAction();
+		case INSERT_SLAVE_CMD:
+			return new SlaveNodeInsertAction();
 		default:
 			throw new IllegalArgumentException("Unknown command");
 		}

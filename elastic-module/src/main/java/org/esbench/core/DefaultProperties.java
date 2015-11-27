@@ -1,5 +1,8 @@
 package org.esbench.core;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.commons.lang3.Validate;
@@ -9,15 +12,16 @@ import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.ConverterNotFoundException;
 import org.springframework.core.convert.support.DefaultConversionService;
 
-public class DefaultProperties {
+public class DefaultProperties implements Serializable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultProperties.class);
 	public static final DefaultProperties EMPTY = new DefaultProperties(new Properties(), new Properties());
-	private final DefaultConversionService converter = new DefaultConversionService();
+	private transient DefaultConversionService converter;
 	private final Properties userDefined;
 	private final Properties defaultProperties;
 	private final Properties merged;
 
 	public DefaultProperties(Properties props, Properties defaults) {
+		this.converter = new DefaultConversionService();
 		this.userDefined = props;
 		this.defaultProperties = defaults;
 		this.merged = new Properties();
@@ -65,6 +69,11 @@ public class DefaultProperties {
 			LOGGER.warn("Invalid type for property: {}, value: {}, reason: {}", propertyName, value, ex.getMessage());
 			throw new IllegalArgumentException();
 		}
+	}
+
+	private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+		inputStream.defaultReadObject();
+		converter = new DefaultConversionService();
 	}
 
 	public boolean contains(String helpOpt) {

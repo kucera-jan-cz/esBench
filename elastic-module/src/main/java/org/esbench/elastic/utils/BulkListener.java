@@ -1,4 +1,4 @@
-package org.esbench.elastic.sender;
+package org.esbench.elastic.utils;
 
 import org.elasticsearch.action.bulk.BulkProcessor.Listener;
 import org.elasticsearch.action.bulk.BulkRequest;

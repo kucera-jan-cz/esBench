@@ -10,8 +10,10 @@ public final class CommandPropsConstants {
 
 	// Commands
 	public static final String INSERT_CMD = "insert";
+	public static final String INSERT_MASTER_CMD = "insert-master";
+	public static final String INSERT_SLAVE_CMD = "insert-slave";
 	public static final String COLLECT_CMD = "collect";
-	static final List<String> ALLOWED_CMDS = Arrays.asList(COLLECT_CMD, INSERT_CMD);
+	static final List<String> ALLOWED_CMDS = Arrays.asList(COLLECT_CMD, INSERT_CMD, INSERT_MASTER_CMD, INSERT_SLAVE_CMD);
 
 	// General options
 	public static final String HELP_OPT = "help";

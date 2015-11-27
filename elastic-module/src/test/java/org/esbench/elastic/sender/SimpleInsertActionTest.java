@@ -2,10 +2,10 @@ package org.esbench.elastic.sender;
 
 import org.esbench.workload.Workload;
 
-public class InsertDocsActionTest {
+public class SimpleInsertActionTest {
 
 	public void getIndexType() {
-		InsertDocsAction action = new InsertDocsAction();
+		SimpleInsertAction action = new SimpleInsertAction();
 		InsertProperties properties = null;
 		Workload configuration = null;
 		action.getIndexType(properties, configuration);

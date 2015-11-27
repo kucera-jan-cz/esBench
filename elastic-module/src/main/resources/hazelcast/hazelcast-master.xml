@@ -1,0 +1,26 @@
+<hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config
+    http://www.hazelcast.com/schema/config/hazelcast-config-3.5.xsd" xmlns="http://www.hazelcast.com/schema/config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <executor-service name="default">
+        <pool-size>8</pool-size>
+        <!--Queue capacity. 0 means Integer.MAX_VALUE.-->
+        <queue-capacity>0</queue-capacity>
+    </executor-service>
+
+
+	<properties>
+		<property name="hazelcast.logging.type">slf4j</property>
+		<property name="hazelcast.memcache.enabled">false</property>
+		<property name="hazelcast.rest.enabled">false</property>
+		<property name="hazelcast.version.check.enabled">false</property>
+		<property name="hazelcast.mc.url.change.enabled">false</property>
+		
+		<property name="hazelcast.io.thread.count">1</property>
+		<property name="hazelcast.operation.thread.count">1</property>
+		<property name="hazelcast.operation.generic.thread.count">1</property>
+		<property name="hazelcast.event.thread.count">1</property>
+		
+<!-- 		hazelcast.client.event.thread.count -->
+	</properties>
+</hazelcast>

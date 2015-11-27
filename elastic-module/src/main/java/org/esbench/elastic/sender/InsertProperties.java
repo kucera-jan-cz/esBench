@@ -21,6 +21,8 @@ public class InsertProperties {
 	static final String BULK_ACTIONS = "insert.bulk.actions";
 	static final String BULK_THREADS = "insert.bulk.threads";
 
+	static final String CLUSTER_NODES = "insert.cluster.nodes";
+
 	private final int numOfThreads;
 	private final int numOfIterations;
 	private final int docPerIteration;
@@ -31,6 +33,7 @@ public class InsertProperties {
 	private final String workloadType;
 	private final int bulkThreads;
 	private final int bulkActions;
+	private final int clusterNodes;
 
 	public InsertProperties(DefaultProperties props) {
 		Validate.notNull(props);
@@ -50,6 +53,8 @@ public class InsertProperties {
 
 		bulkActions = props.getInt(BULK_ACTIONS);
 		bulkThreads = props.getInt(BULK_THREADS);
+
+		clusterNodes = props.getInt(CLUSTER_NODES);
 	}
 
 	public int getNumOfThreads() {
@@ -90,6 +95,10 @@ public class InsertProperties {
 
 	public int getBulkActions() {
 		return bulkActions;
+	}
+
+	public int getClusterNodes() {
+		return clusterNodes;
 	}
 
 }
