@@ -85,7 +85,7 @@ public class StatsCollector {
 			MappingMetaData meta = mapping.get(indexType);
 			LOGGER.info("Index: {} Type: {}", indexName, indexType);
 			String mappingsAsJson = meta.source().string();
-			LOGGER.info("JSON:\n{}", mappingsAsJson);
+			LOGGER.debug("JSON:\n{}", mappingsAsJson);
 
 			JsonNode root = mapper.readValue(mappingsAsJson, JsonNode.class);
 			JsonNode typeProp = root.path(indexType).path(PROPERTIES_PROP);
