@@ -25,7 +25,6 @@ import org.esbench.testng.AbstractSharedElasticSearchIntegrationTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class DocumentSenderIntegrationTest extends AbstractSharedElasticSearchIntegrationTest {
@@ -43,10 +42,10 @@ public class DocumentSenderIntegrationTest extends AbstractSharedElasticSearchIn
 		assertTrue(client.admin().indices().create(indexRequest).actionGet().isAcknowledged());
 
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();
+		insertDocuments();
 	}
 
-	@BeforeTest
-	public void insertDocuments() throws IOException {
+	private void insertDocuments() throws IOException {
 		SimpleInsertAction action = new SimpleInsertAction();
 		Properties inputProps = new Properties();
 		inputProps.put(CommandPropsConstants.INDEX_OPT, INDEX_NAME);
