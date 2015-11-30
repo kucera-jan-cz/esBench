@@ -31,13 +31,16 @@ public class SenderAction implements Runnable {
 
 	@Override
 	public void run() {
-		IndexRequest indexRequest = new IndexRequest(properties.getIndex(), properties.getType());
+		String index = properties.getIndex();
+		String type = properties.getType();
+		IndexRequest indexRequest;
 		Timer.Context insert = metrics.timer("insert-per-thread").time();
 		Timer.Context docCreation = metrics.timer("doc-creation").time();
 		try {
 			for(int i = from; i < to; i++) {
 				String json = factory.newInstance(i);
-				bulkProcessor.add(indexRequest.source(json));
+				indexRequest = new IndexRequest(index, type).source(json);
+				bulkProcessor.add(indexRequest);
 			}
 			docCreation.stop();
 			bulkProcessor.awaitClose(60, TimeUnit.SECONDS);

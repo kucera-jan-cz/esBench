@@ -10,11 +10,14 @@
     "OBJECT":{"type":"OBJECT", "array":1, "innerMetadata":[ ], "strategy":"SEQUENCE"}
   },
   "histogram":[ {
-    "index":"INDEX",
-    "type":"TYPE",
+    "index":"index",
+    "type":"type",
     "fields":{
-      "title":{"type":"STRING", "array":3, "strategy":"SEQUENCE", "tokens":[ "a", "b", "c" ], "words":2},
-      "title":{"type":"STRING", "strategy":"SEQUENCE", "tokens":[ "x", "y", "z" ], "words":3},
+      "title" : {"type": "MULTI", "fields" : [
+      	{"type":"STRING", "array":3, "strategy":"SEQUENCE", "tokens":[ "a", "b", "c" ], "words":2},
+      	{"type":"STRING", "strategy":"SEQUENCE", "tokens":[ "x", "y", "z" ], "words":3}
+      ]},
+      
       "type":{"type":"STRING", "strategy":"SEQUENCE", "tokens":[ "x", "y", "z" ], "words":3},
       "controversial":{"type":"BOOLEAN", "strategy":"SEQUENCE", "tokens":"ALWAYS_TRUE"},
       "latest":{"type":"BOOLEAN", "strategy":"SEQUENCE"},
