@@ -33,6 +33,6 @@ esbench insert --index=perf_games --type=game --insert.docs=10000 --insert.threa
 ### Requirements:
 * Java 8
 * Elasticsearch 2.0+ [Older versions may be supported]
-* 
+ 
 ### Development and feedback
 Currently **esBench** in **early phase of development** meaning that API, configuration format may change release to release. Early adopters are **more than welcome** to provide feedback and influence [future versions and features](https://github.com/kucera-jan-cz/esBench/wiki/Future-features).
