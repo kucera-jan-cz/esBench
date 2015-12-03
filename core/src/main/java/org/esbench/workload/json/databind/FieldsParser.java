@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.Validate;
 import org.esbench.generator.field.meta.FieldMetadata;
-import org.esbench.generator.field.meta.FieldMetadataUtils;
 import org.esbench.generator.field.meta.MetaType;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -80,9 +79,7 @@ public class FieldsParser {
 
 	private FieldMetadata deserializeMetadata(ObjectMapper mapper, JsonParser json) throws JsonParseException, IOException {
 		FieldMetadata diff = mapper.readValue(json, FieldMetadata.class);
-		MetaType metaType = diff.getMetaType();
-		FieldMetadata defaultMeta = defaultMetaProvider.getDefaultMetadata(metaType);
-		return FieldMetadataUtils.merge(diff, defaultMeta);
+		return defaultMetaProvider.mergeWithDefault(diff);
 	}
 
 	private JsonParser enrichJsonObject(ObjectMapper mapper, String fieldName, JsonNode fieldJson) throws IOException {

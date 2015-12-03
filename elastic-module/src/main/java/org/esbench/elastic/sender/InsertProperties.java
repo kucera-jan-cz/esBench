@@ -12,6 +12,7 @@ public class InsertProperties {
 	static final String DOCS = "insert.docs";
 	static final String THREADS = "insert.threads";
 	static final String ITERATIONS = "insert.iterations";
+	static final String CACHE_LIMIT = "insert.cache.value_limit";
 
 	// Loading workload
 	static final String WORKLOAD_INDEX = "workload.index";
@@ -26,6 +27,7 @@ public class InsertProperties {
 	private final int numOfThreads;
 	private final int numOfIterations;
 	private final int docPerIteration;
+	private final int fieldCacheLimit;
 	private final String workloadLocation;
 	private final String index;
 	private final String type;
@@ -45,6 +47,7 @@ public class InsertProperties {
 		numOfThreads = props.getInt(THREADS);
 		numOfIterations = props.getInt(ITERATIONS);
 		docPerIteration = props.getInt(DOCS);
+		fieldCacheLimit = props.getInt(CACHE_LIMIT);
 
 		workloadLocation = props.getProperty(CommandPropsConstants.WORKLOAD_OPT);
 		Validate.notEmpty(workloadLocation, "Workload property is not defined");
@@ -71,6 +74,10 @@ public class InsertProperties {
 
 	public String getWorkloadLocation() {
 		return workloadLocation;
+	}
+
+	public int getFieldCacheLimit() {
+		return fieldCacheLimit;
 	}
 
 	public String getWorkloadIndex() {
@@ -100,5 +107,4 @@ public class InsertProperties {
 	public int getClusterNodes() {
 		return clusterNodes;
 	}
-
 }

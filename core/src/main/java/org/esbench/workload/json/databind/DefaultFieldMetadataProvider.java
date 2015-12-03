@@ -19,7 +19,6 @@ public class DefaultFieldMetadataProvider {
 		return defaultMeta;
 	}
 
-	// @TODO - implement also "merging mechanism" and to remove DRY
 	public FieldMetadata getDiff(FieldMetadata field) {
 		MetaType metaType = field.getMetaType();
 		FieldMetadata defaultMeta = getDefaultMetadata(metaType);
@@ -30,6 +29,12 @@ public class DefaultFieldMetadataProvider {
 		} else {
 			return field;
 		}
+	}
+
+	public FieldMetadata mergeWithDefault(FieldMetadata diff) {
+		MetaType metaType = diff.getMetaType();
+		FieldMetadata defaultMeta = getDefaultMetadata(metaType);
+		return FieldMetadataUtils.merge(diff, defaultMeta);
 	}
 
 	public void registerDefaultMetadata(FieldMetadata meta) {

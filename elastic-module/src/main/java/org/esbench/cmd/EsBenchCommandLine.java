@@ -1,10 +1,12 @@
 package org.esbench.cmd;
 
-import static org.esbench.cmd.CommandPropsConstants.*;
+import static org.esbench.cmd.CommandPropsConstants.ALLOWED_CMDS;
 import static org.esbench.cmd.CommandPropsConstants.COLLECT_CMD;
 import static org.esbench.cmd.CommandPropsConstants.CONF_OPT;
 import static org.esbench.cmd.CommandPropsConstants.HELP_OPT;
 import static org.esbench.cmd.CommandPropsConstants.INSERT_CMD;
+import static org.esbench.cmd.CommandPropsConstants.INSERT_MASTER_CMD;
+import static org.esbench.cmd.CommandPropsConstants.INSERT_SLAVE_CMD;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

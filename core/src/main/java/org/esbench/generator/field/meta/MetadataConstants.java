@@ -11,6 +11,7 @@ import org.esbench.generator.field.meta.BooleanFieldMetadata.Type;
 import com.google.common.collect.ImmutableMap;
 
 public final class MetadataConstants {
+	public static final int UNDEFINED_UNQIUE_VALUES = -1;
 	public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 	public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN).withZone(ZoneId.of("UTC"));
 

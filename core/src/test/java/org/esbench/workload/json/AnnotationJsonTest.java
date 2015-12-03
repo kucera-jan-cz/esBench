@@ -2,6 +2,7 @@ package org.esbench.workload.json;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IPv4FieldMetadata;
@@ -20,12 +21,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AnnotationJsonTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationJsonTest.class);
 
-	// @Test
+	@Test
 	public void serialize() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		StringFieldMetadata stringField = new StringFieldMetadata("fString", 2, 2, MetadataConstants.DEFAULT_STRING_META.getTokens());
+		ObjectMapper mapper = MapperFactory.initMapper();
+
+		StringFieldMetadata stringField = new StringFieldMetadata("fString", 2, 2, Arrays.asList("A", "B", "C"));
 		String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(stringField);
 		LOGGER.info("\n{}", json);
+
+		TokenListTestUtil.registerTokens(mapper, 0, Arrays.asList("A", "B", "C"));
 		LOGGER.info("\n{}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(MetadataConstants.DEFAULT_BOOLEAN_META));
 		LOGGER.info("\n{}", mapper.readValue(json, FieldMetadata.class));
 	}
@@ -33,6 +37,8 @@ public class AnnotationJsonTest {
 	@Test
 	public void serializeIndexType() throws IOException {
 		ObjectMapper mapper = MapperFactory.initMapper();
+		TokenListTestUtil.registerTokens(mapper, Collections.emptyList());
+		TokenListTestUtil.registerTokens(mapper, Arrays.asList("A", "B", "C"));
 
 		StringFieldMetadata stringField = new StringFieldMetadata("fString", 2, 2, MetadataConstants.DEFAULT_STRING_META.getTokens());
 		NumericFieldMetadata integerField = new NumericFieldMetadata("fInteger", 1, MetaType.INTEGER, 0, 10, 1);

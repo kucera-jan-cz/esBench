@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.esbench.generator.field.meta.FieldMetadata;
-import org.esbench.generator.field.meta.FieldMetadataUtils;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
-import org.esbench.generator.field.meta.MetaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,8 +86,6 @@ public class IndexTypeDeserializer extends JsonDeserializer<IndexTypeMetadata> {
 		jp.nextToken();
 		tb.close();
 		FieldMetadata diff = mapper.readValue(jp, FieldMetadata.class);
-		MetaType metaType = diff.getMetaType();
-		FieldMetadata defaultMeta = defaultMetaProvider.getDefaultMetadata(metaType);
-		return FieldMetadataUtils.merge(diff, defaultMeta);
+		return defaultMetaProvider.mergeWithDefault(diff);
 	}
 }
