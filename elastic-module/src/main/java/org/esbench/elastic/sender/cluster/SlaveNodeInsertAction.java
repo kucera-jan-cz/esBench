@@ -2,6 +2,7 @@ package org.esbench.elastic.sender.cluster;
 
 import static org.esbench.elastic.sender.cluster.ClusterConstants.CONF_MAP;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.DEFAULT_PROPS;
+import static org.esbench.elastic.sender.cluster.ClusterConstants.DEFAULT_WAIT_UNIT;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.EXEC_LATCH;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.NODE_ID;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.PREP_LATCH;
@@ -68,7 +69,7 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 		if(id < 1) {
 			prepLatch.trySetCount(1);
 		}
-		prepLatch.await(10, TimeUnit.MINUTES);
+		prepLatch.await(DEFAULT_WAIT_UNIT, TimeUnit.MINUTES);
 
 		execLatch = hz.getCountDownLatch(EXEC_LATCH);
 
@@ -90,7 +91,7 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 		int docsPerIteration = insProperties.getDocPerIteration();
 		int startingFrom = docsPerIteration * (int) id;
 		execLatch.countDown();
-		execLatch.await(10, TimeUnit.MINUTES);
+		execLatch.await(DEFAULT_WAIT_UNIT, TimeUnit.MINUTES);
 		sender.send(factory, insProperties, startingFrom);
 	}
 

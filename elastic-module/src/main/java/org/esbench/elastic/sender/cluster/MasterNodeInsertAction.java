@@ -2,6 +2,7 @@ package org.esbench.elastic.sender.cluster;
 
 import static org.esbench.elastic.sender.cluster.ClusterConstants.CONF_MAP;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.DEFAULT_PROPS;
+import static org.esbench.elastic.sender.cluster.ClusterConstants.DEFAULT_WAIT_UNIT;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.EXEC_LATCH;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.NODE_ID;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.PREP_LATCH;
@@ -107,7 +108,7 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 		DocumentSender sender = new DocumentSender(client);
 		LOGGER.info("Waiting for slave nodes...");
 		execLatch.countDown();
-		Validate.isTrue(execLatch.await(10, TimeUnit.MINUTES), "Execution failed: waiting for nodes exceeded limit");
+		Validate.isTrue(execLatch.await(DEFAULT_WAIT_UNIT, TimeUnit.MINUTES), "Execution failed: waiting for nodes exceeded limit");
 		LOGGER.info("All nodes ready, startign inserting...");
 		sender.send(factory, insProperties, startingFrom);
 	}
@@ -119,7 +120,7 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 		lock.lock();
 		try {
 			while(clientService.getConnectedClients().size() > 0) {
-				notEmpty.await();
+				notEmpty.await(DEFAULT_WAIT_UNIT, TimeUnit.MINUTES);
 			}
 		} finally {
 			lock.unlock();

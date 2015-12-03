@@ -13,6 +13,8 @@ public final class ClusterConstants {
 	public static final String WORKLOAD = "workload";
 	public static final String NODE_ID = "nodeId";
 
+	public static final int DEFAULT_WAIT_UNIT = 10;
+
 	private ClusterConstants() {
 	}
 }

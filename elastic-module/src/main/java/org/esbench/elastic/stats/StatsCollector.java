@@ -10,10 +10,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsAction;
-import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequestBuilder;
 import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse;
-import org.elasticsearch.action.search.SearchAction;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
@@ -76,7 +73,7 @@ public class StatsCollector {
 	}
 
 	public List<IndexTypeMetadata> collectIndex() throws IOException {
-		GetMappingsResponse response = new GetMappingsRequestBuilder(client, GetMappingsAction.INSTANCE, indexName).get();
+		GetMappingsResponse response = client.admin().indices().prepareGetMappings(indexName).get();
 		ImmutableOpenMap<String, MappingMetaData> mapping = response.getMappings().get(indexName);
 		String[] indexTypes = mapping.keys().toArray(String.class);
 		ObjectMapper mapper = new ObjectMapper();
@@ -185,7 +182,7 @@ public class StatsCollector {
 	}
 
 	private SearchRequestBuilder createStringSearchBuilder(Collection<FieldInfo> fields) {
-		SearchRequestBuilder builder = new SearchRequestBuilder(client, SearchAction.INSTANCE);
+		SearchRequestBuilder builder = client.prepareSearch(indexName);
 		for(FieldInfo info : fields) {
 			TermsBuilder tokenBuilder = AggregationBuilders.terms(TERMS_AGG + info.getFullPath())
 					.field(info.getFullPath())
@@ -198,7 +195,7 @@ public class StatsCollector {
 			FilterAggregationBuilder filterBuilder = AggregationBuilders.filter(FILTER_AGG + info.getFullPath()).filter(filter).subAggregation(countBuilder);
 			builder.addAggregation(createNestedIfNecessary(info, filterBuilder));
 		}
-		builder.setIndices(indexName).setSize(ZERO_ITEMS);
+		builder.setSize(ZERO_ITEMS);
 		return builder;
 	}
 
@@ -223,14 +220,14 @@ public class StatsCollector {
 	}
 
 	private SearchRequestBuilder createNumericSearchBuilder(Collection<FieldInfo> fields) {
-		SearchRequestBuilder builder = new SearchRequestBuilder(client, SearchAction.INSTANCE);
+		SearchRequestBuilder builder = client.prepareSearch(indexName);
 		for(FieldInfo info : fields) {
 			ExtendedStatsBuilder stats = AggregationBuilders.extendedStats(EXTENDED_STATS_AGG + info.getFullPath()).field(info.getFullPath());
 			QueryBuilder filter = new BoolQueryBuilder().filter(new ExistsQueryBuilder(info.getFullPath()));
 			FilterAggregationBuilder aggregation = AggregationBuilders.filter(FILTER_AGG + info.getFullPath()).filter(filter).subAggregation(stats);
 			builder.addAggregation(createNestedIfNecessary(info, aggregation));
 		}
-		builder.setIndices(indexName).setSize(ZERO_ITEMS);
+		builder.setSize(ZERO_ITEMS);
 		return builder;
 	}
 
