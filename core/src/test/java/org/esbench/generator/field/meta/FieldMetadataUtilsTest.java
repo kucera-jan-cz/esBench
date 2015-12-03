@@ -33,8 +33,7 @@ public class FieldMetadataUtilsTest {
 		LOGGER.info("{}", updated);
 		assertEquals(updated.getFullPath(), fullPath);
 		assertEquals(updated.getTokens(), tokens);
-		// Deep copy is not required
-		assertTrue(updated.getTokens() == tokens);
+		assertTrue(updated.getTokens() != tokens);
 	}
 
 	@Test

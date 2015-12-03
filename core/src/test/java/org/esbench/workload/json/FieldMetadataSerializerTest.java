@@ -2,6 +2,7 @@ package org.esbench.workload.json;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.BooleanFieldMetadata.Type;
@@ -27,6 +28,8 @@ public class FieldMetadataSerializerTest {
 	@BeforeClass
 	public void initMapper() {
 		mapper = MapperFactory.initMapper();
+		TokenListTestUtil.registerTokens(mapper, Collections.emptyList());
+		TokenListTestUtil.registerTokens(mapper, Arrays.asList("a", "b", "c"));
 	}
 
 	@Test
@@ -44,10 +47,7 @@ public class FieldMetadataSerializerTest {
 	@Test
 	public void deserialize() throws JsonParseException, JsonMappingException, IOException {
 		String json = ResourcesUtils.loadAsString("configuration/index-meta-test01.json");
-		// mapper.enableDefaultTyping();
-		// IndexTypeMetadata metadata = mapper.readValue(json, IndexTypeMetadata.class);
 		IndexTypeMetadata metadata = mapper.readValue(json, IndexTypeMetadata.class);
-		// LOGGER.info("{}", Arrays.toString(metadata));
 		LOGGER.info("{}", metadata);
 	}
 
@@ -55,7 +55,7 @@ public class FieldMetadataSerializerTest {
 	public void deserializeString() throws JsonParseException, JsonMappingException, IOException {
 		FieldMetadata booleanMeta = mapper.readValue("{\"type\":\"BOOLEAN\",\"tokens\":\"ALWAYS_TRUE\"}", FieldMetadata.class);
 		LOGGER.info("{}", booleanMeta);
-		FieldMetadata stringMeta = mapper.readValue("{\"type\":\"STRING\",\"array\":2,\"words\":2,\"tokens\":[\"x\",\"y\",\"z\"]}", FieldMetadata.class);
+		FieldMetadata stringMeta = mapper.readValue("{\"type\":\"STRING\",\"array\":2,\"words\":2,\"tokens\": 1}", FieldMetadata.class);
 		LOGGER.info("{}", stringMeta);
 	}
 }

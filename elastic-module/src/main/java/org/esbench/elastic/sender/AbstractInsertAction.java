@@ -21,7 +21,7 @@ public abstract class AbstractInsertAction {
 	protected final DocumentFactory<String> getFactory(InsertProperties insProperties, Reader reader) throws IOException {
 		Workload workload = new WorkloadParser().parse(reader);
 		IndexTypeMetadata indexTypeMetadata = getIndexType(insProperties, workload);
-		DocumentFactory<String> factory = new SimpleDocumentFactory(indexTypeMetadata);
+		DocumentFactory<String> factory = new SimpleDocumentFactory(indexTypeMetadata, insProperties.getFieldCacheLimit());
 		return factory;
 	}
 

@@ -1,6 +1,7 @@
 package org.esbench.workload.json;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.testng.ResourcesUtils;
@@ -18,6 +19,7 @@ public class IndexTypeMetadataDeserializerTest {
 	@BeforeClass
 	public void initMapper() {
 		mapper = MapperFactory.initMapper();
+		TokenListTestUtil.registerTokens(mapper, Arrays.asList("a", "b", "c"));
 	}
 
 	@Test

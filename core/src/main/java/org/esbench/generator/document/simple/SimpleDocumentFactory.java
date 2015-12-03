@@ -29,9 +29,18 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 	 * @param indexTypeMetadata metadata based on which factory create JSON documents 
 	 */
 	public SimpleDocumentFactory(IndexTypeMetadata indexTypeMetadata) {
+		this(indexTypeMetadata, JsonBuilderFactory.DEFAULT_CACHE_LIMIT);
+	}
+
+	/**
+	 * Creates factory instances using given {@link IndexTypeMetadata} and specifying caching limit.
+	 * @param indexTypeMetadata metadata based on which factory create JSON documents 
+	 * @param cachingLimit defines field value caching limit
+	 */
+	public SimpleDocumentFactory(IndexTypeMetadata indexTypeMetadata, int cachingLimit) {
 		Validate.notNull(indexTypeMetadata);
 		this.factory.enable(JsonParser.Feature.ALLOW_COMMENTS);
-		builders.addAll(initBuilders(indexTypeMetadata.getFields()));
+		builders.addAll(initBuilders(indexTypeMetadata.getFields(), cachingLimit));
 	}
 
 	@Override
@@ -52,9 +61,10 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 		}
 	}
 
-	private List<JsonBuilder> initBuilders(List<? extends FieldMetadata> metadata) {
+	private List<JsonBuilder> initBuilders(List<? extends FieldMetadata> metadata, int cachingLimit) {
 		List<JsonBuilder> builders = new ArrayList<>();
 		JsonBuilderFactory jsonBuilderFactory = new JsonBuilderFactory();
+		jsonBuilderFactory.setFieldCacheLimit(cachingLimit);
 		for(FieldMetadata meta : metadata) {
 			JsonBuilder jsonBuilder = jsonBuilderFactory.newInstance(meta);
 			LOGGER.debug("Building {} for {}", jsonBuilder, meta.getFullPath());

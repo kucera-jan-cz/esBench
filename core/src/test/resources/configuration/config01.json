@@ -16,21 +16,38 @@
 				//Generate strings containing 1 or 2 words from defined vocabulary called tokens
 				"title" : {"type": "MULTI", "fields" : [
 					//Produces 2 string array whose values will have 2 tokens(words)
-					{"type": "STRING", "array": 3, "words" : 2, "tokens" : ["a", "b", "c"]},
+					{"type": "STRING", "array": 3, "words" : 2, "tokens" : 1},
 					//Produces single string whose values will have 3 tokens(words)
-					{"type": "STRING", "words" : 3, "tokens" : ["x", "y", "z"]}	
+					{"type": "STRING", "words" : 3, "tokens" : 2}	
 				  ]
 				},
-				"type" : {"type": "STRING", "words" : 3, "tokens" : ["x", "y", "z"]},
+				"type" : {"type": "STRING", "words" : 3, "tokens" : 3},
 				"controversial" :  {"type" : "BOOLEAN", "tokens" : "ALWAYS_TRUE"},
 				"latest" :  {"type" : "BOOLEAN"},
 				"page_views" : {"type" : "INTEGER", "from" : 50},
 			    "authors": {"name":"authors", "type":"OBJECT", "fields":{
 			    	"authors.likes":{"type":"LONG", "from":50, "step":5, "to":1000000},
-			        "authors.reviews":{"type":"STRING", "array":2, "tokens":[ "L1", "L2", "L3" ]}
+			        "authors.reviews":{"type":"STRING", "array":2, "tokens":4}
 				  }},
 				"lastUpdate" : {"type" : "DATE", "from" : "2015-01-01T00:00:00", "to" : "2015-12-31T23:59:59", "step" : 5}
 			}
 		}
+	],
+	"token_references":[
+		{
+			"@id": 0, "tokens":[]
+		}, 
+		{
+			"@id": 1, "tokens":["a", "b", "c"]
+		},
+		{
+			"@id": 2, "tokens":["x", "Y", "z"]
+		},
+		{
+			"@id": 3, "tokens":["x", "y", "z"]
+		},
+		{
+			"@id": 4, "tokens":[ "L1", "L2", "L3" ]
+		} 
 	]		
 }

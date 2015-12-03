@@ -47,6 +47,16 @@ public abstract class FieldMetadata {
 		this.strategy = Strategy.SEQUENCE;
 	}
 
+	@JsonIgnore
+	public boolean isFinite() {
+		return false;
+	}
+
+	@JsonIgnore
+	public int getUniqueValueCount() {
+		return MetadataConstants.UNDEFINED_UNQIUE_VALUES;
+	}
+
 	public String getName() {
 		return name;
 	}

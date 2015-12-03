@@ -2,7 +2,6 @@ package org.esbench.elastic.sender;
 
 import static org.esbench.cmd.CommandPropsConstants.INDEX_OPT;
 import static org.esbench.cmd.CommandPropsConstants.TYPE_OPT;
-import static org.esbench.elastic.sender.InsertProperties.DOCS;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -18,7 +17,7 @@ public class InsertPropertiesTest {
 	@Test
 	public void valid() throws IOException {
 		Properties defaults = ResourceUtils.asProperties("default.properties");
-		InsertProperties ins = new InsertProperties(toProps(defaults, INDEX_OPT, "index", TYPE_OPT, "type", DOCS, "1"));
+		InsertProperties ins = new InsertProperties(toProps(defaults, INDEX_OPT, "index", TYPE_OPT, "type", InsertProperties.DOCS, "1"));
 		assertEquals(ins.getIndex(), "index");
 		assertEquals(ins.getType(), "type");
 		assertEquals(ins.getWorkloadIndex(), "index");

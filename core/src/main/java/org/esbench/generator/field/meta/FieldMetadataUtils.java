@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public final class FieldMetadataUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldMetadataUtils.class);
-	private static List<String> FILTERED_PROPERTIES = Arrays.asList("name", "class");
+	private static List<String> FILTERED_PROPERTIES = Arrays.asList("name", "class", "uniqueValueCount", "finite");
 	private static Map<Class<?>, List<PropertyDescriptor>> descriptorsMap = new HashMap<>();
 
 	private FieldMetadataUtils() {

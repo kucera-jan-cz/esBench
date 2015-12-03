@@ -16,16 +16,22 @@
 					"type":"STRING",
 					"array":2,
 					"words":2,
-					"tokens":[
-						"a",
-						"b",
-						"c"
-					]
-					
+					"tokens":1
 				}
 				
 			}
 			
+		}
+		
+	],
+	"token_references":[
+		{
+			"@id":1,
+			"tokens":[
+				"a",
+				"b",
+				"c"
+			]
 		}
 	]
 }
