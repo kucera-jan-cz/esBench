@@ -17,11 +17,13 @@ import java.util.Properties;
 import org.esbench.core.DefaultProperties;
 import org.esbench.core.ResourceUtils;
 import org.esbench.elastic.sender.SimpleInsertAction;
-import org.esbench.elastic.sender.cluster.MasterNodeInsertAction;
 import org.esbench.elastic.sender.cluster.SlaveNodeInsertAction;
+import org.esbench.elastic.spring.InsertSpringConfiguration;
 import org.esbench.elastic.stats.CollectWorkloadAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 public class EsBenchCommandLine {
@@ -41,18 +43,23 @@ public class EsBenchCommandLine {
 		if(defaultProps.contains(HELP_OPT)) {
 			displayHelp(0);
 		}
-		EsBenchAction action = executeCommand(command);
+		EsBenchAction action = executeCommand(command, defaultProps);
 		action.perform(defaultProps);
 	}
 
-	private EsBenchAction executeCommand(String command) throws IOException {
+	private EsBenchAction executeCommand(String command, DefaultProperties defaultProps) throws IOException {
+		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+		beanFactory.registerSingleton("defaults", defaultProps);
 		switch(command) {
 		case INSERT_CMD:
 			return new SimpleInsertAction();
 		case COLLECT_CMD:
 			return new CollectWorkloadAction();
 		case INSERT_MASTER_CMD:
-			return new MasterNodeInsertAction();
+			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(beanFactory);
+			context.register(InsertSpringConfiguration.class);
+			context.refresh();
+			return context.getBean(SimpleInsertAction.class);
 		case INSERT_SLAVE_CMD:
 			return new SlaveNodeInsertAction();
 		default:
