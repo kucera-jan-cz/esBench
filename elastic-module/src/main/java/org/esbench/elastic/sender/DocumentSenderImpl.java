@@ -11,8 +11,7 @@ import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.esbench.elastic.sender.exceptions.InsertionFailure;
 import org.esbench.elastic.utils.BulkListener;
-import org.esbench.generator.document.simple.SimpleDocumentFactory;
-import org.esbench.generator.field.meta.IndexTypeMetadata;
+import org.esbench.generator.document.DocumentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +19,8 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Slf4jReporter;
 import com.codahale.metrics.Timer;
 
-public class ClientSender {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ClientSender.class);
+public class DocumentSenderImpl implements DocumentSender {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DocumentSenderImpl.class);
 	static final MetricRegistry metrics = new MetricRegistry();
 	final Slf4jReporter reporter = Slf4jReporter.forRegistry(metrics)
 			.outputTo(LOGGER)
@@ -30,28 +29,38 @@ public class ClientSender {
 			.build();
 	private final Client client;
 
-	public ClientSender(Client client) {
+	public DocumentSenderImpl(Client client) {
 		this.client = client;
 	}
 
-	public void send(IndexTypeMetadata indexType, InsertProperties properties) throws IOException {
-		SimpleDocumentFactory factory = new SimpleDocumentFactory(indexType);
+	/* (non-Javadoc)
+	 * @see org.esbench.elastic.sender.DocumentSender#send(org.esbench.generator.document.DocumentFactory, org.esbench.elastic.sender.InsertProperties)
+	 */
+	@Override
+	public void send(DocumentFactory<String> factory, InsertProperties properties) throws IOException {
+		send(factory, properties, 0);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.esbench.elastic.sender.DocumentSender#send(org.esbench.generator.document.DocumentFactory, org.esbench.elastic.sender.InsertProperties, int)
+	 */
+	@Override
+	public void send(DocumentFactory<String> factory, InsertProperties properties, int from) throws IOException {
 		String index = properties.getIndex();
 		String type = properties.getType();
 		for(int i = 0; i < properties.getNumOfIterations(); i++) {
 			LOGGER.info("Iteration {}: Sending {} documents to /{}/{}", i, properties.getDocPerIteration(), index, type);
 			try {
-				execute(factory, properties);
+				execute(factory, properties, from);
 			} catch (InterruptedException ex) {
 				throw new InsertionFailure("Failed to send documents", ex);
 			}
 		}
 	}
 
-	private void execute(SimpleDocumentFactory factory, InsertProperties properties) throws InterruptedException {
+	private void execute(DocumentFactory<String> factory, InsertProperties properties, int from) throws InterruptedException {
 		final int threads = properties.getNumOfThreads();
 		ExecutorService service = Executors.newFixedThreadPool(threads);
-		int from = 0;
 		int perThread = properties.getDocPerIteration() / threads;
 		int to = 0;
 		Timer.Context insert = metrics.timer("insert-total").time();

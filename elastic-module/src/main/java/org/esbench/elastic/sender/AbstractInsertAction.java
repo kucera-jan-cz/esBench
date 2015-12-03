@@ -2,9 +2,12 @@ package org.esbench.elastic.sender;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang3.StringUtils;
+import org.esbench.core.ResourceUtils;
 import org.esbench.generator.document.DocumentFactory;
 import org.esbench.generator.document.simple.SimpleDocumentFactory;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
@@ -12,9 +15,12 @@ import org.esbench.workload.Workload;
 import org.esbench.workload.json.WorkloadParser;
 
 public abstract class AbstractInsertAction {
+	private static final String FILE_PREFIX = "file:";
+	private static final String CLASSPATH_PREFIX = "classpath:";
 
 	protected final DocumentFactory<String> getFactory(InsertProperties insProperties) throws IOException {
-		Reader reader = new FileReader(insProperties.getWorkloadLocation());
+		String location = insProperties.getWorkloadLocation();
+		Reader reader = guessReader(location);
 		return getFactory(insProperties, reader);
 	}
 
@@ -23,6 +29,16 @@ public abstract class AbstractInsertAction {
 		IndexTypeMetadata indexTypeMetadata = getIndexType(insProperties, workload);
 		DocumentFactory<String> factory = new SimpleDocumentFactory(indexTypeMetadata, insProperties.getFieldCacheLimit());
 		return factory;
+	}
+
+	protected final Reader guessReader(String location) throws IOException {
+		if(location.startsWith(FILE_PREFIX)) {
+			return new FileReader(location);
+		} else if(location.startsWith(CLASSPATH_PREFIX)) {
+			return new InputStreamReader(ResourceUtils.asInputStream(location), StandardCharsets.UTF_8);
+		} else {
+			return new FileReader(location);
+		}
 	}
 
 	protected final IndexTypeMetadata getIndexType(InsertProperties properties, Workload configuration) {

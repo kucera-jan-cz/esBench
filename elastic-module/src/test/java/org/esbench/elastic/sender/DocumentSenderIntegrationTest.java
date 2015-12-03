@@ -58,7 +58,7 @@ public class DocumentSenderIntegrationTest extends AbstractSharedElasticSearchIn
 		String workloadAsText = ResourceUtils.asString("configuration/config02.json");
 		DocumentFactory<String> factory = action.getFactory(insProperties, new StringReader(workloadAsText));
 
-		DocumentSender sender = new DocumentSender(client);
+		DocumentSender sender = new DocumentSenderImpl(client);
 		sender.send(factory, insProperties);
 
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();

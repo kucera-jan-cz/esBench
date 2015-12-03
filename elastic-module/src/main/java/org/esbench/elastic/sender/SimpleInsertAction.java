@@ -23,7 +23,7 @@ public class SimpleInsertAction extends AbstractInsertAction implements EsBenchA
 		InsertProperties insProperties = new InsertProperties(props);
 		DocumentFactory<String> factory = super.getFactory(insProperties);
 		Client client = new ElasticClientBuilder().withProperties(props).build();
-		DocumentSender sender = new DocumentSender(client);
+		DocumentSender sender = new DocumentSenderImpl(client);
 
 		sender.send(factory, insProperties);
 	}

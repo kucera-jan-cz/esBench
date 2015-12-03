@@ -9,23 +9,20 @@ import static org.esbench.elastic.sender.cluster.ClusterConstants.PREP_LATCH;
 import static org.esbench.elastic.sender.cluster.ClusterConstants.WORKLOAD;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.net.InetSocketAddress;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
-import org.elasticsearch.client.Client;
-import org.esbench.cmd.CommandPropsConstants;
 import org.esbench.cmd.EsBenchAction;
 import org.esbench.core.DefaultProperties;
-import org.esbench.core.ResourceUtils;
 import org.esbench.elastic.sender.AbstractInsertAction;
 import org.esbench.elastic.sender.DocumentSender;
 import org.esbench.elastic.sender.InsertProperties;
-import org.esbench.elastic.utils.ElasticClientBuilder;
 import org.esbench.generator.document.DocumentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +45,14 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 	private ICountDownLatch prepLatch;
 	private ICountDownLatch execLatch;
 	private long id;
+	private DocumentSender sender;
+
+	public MasterNodeInsertAction(DocumentSender sender) {
+		this.sender = sender;
+	}
 
 	/**
-	 *Establishs Hazelcast cluster and once required number of clients connect, execute multiple document insertion. 
+	 * Establishes Hazelcast cluster and once required number of clients connect, execute multiple document insertion. 
 	 */
 	@Override
 	public void perform(DefaultProperties properties) throws IOException {
@@ -64,7 +66,7 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 			init(hz, properties, insProperties);
 			InetSocketAddress establishedAddress = hz.getCluster().getLocalMember().getSocketAddress();
 			LOGGER.info("Cluster established at {}", establishedAddress);
-			executeSend(properties, insProperties);
+			executeSend(insProperties);
 			LOGGER.info("Sending on master node finished");
 			waitForAllClientShutdown(hz.getClientService());
 		} catch (InterruptedException ex) {
@@ -72,7 +74,6 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 		} finally {
 			hz.shutdown();
 		}
-
 	}
 
 	private void init(HazelcastInstance hz, DefaultProperties properties, InsertProperties insProperties) throws IOException, InterruptedException {
@@ -91,21 +92,19 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 
 		IMap<String, Object> configMap = hz.getMap(CONF_MAP);
 		configMap.put(DEFAULT_PROPS, properties);
-
-		String workloadAsText = ResourceUtils.asString("file:" + insProperties.getWorkloadLocation());
+		Reader reader = guessReader(insProperties.getWorkloadLocation());
+		String workloadAsText = IOUtils.toString(reader);
 		configMap.put(WORKLOAD, workloadAsText);
 
 		prepLatch.countDown();
 	}
 
-	private void executeSend(DefaultProperties properties, InsertProperties insProperties) throws IOException, InterruptedException {
+	private void executeSend(InsertProperties insProperties) throws IOException, InterruptedException {
 		int docsPerIteration = insProperties.getDocPerIteration();
 
 		int startingFrom = insProperties.getNumOfIterations() * docsPerIteration * (int) id;
 
-		Client client = new ElasticClientBuilder().withProperties(properties).build();
 		DocumentFactory<String> factory = super.getFactory(insProperties);
-		DocumentSender sender = new DocumentSender(client);
 		LOGGER.info("Waiting for slave nodes...");
 		execLatch.countDown();
 		Validate.isTrue(execLatch.await(DEFAULT_WAIT_UNIT, TimeUnit.MINUTES), "Execution failed: waiting for nodes exceeded limit");
@@ -126,20 +125,6 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 			lock.unlock();
 		}
 		LOGGER.info("All slave nodes finished, shutting down");
-	}
-
-	public static void main(String[] args) throws InterruptedException, IOException {
-		MasterNodeInsertAction node = new MasterNodeInsertAction();
-		Properties confProperties = ResourceUtils.asProperties("file:C:\\projects\\esBench\\elastic-module\\conf\\bgg.properties");
-		Properties userDefined = new Properties();
-		userDefined.put(CommandPropsConstants.TYPE_OPT, "game");
-		userDefined.put(CommandPropsConstants.WORKLOAD_OPT, "C:\\projects\\esBench\\elastic-module\\workloads\\esbench.json");
-		userDefined.put(ClusterConstants.CLUSTER_MASTER_PROP, "192.168.1.104:5702");
-		userDefined.putAll(confProperties);
-
-		Properties defaults = ResourceUtils.asProperties("default.properties");
-		DefaultProperties props = new DefaultProperties(userDefined, defaults);
-		node.perform(props);
 	}
 
 }

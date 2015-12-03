@@ -18,6 +18,7 @@ import org.esbench.cmd.EsBenchAction;
 import org.esbench.core.DefaultProperties;
 import org.esbench.elastic.sender.AbstractInsertAction;
 import org.esbench.elastic.sender.DocumentSender;
+import org.esbench.elastic.sender.DocumentSenderImpl;
 import org.esbench.elastic.sender.InsertProperties;
 import org.esbench.elastic.utils.ElasticClientBuilder;
 import org.esbench.generator.document.DocumentFactory;
@@ -86,7 +87,7 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 		Reader reader = new StringReader(workloadAsText);
 		DocumentFactory<String> factory = super.getFactory(insProperties, reader);
 		Client client = new ElasticClientBuilder().withProperties(defaults).build();
-		DocumentSender sender = new DocumentSender(client);
+		DocumentSender sender = new DocumentSenderImpl(client);
 
 		int docsPerIteration = insProperties.getDocPerIteration();
 		int startingFrom = docsPerIteration * (int) id;
