@@ -1,7 +1,9 @@
-package org.esbench.generator.document.simple;
+package org.esbench.generator.document.simple.builder;
 
 import java.io.IOException;
 import java.io.StringWriter;
+
+import org.esbench.generator.document.simple.JsonBuilder;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;

@@ -1,0 +1,18 @@
+<hazelcast-client xsi:schemaLocation="http://www.hazelcast.com/schema/client-config hazelcast-client-config-3.6.xsd" xmlns="http://www.hazelcast.com/schema/client-config"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<group>
+		<name>dev</name>
+		<password>dev-pass</password>
+	</group>
+	<properties>
+		<property name="hazelcast.client.heartbeat.timeout">60000</property>
+		<property name="hazelcast.client.event.thread.count">1</property>
+		<property name="hazelcast.client.event.queue.capacity">100</property>
+		<property name="hazelcast.client.invocation.timeout.seconds">60</property>
+	</properties>
+	<network>
+		<connection-timeout>60000</connection-timeout>
+		<connection-attempt-period>3000</connection-attempt-period>
+		<connection-attempt-limit>180</connection-attempt-limit>
+	</network>
+</hazelcast-client>

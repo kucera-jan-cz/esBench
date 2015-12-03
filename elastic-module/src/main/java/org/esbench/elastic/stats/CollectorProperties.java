@@ -10,8 +10,8 @@ public class CollectorProperties {
 	private final int stringTokenMinOccurent;
 
 	public CollectorProperties(DefaultProperties props) {
-		stringTokenLimit = props.get(TOKENS_STRING_LIMIT, 10_000);
-		stringTokenMinOccurent = props.get(TOKENS_STRING_MIN_OCCURENCE, 1);
+		stringTokenLimit = props.getInt(TOKENS_STRING_LIMIT);
+		stringTokenMinOccurent = props.getInt(TOKENS_STRING_MIN_OCCURENCE);
 	}
 
 	public int getStringTokenLimit() {

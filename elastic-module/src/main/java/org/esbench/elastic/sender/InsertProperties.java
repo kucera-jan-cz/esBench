@@ -1,20 +1,33 @@
 package org.esbench.elastic.sender;
 
+import org.apache.commons.lang3.Validate;
 import org.esbench.cmd.CommandPropsConstants;
 import org.esbench.core.DefaultProperties;
 
+/**
+ * Insertion related properties.
+ */
 public class InsertProperties {
-	private static final String THREADS = "insert.threads";
-	private static final String ITERATIONS = "insert.iterations";
-	private static final String DOCS = "insert.docs";
-	private static final String WORKLOAD_INDEX = "workload.index";
-	private static final String WORKLOAD_TYPE = "workload.type";
-	private static final String BULK_ACTIONS = "insert.bulk.actions";
-	private static final String BULK_THREADS = "insert.bulk.threads";
+	// General insert definition
+	static final String DOCS = "insert.docs";
+	static final String THREADS = "insert.threads";
+	static final String ITERATIONS = "insert.iterations";
+	static final String CACHE_LIMIT = "insert.cache.value_limit";
+
+	// Loading workload
+	static final String WORKLOAD_INDEX = "workload.index";
+	static final String WORKLOAD_TYPE = "workload.type";
+
+	// Bulk configuration
+	static final String BULK_ACTIONS = "insert.bulk.actions";
+	static final String BULK_THREADS = "insert.bulk.threads";
+
+	static final String CLUSTER_NODES = "insert.cluster.nodes";
 
 	private final int numOfThreads;
 	private final int numOfIterations;
 	private final int docPerIteration;
+	private final int fieldCacheLimit;
 	private final String workloadLocation;
 	private final String index;
 	private final String type;
@@ -22,18 +35,29 @@ public class InsertProperties {
 	private final String workloadType;
 	private final int bulkThreads;
 	private final int bulkActions;
+	private final int clusterNodes;
 
 	public InsertProperties(DefaultProperties props) {
-		numOfThreads = props.get(THREADS, 1);
-		numOfIterations = props.get(ITERATIONS, 1);
-		docPerIteration = props.get(DOCS, 100);
-		workloadLocation = props.getProperty(CommandPropsConstants.WORKLOAD_OPT);
+		Validate.notNull(props);
 		index = props.getProperty(CommandPropsConstants.INDEX_OPT);
-		type = props.getProperty(CommandPropsConstants.TYPE_OPT);
+		Validate.notEmpty(index, "Index property is not defined");
+		this.type = props.getProperty(CommandPropsConstants.TYPE_OPT);
+		Validate.notEmpty(type, "Type property is not defined");
+
+		numOfThreads = props.getInt(THREADS);
+		numOfIterations = props.getInt(ITERATIONS);
+		docPerIteration = props.getInt(DOCS);
+		fieldCacheLimit = props.getInt(CACHE_LIMIT);
+
+		workloadLocation = props.getProperty(CommandPropsConstants.WORKLOAD_OPT);
+		Validate.notEmpty(workloadLocation, "Workload property is not defined");
 		workloadIndex = props.get(WORKLOAD_INDEX, this.index);
-		workloadType = props.getProperty(WORKLOAD_TYPE);
-		bulkActions = props.get(BULK_ACTIONS, 20000);
-		bulkThreads = props.get(BULK_THREADS, 1);
+		workloadType = props.get(WORKLOAD_TYPE, this.type);
+
+		bulkActions = props.getInt(BULK_ACTIONS);
+		bulkThreads = props.getInt(BULK_THREADS);
+
+		clusterNodes = props.getInt(CLUSTER_NODES);
 	}
 
 	public int getNumOfThreads() {
@@ -50,6 +74,10 @@ public class InsertProperties {
 
 	public String getWorkloadLocation() {
 		return workloadLocation;
+	}
+
+	public int getFieldCacheLimit() {
+		return fieldCacheLimit;
 	}
 
 	public String getWorkloadIndex() {
@@ -76,4 +104,7 @@ public class InsertProperties {
 		return bulkActions;
 	}
 
+	public int getClusterNodes() {
+		return clusterNodes;
+	}
 }

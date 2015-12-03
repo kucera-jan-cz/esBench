@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.elasticsearch.client.Client;
 import org.esbench.cmd.ElasticClientBuilder;
 import org.esbench.cmd.EsBenchAction;

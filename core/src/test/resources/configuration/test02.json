@@ -4,11 +4,7 @@
 	"fields":{
 		"a":{
 			"type":"STRING",
-			"tokens":[
-				"a",
-				"b",
-				"c"
-			]
+			"tokens": 1
 		},
 		"fBoolean":{
 			"type":"BOOLEAN",

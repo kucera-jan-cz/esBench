@@ -18,6 +18,8 @@ import org.esbench.workload.json.WorkloadParser;
  */
 public class InsertDocsAction implements EsBenchAction {
 
+	private static final int SINGLE_INDEX_TYPE = 1;
+
 	/**
 	 * Based on given props perform docs inserting. 
 	 * @param props holding information properties for establish ClientSender and other components necessary for inserting.
@@ -38,7 +40,7 @@ public class InsertDocsAction implements EsBenchAction {
 	}
 
 	IndexTypeMetadata getIndexType(InsertProperties properties, Workload configuration) {
-		if(configuration.getIndiceTypes().size() == 1) {
+		if(configuration.getIndiceTypes().size() == SINGLE_INDEX_TYPE) {
 			return configuration.getIndiceTypes().get(0);
 		}
 		String indexName = properties.getWorkloadIndex();

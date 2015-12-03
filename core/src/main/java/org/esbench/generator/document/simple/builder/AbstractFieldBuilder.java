@@ -1,8 +1,10 @@
-package org.esbench.generator.document.simple;
+package org.esbench.generator.document.simple.builder;
 
 import java.io.IOException;
 import java.util.List;
 
+import org.esbench.generator.document.simple.InstanceIdTransformer;
+import org.esbench.generator.document.simple.JsonBuilder;
 import org.esbench.generator.field.FieldConstants;
 import org.esbench.generator.field.FieldFactory;
 import org.esbench.generator.field.meta.FieldMetadata;

@@ -6,8 +6,6 @@ import static org.esbench.workload.WorkloadConstants.TOKENS_PROP;
 import static org.esbench.workload.WorkloadConstants.TYPE_PROP;
 import static org.esbench.workload.WorkloadConstants.WORDS_PROP;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
@@ -16,6 +14,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -23,8 +22,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class StringFieldMetadata extends FieldMetadata {
 	@JsonProperty(value = WORDS_PROP)
 	private Integer tokensPerValue;
+
+	@JsonIdentityReference(alwaysAsId = true)
 	@JsonProperty(value = TOKENS_PROP)
-	private List<String> tokens;
+	private TokenList tokenList = new TokenList();
 
 	/**
 	 * Protected constructor for JSON serialization
@@ -32,20 +33,36 @@ public class StringFieldMetadata extends FieldMetadata {
 	protected StringFieldMetadata() {
 	}
 
+	@Override
+	public boolean isFinite() {
+		return Strategy.SEQUENCE.equals(getStrategy());
+	}
+
+	@Override
+	public int getUniqueValueCount() {
+		if(tokenList.getTokens().isEmpty()) {
+			return MetadataConstants.UNDEFINED_UNQIUE_VALUES;
+		}
+		int i = 1;
+		while(true) {
+			int restAfterModulo = (i * tokensPerValue.intValue()) % tokenList.getTokens().size();
+			if(restAfterModulo == 0) {
+				return i;
+			} else {
+				i++;
+			}
+		}
+	}
+
 	public StringFieldMetadata(String name, int valuesPerDoc, int tokenPerValue, List<String> tokens) {
 		super(name, MetaType.STRING, valuesPerDoc);
 		Validate.notNull(tokens);
-		this.tokens = new ArrayList<>(tokens);
-		Collections.sort(this.tokens);
+		this.setTokens(tokens);
 		this.tokensPerValue = tokenPerValue;
 	}
 
 	public Integer getTokensPerValue() {
 		return tokensPerValue;
-	}
-
-	public List<String> getTokens() {
-		return tokens;
 	}
 
 	@Override
@@ -67,8 +84,22 @@ public class StringFieldMetadata extends FieldMetadata {
 		this.tokensPerValue = tokensPerValue;
 	}
 
+	@JsonProperty(value = TOKENS_PROP)
+	public TokenList getTokenList() {
+		return tokenList;
+	}
+
+	@JsonProperty(value = TOKENS_PROP)
+	public void setTokenList(TokenList tokenList) {
+		this.tokenList = tokenList;
+	}
+
 	public void setTokens(List<String> tokens) {
-		this.tokens = tokens;
+		this.tokenList.setTokens(tokens);
+	}
+
+	public List<String> getTokens() {
+		return tokenList.getTokens();
 	}
 
 }

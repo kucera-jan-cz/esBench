@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
+import org.esbench.generator.document.simple.builder.BooleanFieldBuilder;
+import org.esbench.generator.document.simple.builder.DateFieldBuilder;
+import org.esbench.generator.document.simple.builder.MultiFieldBuilder;
+import org.esbench.generator.document.simple.builder.NumericFieldBuilder;
+import org.esbench.generator.document.simple.builder.ObjectTypeBuilder;
+import org.esbench.generator.document.simple.builder.StringFieldBuilder;
+import org.esbench.generator.field.AbstractFieldFactory;
+import org.esbench.generator.field.CachedFieldFactory;
 import org.esbench.generator.field.FieldFactory;
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.DateFieldMetadata;
@@ -28,6 +36,9 @@ import org.esbench.generator.field.type.text.StringFieldFactory;
  * Creates implementation of JSONBuilders based on given FieldMetadata.
  */
 public class JsonBuilderFactory {
+	static final int DEFAULT_CACHE_LIMIT = 1000;
+	private int fieldCacheLimit = DEFAULT_CACHE_LIMIT;
+
 	/**
 	 * Based on ginve metadata creates appropriate JsonBuilder.
 	 * @param metadata for concrete type of document's field
@@ -64,7 +75,8 @@ public class JsonBuilderFactory {
 	}
 
 	private JsonBuilder build(IPv4FieldMetadata meta) {
-		FieldFactory<String> factory = new Ipv4FieldFactory(meta.getCidrAddress());
+		AbstractFieldFactory<String> normalFactory = new Ipv4FieldFactory(meta.getCidrAddress());
+		FieldFactory<String> factory = cacheIfNecessary(normalFactory, String.class, meta);
 		return new StringFieldBuilder(meta, factory);
 	}
 
@@ -81,7 +93,8 @@ public class JsonBuilderFactory {
 	}
 
 	private StringFieldBuilder build(StringFieldMetadata meta) {
-		StringFieldFactory factory = new StringFieldFactory(meta.getTokensPerValue(), meta.getTokens());
+		StringFieldFactory normalFactory = new StringFieldFactory(meta.getTokensPerValue(), meta.getTokens());
+		FieldFactory<String> factory = cacheIfNecessary(normalFactory, String.class, meta);
 		return new StringFieldBuilder(meta, factory);
 	}
 
@@ -109,6 +122,15 @@ public class JsonBuilderFactory {
 		}
 	}
 
+	private <T> FieldFactory<T> cacheIfNecessary(AbstractFieldFactory<T> factory, Class<T> clazz, FieldMetadata meta) {
+		if(meta.isFinite() && fieldCacheLimit > meta.getUniqueValueCount()) {
+			CachedFieldFactory<T> cachedFactory = new CachedFieldFactory<T>(factory, clazz, meta.getUniqueValueCount());
+			return cachedFactory;
+		} else {
+			return factory;
+		}
+	}
+
 	private DateFieldBuilder build(DateFieldMetadata meta) {
 		long units = meta.getFrom().until(meta.getTo(), meta.getUnit());
 		int modulo = (int) (units / meta.getStep());
@@ -123,4 +145,13 @@ public class JsonBuilderFactory {
 		}
 		return builders;
 	}
+
+	public int getFieldCacheLimit() {
+		return fieldCacheLimit;
+	}
+
+	public void setFieldCacheLimit(int fieldCacheLimit) {
+		this.fieldCacheLimit = fieldCacheLimit;
+	}
+
 }

@@ -1,8 +1,9 @@
-package org.esbench.generator.document.simple;
+package org.esbench.generator.document.simple.builder;
 
 import java.io.IOException;
 
 import org.apache.commons.lang3.Validate;
+import org.esbench.generator.document.simple.JsonBuilder;
 import org.esbench.generator.field.FieldFactory;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.NumericFieldMetadata;

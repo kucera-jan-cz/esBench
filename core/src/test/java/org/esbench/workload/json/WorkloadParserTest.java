@@ -38,7 +38,7 @@ public class WorkloadParserTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WorkloadParserTest.class);
 
 	StringFieldMetadata titleA = new StringFieldMetadata("title", 3, 2, Arrays.asList("a", "b", "c"));
-	StringFieldMetadata titleX = new StringFieldMetadata("title", 1, 3, Arrays.asList("x", "y", "z"));
+	StringFieldMetadata titleX = new StringFieldMetadata("title", 1, 3, Arrays.asList("x", "Y", "z"));
 	MultiFieldMetadata multiTitle = new MultiFieldMetadata("title", Arrays.asList(titleA, titleX));
 	StringFieldMetadata type = new StringFieldMetadata("type", 1, 3, Arrays.asList("x", "y", "z"));
 	BooleanFieldMetadata controversial = new BooleanFieldMetadata("controversial", 1, Type.ALWAYS_TRUE);

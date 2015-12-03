@@ -1,9 +1,11 @@
-package org.esbench.generator.document.simple;
+package org.esbench.generator.document.simple.builder;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.esbench.generator.document.simple.JsonBuilder;
+import org.esbench.generator.document.simple.JsonBuilderFactory;
 import org.esbench.generator.field.meta.StringFieldMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-	<property name="defaultPattern" value="%date{HH:mm:ss.SSS} %-5level %-26logger{26} {%thread} %m%n" />
+	<property name="defaultPattern" value="%date{HH:mm:ss.SSS} %-5level %-40logger{40} {%thread} %m%n" />
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>${defaultPattern}</pattern>
 		</encoder>
 	</appender>
+	<logger name="com.hazelcast" level="WARN" />
 
+	
 	<root level="INFO">
 		<appender-ref ref="CONSOLE" />
 	</root>

@@ -35,7 +35,6 @@ import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStat
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStatsBuilder;
 import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount;
 import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCountBuilder;
-import org.esbench.core.DefaultProperties;
 import org.esbench.generator.field.FieldConstants;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
@@ -70,10 +69,6 @@ public class StatsCollector {
 	private final String indexName;
 	private final CollectorProperties props;
 
-	public StatsCollector(Client client, String indexName) {
-		this(client, new CollectorProperties(DefaultProperties.EMPTY), indexName);
-	}
-
 	public StatsCollector(Client client, CollectorProperties props, String indexName) {
 		this.client = client;
 		this.props = props;
@@ -90,7 +85,7 @@ public class StatsCollector {
 			MappingMetaData meta = mapping.get(indexType);
 			LOGGER.info("Index: {} Type: {}", indexName, indexType);
 			String mappingsAsJson = meta.source().string();
-			LOGGER.info("JSON:\n{}", mappingsAsJson);
+			LOGGER.debug("JSON:\n{}", mappingsAsJson);
 
 			JsonNode root = mapper.readValue(mappingsAsJson, JsonNode.class);
 			JsonNode typeProp = root.path(indexType).path(PROPERTIES_PROP);

@@ -5,6 +5,8 @@ import static org.esbench.cmd.CommandPropsConstants.COLLECT_CMD;
 import static org.esbench.cmd.CommandPropsConstants.CONF_OPT;
 import static org.esbench.cmd.CommandPropsConstants.HELP_OPT;
 import static org.esbench.cmd.CommandPropsConstants.INSERT_CMD;
+import static org.esbench.cmd.CommandPropsConstants.INSERT_MASTER_CMD;
+import static org.esbench.cmd.CommandPropsConstants.INSERT_SLAVE_CMD;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +16,9 @@ import java.util.Properties;
 
 import org.esbench.core.DefaultProperties;
 import org.esbench.core.ResourceUtils;
-import org.esbench.elastic.sender.InsertDocsAction;
+import org.esbench.elastic.sender.SimpleInsertAction;
+import org.esbench.elastic.sender.cluster.MasterNodeInsertAction;
+import org.esbench.elastic.sender.cluster.SlaveNodeInsertAction;
 import org.esbench.elastic.stats.CollectWorkloadAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +37,10 @@ public class EsBenchCommandLine {
 			LOGGER.error("Command is not defined or invalid, please read help");
 			displayHelp(10);
 		}
-		Properties properties = loadProperties(args);
-		if(properties.contains(HELP_OPT)) {
+		DefaultProperties defaultProps = loadProperties(args);
+		if(defaultProps.contains(HELP_OPT)) {
 			displayHelp(0);
 		}
-		DefaultProperties defaultProps = new DefaultProperties(properties);
 		EsBenchAction action = executeCommand(command);
 		action.perform(defaultProps);
 	}
@@ -45,15 +48,19 @@ public class EsBenchCommandLine {
 	private EsBenchAction executeCommand(String command) throws IOException {
 		switch(command) {
 		case INSERT_CMD:
-			return new InsertDocsAction();
+			return new SimpleInsertAction();
 		case COLLECT_CMD:
 			return new CollectWorkloadAction();
+		case INSERT_MASTER_CMD:
+			return new MasterNodeInsertAction();
+		case INSERT_SLAVE_CMD:
+			return new SlaveNodeInsertAction();
 		default:
 			throw new IllegalArgumentException("Unknown command");
 		}
 	}
 
-	private Properties loadProperties(String... args) throws IOException {
+	private DefaultProperties loadProperties(String... args) throws IOException {
 		SimpleCommandLinePropertySource cmdSource = new SimpleCommandLinePropertySource(CMD, args);
 		Properties defaultProps = ResourceUtils.asProperties("default.properties");
 		Properties properties = new Properties(defaultProps);
@@ -71,7 +78,8 @@ public class EsBenchCommandLine {
 			LOGGER.debug("Overriding {} to {}", name, value);
 			properties.put(name, value);
 		}
-		return properties;
+
+		return new DefaultProperties(properties, defaultProps);
 	}
 
 	private void displayHelp(int returnCode) throws IOException {

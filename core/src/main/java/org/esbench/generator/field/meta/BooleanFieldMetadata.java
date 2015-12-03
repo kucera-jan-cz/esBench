@@ -11,7 +11,13 @@ import org.esbench.workload.WorkloadConstants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 //@TODO - implement rest of the configuration
+/**
+ * Metadata structure class holding basic information about boolean field.
+ */
 public class BooleanFieldMetadata extends FieldMetadata {
+	/**
+	 * Represents simple enum corresponds with BooleanFieldFactory.valueOf() for creation FieldFactory. 
+	 */
 	public enum Type {
 		ALWAYS_TRUE, ALWAYS_FALSE, TICK_TOCK
 	};

@@ -14,6 +14,8 @@ import org.esbench.workload.json.databind.MultiMetadataDeserializer;
 import org.esbench.workload.json.databind.MultiMetadataSerializer;
 import org.esbench.workload.json.databind.ObjectMetadataDeserializer;
 import org.esbench.workload.json.databind.ObjectMetadataSerializer;
+import org.esbench.workload.json.databind.TokensIdGenerator;
+import org.esbench.workload.json.databind.TokensIdResolver;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser;
@@ -48,6 +50,19 @@ class MapperFactory {
 		mapper.registerModule(module);
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		mapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+		mapper.setHandlerInstantiator(new WorkloadHandlerInstantiator());
 		return mapper;
+	}
+
+	public static TokensIdGenerator getTokenIdGenerator(ObjectMapper mapper) {
+		WorkloadHandlerInstantiator handlerInstantiator = (WorkloadHandlerInstantiator) mapper.getSerializationConfig().getHandlerInstantiator();
+		TokensIdGenerator generator = handlerInstantiator.getTokenIdGenerator();
+		return generator;
+	}
+
+	public static TokensIdResolver getTokenIdResolver(ObjectMapper mapper) {
+		WorkloadHandlerInstantiator handlerInstantiator = (WorkloadHandlerInstantiator) mapper.getSerializationConfig().getHandlerInstantiator();
+		TokensIdResolver resolver = handlerInstantiator.getTokenIdResolver();
+		return resolver;
 	}
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
@@ -18,6 +19,8 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuild
 import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
+import org.esbench.core.DefaultProperties;
+import org.esbench.core.ResourceUtils;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
 import org.esbench.testng.AbstractSharedElasticSearchIntegrationTest;
@@ -36,6 +39,7 @@ public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSea
 	private static final String INDEX_TYPE = "typeA";
 	private static final String INDEX_NAME = "types";
 	private Client client;
+	private DefaultProperties defaultProperties;
 
 	@BeforeClass
 	public void initCluster() throws IOException {
@@ -55,6 +59,9 @@ public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSea
 		assertTrue(client.index(indexBuilder.setId("1").setSource(doc01).request()).actionGet().isCreated());
 		assertTrue(client.index(indexBuilder.setId("2").setSource(doc02).request()).actionGet().isCreated());
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();
+		Properties props = new Properties();
+		defaultProperties = new DefaultProperties(props, ResourceUtils.asProperties("default.properties"));
+
 	}
 
 	@AfterClass
@@ -64,7 +71,7 @@ public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSea
 
 	@Test
 	public void init() throws IOException {
-		StatsCollector collector = new StatsCollector(client, INDEX_NAME);
+		StatsCollector collector = new StatsCollector(client, new CollectorProperties(defaultProperties), INDEX_NAME);
 		List<IndexTypeMetadata> indexList = collector.collectIndex();
 		assertEquals(indexList.size(), 1);
 		IndexTypeMetadata meta = indexList.get(0);

@@ -9,6 +9,7 @@ public final class WorkloadConstants {
 	// Global
 	public static final String VERSION_PROP = "version";
 	public static final String DEFAULTS_PROP = "defaults";
+	public static final String REFS_PROP = "token_references";
 
 	// Index related
 	public static final String INDEX_PROP = "index";
@@ -30,6 +31,7 @@ public final class WorkloadConstants {
 	// String properties
 	public static final String TOKENS_PROP = "tokens";
 	public static final String WORDS_PROP = "words";
+	public static final String REF_ID_PROP = "@id";
 
 	// IP properties
 	public static final String CIDR_PROP = "cidr";

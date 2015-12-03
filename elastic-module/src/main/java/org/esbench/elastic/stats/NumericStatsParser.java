@@ -4,6 +4,9 @@ import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStat
 import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 
+/**
+ * Converts Elasticsearch ExtendedStats to NumericFieldMetadata by extracting lowest and highest value. 
+ */
 public class NumericStatsParser implements ExtendedStatsParser<NumericFieldMetadata> {
 
 	@Override
@@ -20,6 +23,22 @@ public class NumericStatsParser implements ExtendedStatsParser<NumericFieldMetad
 			long longFrom = Math.round(stats.getMin());
 			long longTo = Math.round(stats.getMax());
 			return new NumericFieldMetadata(info.getFullPath(), valuesPerDocument, type, longFrom, longTo, 1L);
+		case DOUBLE:
+			double doubleFrom = stats.getMin();
+			double doubleTo = stats.getMax();
+			return new NumericFieldMetadata(info.getFullPath(), valuesPerDocument, type, doubleFrom, doubleTo, 1L);
+		case SHORT:
+			short shortFrom = (short) Math.round(stats.getMin());
+			short shortTo = (short) Math.round(stats.getMax());
+			return new NumericFieldMetadata(info.getFullPath(), valuesPerDocument, type, shortFrom, shortTo, 1L);
+		case BYTE:
+			byte byteFrom = (byte) Math.round(stats.getMin());
+			byte byteTo = (byte) Math.round(stats.getMax());
+			return new NumericFieldMetadata(info.getFullPath(), valuesPerDocument, type, byteFrom, byteTo, 1L);
+		case FLOAT:
+			float floatFrom = (float) stats.getMin();
+			float floatTo = (float) stats.getMax();
+			return new NumericFieldMetadata(info.getFullPath(), valuesPerDocument, type, floatFrom, floatTo, 1L);
 		default:
 			throw new IllegalArgumentException("Unknown type: " + type);
 		}
