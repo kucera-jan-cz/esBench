@@ -33,7 +33,9 @@ public class DocumentSenderImpl implements DocumentSender {
 		this.client = client;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.esbench.elastic.sender.DocumentSender#send(org.esbench.generator.document.DocumentFactory, org.esbench.elastic.sender.InsertProperties)
 	 */
 	@Override
@@ -41,7 +43,9 @@ public class DocumentSenderImpl implements DocumentSender {
 		send(factory, properties, 0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.esbench.elastic.sender.DocumentSender#send(org.esbench.generator.document.DocumentFactory, org.esbench.elastic.sender.InsertProperties, int)
 	 */
 	@Override

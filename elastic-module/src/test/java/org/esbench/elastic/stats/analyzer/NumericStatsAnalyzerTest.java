@@ -1,4 +1,4 @@
-package org.esbench.elastic.stats;
+package org.esbench.elastic.stats.analyzer;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
+import org.esbench.elastic.stats.FieldInfo;
+import org.esbench.elastic.stats.analyzer.NumericStatsAnalyzer;
 import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 import org.testng.annotations.DataProvider;
@@ -13,7 +15,7 @@ import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class NumericStatsParserTest {
+public class NumericStatsAnalyzerTest {
 	@DataProvider
 	public Object[][] parseDataProvider() {
 		Object[][] values = { { new Double("0"), new Double("10"), "integer" }, { new Double("2147483647"), new Double("2147483648"), "long" },
@@ -24,7 +26,7 @@ public class NumericStatsParserTest {
 
 	@Test(dataProvider = "parseDataProvider")
 	public void parse(Double from, Double to, String typeAsText) {
-		NumericStatsParser parser = new NumericStatsParser();
+		NumericStatsAnalyzer parser = new NumericStatsAnalyzer();
 		ExtendedStats stats = mockStats(from, to);
 		FieldInfo info = mockInfo(typeAsText);
 		NumericFieldMetadata meta = parser.parse(info, stats, 1);
@@ -36,7 +38,7 @@ public class NumericStatsParserTest {
 	public void parseFloat() {
 		Double from = new Double("0.00001");
 		Double to = new Double("1.111");
-		NumericStatsParser parser = new NumericStatsParser();
+		NumericStatsAnalyzer parser = new NumericStatsAnalyzer();
 		ExtendedStats stats = mockStats(from, to);
 		FieldInfo info = mockInfo("float");
 		NumericFieldMetadata meta = parser.parse(info, stats, 1);

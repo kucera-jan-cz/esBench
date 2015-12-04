@@ -1,4 +1,4 @@
-package org.esbench.elastic.stats;
+package org.esbench.elastic.stats.analyzer;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MILLIS;
@@ -17,6 +17,9 @@ import org.apache.commons.lang3.RandomUtils;
 import org.elasticsearch.common.joda.FormatDateTimeFormatter;
 import org.elasticsearch.common.joda.Joda;
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
+import org.esbench.elastic.stats.FieldInfo;
+import org.esbench.elastic.stats.analyzer.DateStatsAnalyzer;
+import org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants;
 import org.esbench.generator.field.FieldConstants;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
@@ -25,12 +28,12 @@ import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class DateStatsParserTest {
-	private DateStatsParser parser = new DateStatsParser();
+public class DateStatsAnalyzerTest {
+	private DateStatsAnalyzer parser = new DateStatsAnalyzer();
 
 	@DataProvider
 	public Object[][] parsePatternDataProvider() {
-		List<String> formats = DateStatsParserConstants.SUPPORTED_ES_FORMATS;
+		List<String> formats = DateStatsAnalyzerConstants.SUPPORTED_FORMATS;
 		Object[][] values = new Object[formats.size()][1];
 		for(int i = 0; i < formats.size(); i++) {
 			values[i] = new Object[] { formats.get(i) };

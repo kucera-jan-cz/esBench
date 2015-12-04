@@ -2,7 +2,7 @@ package org.esbench.elastic.stats;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-class FieldInfo {
+public class FieldInfo {
 	private final String fullPath;
 	private final boolean nested;
 	private final JsonNode json;

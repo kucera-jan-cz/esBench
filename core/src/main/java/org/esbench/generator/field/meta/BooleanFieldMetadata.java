@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class BooleanFieldMetadata extends FieldMetadata {
 	/**
-	 * Represents simple enum corresponds with BooleanFieldFactory.valueOf() for creation FieldFactory. 
+	 * Represents simple enum corresponds with BooleanFieldFactory.valueOf() for creation FieldFactory.
 	 */
 	public enum Type {
 		ALWAYS_TRUE, ALWAYS_FALSE, TICK_TOCK

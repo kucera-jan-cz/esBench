@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Caching proxy class which calls from real factory maxItems and then acts like normal FieldFactory. 
+ * Caching proxy class which calls from real factory maxItems and then acts like normal FieldFactory.
  * @param <T> defines what type of field value it produces
  */
 public class CachedFieldFactory<T> extends AbstractFieldFactory<T> {

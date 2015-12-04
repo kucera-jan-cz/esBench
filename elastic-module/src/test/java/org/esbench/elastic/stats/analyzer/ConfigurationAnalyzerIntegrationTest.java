@@ -1,4 +1,4 @@
-package org.esbench.elastic.stats;
+package org.esbench.elastic.stats.analyzer;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
@@ -20,7 +19,8 @@ import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
 import org.esbench.core.DefaultProperties;
-import org.esbench.core.ResourceUtils;
+import org.esbench.elastic.stats.CollectorProperties;
+import org.esbench.elastic.stats.StatsCollector;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
 import org.esbench.testng.AbstractSharedElasticSearchIntegrationTest;
@@ -34,8 +34,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSearchIntegrationTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationParserIntegrationTest.class);
+public class ConfigurationAnalyzerIntegrationTest extends AbstractSharedElasticSearchIntegrationTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationAnalyzerIntegrationTest.class);
 	private static final String INDEX_TYPE = "typeA";
 	private static final String INDEX_NAME = "types";
 	private Client client;
@@ -59,8 +59,7 @@ public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSea
 		assertTrue(client.index(indexBuilder.setId("1").setSource(doc01).request()).actionGet().isCreated());
 		assertTrue(client.index(indexBuilder.setId("2").setSource(doc02).request()).actionGet().isCreated());
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();
-		Properties props = new Properties();
-		defaultProperties = new DefaultProperties(props, ResourceUtils.asProperties("default.properties"));
+		defaultProperties = new DefaultProperties("default.properties");
 
 	}
 
@@ -71,8 +70,8 @@ public class ConfigurationParserIntegrationTest extends AbstractSharedElasticSea
 
 	@Test
 	public void init() throws IOException {
-		StatsCollector collector = new StatsCollector(client, new CollectorProperties(defaultProperties), INDEX_NAME);
-		List<IndexTypeMetadata> indexList = collector.collectIndex();
+		StatsCollector collector = new StatsCollector(client, new CollectorProperties(defaultProperties));
+		List<IndexTypeMetadata> indexList = collector.collectIndex(INDEX_NAME);
 		assertEquals(indexList.size(), 1);
 		IndexTypeMetadata meta = indexList.get(0);
 		assertEquals(meta.getIndexName(), INDEX_NAME);

@@ -78,7 +78,7 @@ public final class ResourceUtils {
 	/**
 	 * Load Resource for given location.
 	 * @param location representing URI pointing to resource.
-	 * @return Resource entity based on given location 
+	 * @return Resource entity based on given location
 	 * @throws IOException when resource can't be loaded
 	 */
 	public static Resource asResource(String location) throws IOException {

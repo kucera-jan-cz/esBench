@@ -71,6 +71,7 @@ public class WorkloadParser {
 		return workload;
 	}
 
+	// @TODO - rename this method, since it's not parsing but serializing
 	/**
 	 * Serialize given workload to JSON representation and write it to writer.
 	 * @param writer to which workload will be written as JSON

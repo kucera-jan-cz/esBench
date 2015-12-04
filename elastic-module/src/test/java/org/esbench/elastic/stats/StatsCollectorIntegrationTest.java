@@ -9,7 +9,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -23,7 +22,6 @@ import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
 import org.esbench.core.DefaultProperties;
-import org.esbench.core.ResourceUtils;
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.FieldMetadata;
@@ -90,8 +88,7 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 		assertTrue(client.index(indexBuilder.setId("1").setSource(doc01).request()).actionGet().isCreated());
 		assertTrue(client.index(indexBuilder.setId("2").setSource(doc02).request()).actionGet().isCreated());
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();
-		Properties props = new Properties();
-		defaultProperties = new DefaultProperties(props, ResourceUtils.asProperties("default.properties"));
+		defaultProperties = new DefaultProperties("default.properties");
 	}
 
 	@AfterClass
@@ -101,8 +98,8 @@ public class StatsCollectorIntegrationTest extends AbstractSharedElasticSearchIn
 
 	@Test
 	public void init() throws IOException {
-		StatsCollector collector = new StatsCollector(client, new CollectorProperties(defaultProperties), INDEX_NAME);
-		List<IndexTypeMetadata> types = collector.collectIndex();
+		StatsCollector collector = new StatsCollector(client, new CollectorProperties(defaultProperties));
+		List<IndexTypeMetadata> types = collector.collectIndex(INDEX_NAME);
 
 		assertEquals(types.size(), 1);
 

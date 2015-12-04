@@ -46,7 +46,7 @@ public class DocumentSenderIntegrationTest extends AbstractSharedElasticSearchIn
 	}
 
 	private void insertDocuments() throws IOException {
-		SimpleInsertAction action = new SimpleInsertAction();
+		SimpleInsertAction action = new SimpleInsertAction(new DocumentSenderFactory());
 		Properties inputProps = new Properties();
 		inputProps.put(CommandPropsConstants.INDEX_OPT, INDEX_NAME);
 		inputProps.put(CommandPropsConstants.TYPE_OPT, INDEX_TYPE);

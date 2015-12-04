@@ -1,12 +1,13 @@
-package org.esbench.elastic.stats;
+package org.esbench.elastic.stats.analyzer;
 
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
+import org.esbench.elastic.stats.FieldInfo;
 import org.esbench.generator.field.meta.BooleanFieldMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BooleanStatsParser implements ExtendedStatsParser<BooleanFieldMetadata> {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BooleanStatsParser.class);
+public class BooleanStatsAnalyzer implements ExtendedStatsAnalyzer<BooleanFieldMetadata> {
+	private static final Logger LOGGER = LoggerFactory.getLogger(BooleanStatsAnalyzer.class);
 
 	@Override
 	public BooleanFieldMetadata parse(FieldInfo info, ExtendedStats stats, int valuesPerDocument) {
