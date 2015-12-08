@@ -1,13 +1,14 @@
-package org.esbench.elastic.stats;
+package org.esbench.elastic.stats.analyzer;
 
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
+import org.esbench.elastic.stats.FieldInfo;
 import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 
 /**
- * Converts Elasticsearch ExtendedStats to NumericFieldMetadata by extracting lowest and highest value. 
+ * Converts Elasticsearch ExtendedStats to NumericFieldMetadata by extracting lowest and highest value.
  */
-public class NumericStatsParser implements ExtendedStatsParser<NumericFieldMetadata> {
+public class NumericStatsAnalyzer implements ExtendedStatsAnalyzer<NumericFieldMetadata> {
 
 	@Override
 	public NumericFieldMetadata parse(FieldInfo info, ExtendedStats stats, int valuesPerDocument) {

@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 
 /**
- *	Basic JSON document factory which creates JSON documents as String. 
+ *	Basic JSON document factory which creates JSON documents as String.
  */
 public class SimpleDocumentFactory implements DocumentFactory<String> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleDocumentFactory.class);
@@ -26,7 +26,7 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 
 	/**
 	 * Creates factory instances using given {@link IndexTypeMetadata}.
-	 * @param indexTypeMetadata metadata based on which factory create JSON documents 
+	 * @param indexTypeMetadata metadata based on which factory create JSON documents
 	 */
 	public SimpleDocumentFactory(IndexTypeMetadata indexTypeMetadata) {
 		this(indexTypeMetadata, JsonBuilderFactory.DEFAULT_CACHE_LIMIT);
@@ -34,7 +34,7 @@ public class SimpleDocumentFactory implements DocumentFactory<String> {
 
 	/**
 	 * Creates factory instances using given {@link IndexTypeMetadata} and specifying caching limit.
-	 * @param indexTypeMetadata metadata based on which factory create JSON documents 
+	 * @param indexTypeMetadata metadata based on which factory create JSON documents
 	 * @param cachingLimit defines field value caching limit
 	 */
 	public SimpleDocumentFactory(IndexTypeMetadata indexTypeMetadata, int cachingLimit) {

@@ -22,6 +22,7 @@ import org.esbench.cmd.EsBenchAction;
 import org.esbench.core.DefaultProperties;
 import org.esbench.elastic.sender.AbstractInsertAction;
 import org.esbench.elastic.sender.DocumentSender;
+import org.esbench.elastic.sender.DocumentSenderFactory;
 import org.esbench.elastic.sender.InsertProperties;
 import org.esbench.generator.document.DocumentFactory;
 import org.slf4j.Logger;
@@ -45,14 +46,14 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 	private ICountDownLatch prepLatch;
 	private ICountDownLatch execLatch;
 	private long id;
-	private DocumentSender sender;
+	private final DocumentSenderFactory senderFactory;
 
-	public MasterNodeInsertAction(DocumentSender sender) {
-		this.sender = sender;
+	public MasterNodeInsertAction(DocumentSenderFactory senderFactory) {
+		this.senderFactory = senderFactory;
 	}
 
 	/**
-	 * Establishes Hazelcast cluster and once required number of clients connect, execute multiple document insertion. 
+	 * Establishes Hazelcast cluster and once required number of clients connect, execute multiple document insertion.
 	 */
 	@Override
 	public void perform(DefaultProperties properties) throws IOException {
@@ -66,7 +67,7 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 			init(hz, properties, insProperties);
 			InetSocketAddress establishedAddress = hz.getCluster().getLocalMember().getSocketAddress();
 			LOGGER.info("Cluster established at {}", establishedAddress);
-			executeSend(insProperties);
+			executeSend(properties, insProperties);
 			LOGGER.info("Sending on master node finished");
 			waitForAllClientShutdown(hz.getClientService());
 		} catch (InterruptedException ex) {
@@ -99,12 +100,13 @@ public class MasterNodeInsertAction extends AbstractInsertAction implements EsBe
 		prepLatch.countDown();
 	}
 
-	private void executeSend(InsertProperties insProperties) throws IOException, InterruptedException {
+	private void executeSend(DefaultProperties properties, InsertProperties insProperties) throws IOException, InterruptedException {
 		int docsPerIteration = insProperties.getDocPerIteration();
 
 		int startingFrom = insProperties.getNumOfIterations() * docsPerIteration * (int) id;
 
 		DocumentFactory<String> factory = super.getFactory(insProperties);
+		DocumentSender sender = senderFactory.newInstance(properties);
 		LOGGER.info("Waiting for slave nodes...");
 		execLatch.countDown();
 		Validate.isTrue(execLatch.await(DEFAULT_WAIT_UNIT, TimeUnit.MINUTES), "Execution failed: waiting for nodes exceeded limit");

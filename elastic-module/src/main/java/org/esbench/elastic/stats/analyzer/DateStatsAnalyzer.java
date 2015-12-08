@@ -1,11 +1,11 @@
-package org.esbench.elastic.stats;
+package org.esbench.elastic.stats.analyzer;
 
-import static org.esbench.elastic.stats.DateStatsParserConstants.DATE_SEPARATOR;
-import static org.esbench.elastic.stats.DateStatsParserConstants.EPOCH_MILLIS;
-import static org.esbench.elastic.stats.DateStatsParserConstants.EPOCH_SECOND;
-import static org.esbench.elastic.stats.DateStatsParserConstants.ES_FORMATS;
-import static org.esbench.elastic.stats.DateStatsParserConstants.FORMAT_PROP;
-import static org.esbench.elastic.stats.DateStatsParserConstants.JODA_FORMAT_TO_JDK;
+import static org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants.DATE_SEPARATOR;
+import static org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants.EPOCH_MILLIS;
+import static org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants.EPOCH_SECOND;
+import static org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants.ES_FORMATS;
+import static org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants.FORMAT_PROP;
+import static org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants.JODA_FORMAT_TO_JDK;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
+import org.esbench.elastic.stats.FieldInfo;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.FieldMetadata;
 import org.esbench.generator.field.meta.MetaType;
@@ -24,11 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Based on defined mapping
+ * Based on given {@link ExtendedStats} and FieldInfo create FieldMetadata. Analyzer process lowest and highest value in index
+ * and use them as range for DateFieldMetadata/NumericFieldMetadata. The choice which type of FieldMetadata is determined by
+ * allowed format of field. If field is only numeric (like epoch_miliseconds}, analyzer produces only NumericFieldMetadata.  
  */
-public class DateStatsParser implements ExtendedStatsParser<FieldMetadata> {
+public class DateStatsAnalyzer implements ExtendedStatsAnalyzer<FieldMetadata> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DateStatsParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DateStatsAnalyzer.class);
 
 	@Override
 	public FieldMetadata parse(FieldInfo info, ExtendedStats stats, int valuesPerDocument) {
@@ -61,6 +64,12 @@ public class DateStatsParser implements ExtendedStatsParser<FieldMetadata> {
 		throw new IllegalArgumentException("Unsupported formats: " + ArrayUtils.toString(esPatterns));
 	}
 
+	/**
+	 * From given esPatterns choose one which can be translated to JDK format.
+	 * @param info for debuggin information about analyzed field
+	 * @param esPatterns supported elasticsearch date formats in String representation 
+	 * @return String format compatible with JDK Instant, null when none of esPatterns are supported by esBench 
+	 */
 	private String jodaToJDK(FieldInfo info, String[] esPatterns) {
 		for(String pattern : esPatterns) {
 			if(ES_FORMATS.contains(pattern)) {
@@ -89,7 +98,7 @@ public class DateStatsParser implements ExtendedStatsParser<FieldMetadata> {
 	 * Calculate for given instants appropriate ChronoUnit which satisfy this criteria (from + unit * numOfDocs) < to.
 	 * @param from instant defining lowest value in date range
 	 * @param to instant defining highest value in date range
-	 * @param numOfDocs which affects how big unit is  
+	 * @param numOfDocs which affects how big unit is
 	 * @return ChronoUnit never null
 	 */
 	ChronoUnit calculateTimeStep(Instant from, Instant to, long numOfDocs) {

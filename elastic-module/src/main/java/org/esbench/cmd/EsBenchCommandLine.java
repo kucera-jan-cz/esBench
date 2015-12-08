@@ -7,6 +7,7 @@ import static org.esbench.cmd.CommandPropsConstants.HELP_OPT;
 import static org.esbench.cmd.CommandPropsConstants.INSERT_CMD;
 import static org.esbench.cmd.CommandPropsConstants.INSERT_MASTER_CMD;
 import static org.esbench.cmd.CommandPropsConstants.INSERT_SLAVE_CMD;
+import static org.esbench.cmd.CommandPropsConstants.LIST_PROPS_CMD;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,7 +18,9 @@ import java.util.Properties;
 import org.esbench.core.DefaultProperties;
 import org.esbench.core.ResourceUtils;
 import org.esbench.elastic.sender.SimpleInsertAction;
+import org.esbench.elastic.sender.cluster.MasterNodeInsertAction;
 import org.esbench.elastic.sender.cluster.SlaveNodeInsertAction;
+import org.esbench.elastic.spring.CollectSpringConfiguration;
 import org.esbench.elastic.spring.InsertSpringConfiguration;
 import org.esbench.elastic.stats.CollectWorkloadAction;
 import org.slf4j.Logger;
@@ -43,28 +46,46 @@ public class EsBenchCommandLine {
 		if(defaultProps.contains(HELP_OPT)) {
 			displayHelp(0);
 		}
-		EsBenchAction action = executeCommand(command, defaultProps);
-		action.perform(defaultProps);
+
+		AnnotationConfigApplicationContext context = buildSpringContext(defaultProps);
+		try {
+			EsBenchAction action = createAction(command, context);
+			action.perform(defaultProps);
+		} finally {
+			context.close();
+		}
 	}
 
-	private EsBenchAction executeCommand(String command, DefaultProperties defaultProps) throws IOException {
-		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-		beanFactory.registerSingleton("defaults", defaultProps);
+	private EsBenchAction createAction(String command, AnnotationConfigApplicationContext context) throws IOException {
 		switch(command) {
 		case INSERT_CMD:
-			return new SimpleInsertAction();
-		case COLLECT_CMD:
-			return new CollectWorkloadAction();
-		case INSERT_MASTER_CMD:
-			AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(beanFactory);
 			context.register(InsertSpringConfiguration.class);
 			context.refresh();
 			return context.getBean(SimpleInsertAction.class);
+		case COLLECT_CMD:
+			context.register(CollectSpringConfiguration.class);
+			context.refresh();
+			return context.getBean(CollectWorkloadAction.class);
+		case INSERT_MASTER_CMD:
+			context.register(InsertSpringConfiguration.class);
+			context.refresh();
+			return context.getBean(MasterNodeInsertAction.class);
 		case INSERT_SLAVE_CMD:
-			return new SlaveNodeInsertAction();
+			context.register(InsertSpringConfiguration.class);
+			context.refresh();
+			return context.getBean(SlaveNodeInsertAction.class);
+		case LIST_PROPS_CMD:
+			return new ListPropertiesAction();
 		default:
 			throw new IllegalArgumentException("Unknown command");
 		}
+	}
+
+	private AnnotationConfigApplicationContext buildSpringContext(DefaultProperties defaultProps) {
+		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+		beanFactory.registerSingleton("defaults", defaultProps);
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(beanFactory);
+		return context;
 	}
 
 	private DefaultProperties loadProperties(String... args) throws IOException {

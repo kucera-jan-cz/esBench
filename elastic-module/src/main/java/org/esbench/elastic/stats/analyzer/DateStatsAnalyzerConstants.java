@@ -1,4 +1,4 @@
-package org.esbench.elastic.stats;
+package org.esbench.elastic.stats.analyzer;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Constant class for date parsing functions. 
+ * Constant class for date parsing functions.
  */
-public final class DateStatsParserConstants {
+public final class DateStatsAnalyzerConstants {
 	public static final String DATE_SEPARATOR = "\\|\\|";
 	public static final String FORMAT_PROP = "format";
 	public static final String EPOCH_MILLIS = "epoch_millis";
@@ -16,9 +16,9 @@ public final class DateStatsParserConstants {
 	public static final String DEFAULT_DATE_FORMAT = "strict_date_optional_time||epoch_millis";
 
 	/**
-	 * Following list contains all unsupported Elasticsearch date types, since Joda time is handling formating different than JDK 8.  
+	 * Following list contains all unsupported Elasticsearch date types, since Joda time is handling formating different than JDK 8.
 	 */
-	public static final List<String> UNSUPPORTED_ES_FORMATS = ImmutableList.<String> builder()
+	public static final List<String> UNSUPPORTED_FORMATS = ImmutableList.<String> builder()
 			.add("basicWeekDate", "basic_week_date", "basicWeekDateTime", "basic_week_date_time", "basicWeekDateTimeNoMillis", "basic_week_date_time_no_millis",
 					"weekDate", "week_date", "weekDateTime", "week_date_time", "weekDateTimeNoMillis", "week_date_time_no_millis", "weekyear", "week_year",
 					"weekyearWeek", "weekyear_week", "weekyearWeekDay", "weekyear_week_day", "strictWeekDate", "strict_week_date", "strictWeekDateTime",
@@ -31,7 +31,7 @@ public final class DateStatsParserConstants {
 	/**
 	 * Following list contains all Elasticsearch date types which Esbench supports.
 	 */
-	public static final List<String> SUPPORTED_ES_FORMATS = ImmutableList.<String> builder()
+	public static final List<String> SUPPORTED_FORMATS = ImmutableList.<String> builder()
 			.add("basicDate", "basic_date", "basicDateTime", "basic_date_time", "basicDateTimeNoMillis", "basic_date_time_no_millis", "basicOrdinalDate",
 					"basic_ordinal_date", "basicOrdinalDateTime", "basic_ordinal_date_time", "basicOrdinalDateTimeNoMillis",
 					"basic_ordinal_date_time_no_millis", "basicTime", "basic_time", "basicTimeNoMillis", "basic_time_no_millis", "basicTTime", "basic_t_Time",
@@ -54,15 +54,15 @@ public final class DateStatsParserConstants {
 					"strictYearMonth", "strict_year_month", "strictYearMonthDay", "strict_year_month_day")
 			.build();
 
-	public static final List<String> SUPPORTED_ES_NON_DATE_FORMATS = ImmutableList.<String> builder().add("epoch_second", "epoch_millis").build();
+	public static final List<String> SUPPORTED_EPOCH_FORMATS = ImmutableList.<String> builder().add("epoch_second", "epoch_millis").build();
 
 	/**
 	 * List of all know Elasticsearch formats.
 	 */
 	public static final List<String> ES_FORMATS = ImmutableList.<String> builder()
-			.addAll(SUPPORTED_ES_FORMATS)
-			.addAll(SUPPORTED_ES_NON_DATE_FORMATS)
-			.addAll(UNSUPPORTED_ES_FORMATS)
+			.addAll(SUPPORTED_FORMATS)
+			.addAll(SUPPORTED_EPOCH_FORMATS)
+			.addAll(UNSUPPORTED_FORMATS)
 			.build();
 
 	/**
@@ -111,7 +111,7 @@ public final class DateStatsParserConstants {
 			.put("strictdateoptionaltime", "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 			.build();
 
-	private DateStatsParserConstants() {
+	private DateStatsAnalyzerConstants() {
 
 	}
 }

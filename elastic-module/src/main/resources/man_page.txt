@@ -4,7 +4,8 @@ Commands:
 	collect		    - Collects workload from elasticsearch
 	insert  	    - Insert defined number of documents to elasticsearch
 	insert-master   - Starts cluster server which will coordinate clustered insertion 
-	insert-slave    - Starts cluster client which will join cluster server will behave like insert command in clustered mode 
+	insert-slave    - Starts cluster client which will join cluster server will behave like insert command in clustered mode
+	list-props      - Displays all properties evaluated from command-line, configuration file and default options 
 Options:
 	--conf=FILE_A               - defines configuration property file where you can define all other optios [default '']
 	--host=VALUE                - defines elasticsearch address (IP or hostname) [default localhost]

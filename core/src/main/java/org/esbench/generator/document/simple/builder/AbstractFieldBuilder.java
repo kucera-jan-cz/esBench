@@ -12,8 +12,8 @@ import org.esbench.generator.field.meta.FieldMetadata;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
- * Base abstract class for JSONBuilders which handles single value/array fields. 
- * @param <T> defines type which given FieldFactory must produce. 
+ * Base abstract class for JSONBuilders which handles single value/array fields.
+ * @param <T> defines type which given FieldFactory must produce.
  */
 abstract class AbstractFieldBuilder<T> implements JsonBuilder {
 	protected FieldMetadata meta;

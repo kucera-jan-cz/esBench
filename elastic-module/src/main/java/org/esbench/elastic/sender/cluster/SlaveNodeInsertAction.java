@@ -13,13 +13,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.concurrent.TimeUnit;
 
-import org.elasticsearch.client.Client;
 import org.esbench.cmd.EsBenchAction;
 import org.esbench.core.DefaultProperties;
 import org.esbench.elastic.sender.AbstractInsertAction;
 import org.esbench.elastic.sender.DocumentSender;
+import org.esbench.elastic.sender.DocumentSenderFactory;
 import org.esbench.elastic.sender.InsertProperties;
-import org.esbench.elastic.utils.ElasticClientBuilder;
 import org.esbench.generator.document.DocumentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +40,14 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 	private ICountDownLatch execLatch;
 	private IMap<String, Object> configMap;
 	private long id;
+	private final DocumentSenderFactory senderFactory;
+
+	public SlaveNodeInsertAction(DocumentSenderFactory senderFactory) {
+		this.senderFactory = senderFactory;
+	}
 
 	/**
-	 * Wait till master node prepare configuration for sending, then create it's own sender and starts document insertion.  
+	 * Wait till master node prepare configuration for sending, then create it's own sender and starts document insertion.
 	 */
 	@Override
 	public void perform(DefaultProperties properties) throws IOException {
@@ -53,7 +57,7 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 
 		HazelcastInstance client = HazelcastClient.newHazelcastClient(config);
 		try {
-			init(client);
+			init(client, properties);
 		} catch (InterruptedException ex) {
 			LOGGER.error("Thread interrupted: ", ex);
 		} finally {
@@ -61,7 +65,7 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 		}
 	}
 
-	private void init(HazelcastInstance hz) throws IOException, InterruptedException {
+	private void init(HazelcastInstance hz, DefaultProperties slaveProperties) throws IOException, InterruptedException {
 		IAtomicLong nodeId = hz.getAtomicLong(NODE_ID);
 		id = nodeId.getAndIncrement();
 
@@ -74,9 +78,9 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 		execLatch = hz.getCountDownLatch(EXEC_LATCH);
 
 		configMap = hz.getMap(CONF_MAP);
-		DefaultProperties defaults = (DefaultProperties) configMap.get(DEFAULT_PROPS);
-
-		executeSend(defaults);
+		DefaultProperties masterProperties = (DefaultProperties) configMap.get(DEFAULT_PROPS);
+		DefaultProperties merged = DefaultProperties.merge(slaveProperties, masterProperties);
+		executeSend(merged);
 		LOGGER.info("Leader finished");
 	}
 
@@ -85,19 +89,13 @@ public class SlaveNodeInsertAction extends AbstractInsertAction implements EsBen
 		String workloadAsText = (String) configMap.get(WORKLOAD);
 		Reader reader = new StringReader(workloadAsText);
 		DocumentFactory<String> factory = super.getFactory(insProperties, reader);
-		Client client = new ElasticClientBuilder().withProperties(defaults).build();
-		DocumentSender sender = new DocumentSender(client);
+		DocumentSender sender = senderFactory.newInstance(defaults);
 
 		int docsPerIteration = insProperties.getDocPerIteration();
 		int startingFrom = docsPerIteration * (int) id;
 		execLatch.countDown();
 		execLatch.await(DEFAULT_WAIT_UNIT, TimeUnit.MINUTES);
 		sender.send(factory, insProperties, startingFrom);
-	}
-
-	public static void main(String[] args) throws InterruptedException, IOException {
-		SlaveNodeInsertAction node = new SlaveNodeInsertAction();
-		node.perform(DefaultProperties.EMPTY);
 	}
 
 }

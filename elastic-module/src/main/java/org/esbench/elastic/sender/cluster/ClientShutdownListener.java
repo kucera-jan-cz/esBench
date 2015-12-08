@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.hazelcast.core.ClientListener;
 
 /**
- * Notify other thread about client shutdown using given lock and condition signaling.  
+ * Notify other thread about client shutdown using given lock and condition signaling.
  */
 class ClientShutdownListener implements ClientListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ClientShutdownListener.class);

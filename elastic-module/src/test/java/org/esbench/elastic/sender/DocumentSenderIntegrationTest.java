@@ -46,7 +46,7 @@ public class DocumentSenderIntegrationTest extends AbstractSharedElasticSearchIn
 	}
 
 	private void insertDocuments() throws IOException {
-		SimpleInsertAction action = new SimpleInsertAction();
+		SimpleInsertAction action = new SimpleInsertAction(new DocumentSenderFactory());
 		Properties inputProps = new Properties();
 		inputProps.put(CommandPropsConstants.INDEX_OPT, INDEX_NAME);
 		inputProps.put(CommandPropsConstants.TYPE_OPT, INDEX_TYPE);
@@ -58,7 +58,7 @@ public class DocumentSenderIntegrationTest extends AbstractSharedElasticSearchIn
 		String workloadAsText = ResourceUtils.asString("configuration/config02.json");
 		DocumentFactory<String> factory = action.getFactory(insProperties, new StringReader(workloadAsText));
 
-		DocumentSender sender = new DocumentSender(client);
+		DocumentSender sender = new DocumentSenderImpl(client);
 		sender.send(factory, insProperties);
 
 		client.admin().indices().flush(new FlushRequest(INDEX_NAME)).actionGet();

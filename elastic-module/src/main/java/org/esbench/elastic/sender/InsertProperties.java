@@ -1,6 +1,8 @@
 package org.esbench.elastic.sender;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.esbench.cmd.CommandPropsConstants;
 import org.esbench.core.DefaultProperties;
 
@@ -106,5 +108,15 @@ public class InsertProperties {
 
 	public int getClusterNodes() {
 		return clusterNodes;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 }

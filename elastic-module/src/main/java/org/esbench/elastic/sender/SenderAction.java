@@ -2,6 +2,7 @@ package org.esbench.elastic.sender;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.Validate;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.index.IndexRequest;
 import org.esbench.generator.document.DocumentFactory;
@@ -11,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 
+/**
+ * Runnable class responsible for sending documents through {@link BulkProcessor}. 
+ */
 public class SenderAction implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SenderAction.class);
 	private final MetricRegistry metrics;
@@ -21,10 +25,11 @@ public class SenderAction implements Runnable {
 	private final int to;
 
 	public SenderAction(MetricRegistry metrics, InsertProperties properties, DocumentFactory<String> factory, BulkProcessor bulkProcessor, int from, int to) {
-		this.metrics = metrics;
-		this.properties = properties;
-		this.factory = factory;
-		this.bulkProcessor = bulkProcessor;
+		this.metrics = Validate.notNull(metrics);
+		this.properties = Validate.notNull(properties);
+		this.factory = Validate.notNull(factory);
+		this.bulkProcessor = Validate.notNull(bulkProcessor);
+		Validate.isTrue(from < to, "From is not bigger than to");
 		this.from = from;
 		this.to = to;
 	}
