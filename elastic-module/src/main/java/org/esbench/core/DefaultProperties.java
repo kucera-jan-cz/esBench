@@ -62,8 +62,8 @@ public class DefaultProperties implements Serializable {
 
 	/**
 	 * @param propertyName
-	 * @param type Class type which should be returned 
-	 * @return appropriate value for given propertyName class-casted to required type 
+	 * @param type Class type which should be returned
+	 * @return appropriate value for given propertyName class-casted to required type
 	 */
 	public <T> T get(String propertyName, Class<T> type) {
 		try {
@@ -77,7 +77,7 @@ public class DefaultProperties implements Serializable {
 	/**
 	 * @param propertyName
 	 * @param defaultValue which should be returned if conversion failed or property is not presented
-	 * @return value for given propertyName or defaultValue 
+	 * @return value for given propertyName or defaultValue
 	 */
 	public <T> T get(String propertyName, T defaultValue) {
 		Class<T> type = (Class<T>) defaultValue.getClass();
@@ -90,7 +90,7 @@ public class DefaultProperties implements Serializable {
 	}
 
 	/**
-	 * @param propertyName 
+	 * @param propertyName
 	 * @return true when propertyName is presented, false otherwise
 	 */
 	public boolean contains(String propertyName) {
@@ -111,7 +111,7 @@ public class DefaultProperties implements Serializable {
 	}
 
 	/**
-	 * Merge given properties into new one where first DefaultProperties has overloading precedence.	 
+	 * Merge given properties into new one where first DefaultProperties has overloading precedence.
 	 * @param fst DefaultProperties which overrules snd
 	 * @param snd DefaultProperties which serves as baseline
 	 * @return merged DefaultProperties

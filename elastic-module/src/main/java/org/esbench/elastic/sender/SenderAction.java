@@ -13,7 +13,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 
 /**
- * Runnable class responsible for sending documents through {@link BulkProcessor}. 
+ * Runnable class responsible for sending documents through {@link BulkProcessor}.
  */
 public class SenderAction implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SenderAction.class);

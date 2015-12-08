@@ -7,7 +7,6 @@ import static org.testng.Assert.assertEquals;
 
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
 import org.esbench.elastic.stats.FieldInfo;
-import org.esbench.elastic.stats.analyzer.NumericStatsAnalyzer;
 import org.esbench.generator.field.meta.MetaType;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
 import org.testng.annotations.DataProvider;

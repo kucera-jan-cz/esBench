@@ -15,7 +15,7 @@ public class SimpleDocumentFactoryTest {
 	@Test
 	public void newInstance() throws IOException {
 		WorkloadParser parser = new WorkloadParser();
-		Reader reader = new StringReader(ResourcesUtils.loadAsString("configuration/simple-config-01.json"));
+		Reader reader = new StringReader(ResourcesUtils.loadAsString("workloads/simple-config-01.json"));
 		Workload config = parser.parse(reader);
 		SimpleDocumentFactory factory = new SimpleDocumentFactory(config.getIndiceTypes().get(0));
 		String fstJson = factory.newInstance(0);

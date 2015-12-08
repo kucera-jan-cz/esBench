@@ -21,7 +21,7 @@ public class SimpleDocumentFactoryPerformanceTest {
 	@Test(enabled = ENABLED)
 	public void newInstance() throws IOException {
 		WorkloadParser parser = new WorkloadParser();
-		Reader reader = new StringReader(ResourcesUtils.loadAsString("configuration/bgg-histogram.json"));
+		Reader reader = new StringReader(ResourcesUtils.loadAsString("workloads/bgg-histogram.json"));
 		Workload config = parser.parse(reader);
 		SimpleDocumentFactory factory = new SimpleDocumentFactory(config.getIndiceTypes().get(0));
 		long start = System.currentTimeMillis();

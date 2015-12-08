@@ -19,12 +19,12 @@ import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
 import org.esbench.core.DefaultProperties;
+import org.esbench.core.ResourceUtils;
 import org.esbench.elastic.stats.CollectorProperties;
 import org.esbench.elastic.stats.StatsCollector;
 import org.esbench.generator.field.meta.IndexTypeMetadata;
 import org.esbench.generator.field.meta.MetadataConstants;
 import org.esbench.testng.AbstractSharedElasticSearchIntegrationTest;
-import org.esbench.testng.ResourcesUtils;
 import org.esbench.workload.Workload;
 import org.esbench.workload.WorkloadConstants;
 import org.esbench.workload.json.WorkloadParser;
@@ -48,13 +48,13 @@ public class ConfigurationAnalyzerIntegrationTest extends AbstractSharedElasticS
 		CreateIndexRequest indexRequest = new CreateIndexRequest(INDEX_NAME);
 		assertTrue(client.admin().indices().create(indexRequest).actionGet().isAcknowledged());
 
-		String mapping = ResourcesUtils.loadAsString("mapping_request.json");
+		String mapping = ResourceUtils.asString("mapping_request.json");
 		PutMappingRequestBuilder builder = new PutMappingRequestBuilder(client, PutMappingAction.INSTANCE);
 		PutMappingRequest request = builder.setIndices(INDEX_NAME).setType(INDEX_TYPE).setSource(mapping).request();
 		assertTrue(client.admin().indices().putMapping(request).actionGet().isAcknowledged());
 
-		String doc01 = ResourcesUtils.loadAsString("documents/doc01.json");
-		String doc02 = ResourcesUtils.loadAsString("documents/doc02.json");
+		String doc01 = ResourceUtils.asString("documents/doc01.json");
+		String doc02 = ResourceUtils.asString("documents/doc02.json");
 		IndexRequestBuilder indexBuilder = new IndexRequestBuilder(client, IndexAction.INSTANCE, INDEX_NAME).setType(INDEX_TYPE);
 		assertTrue(client.index(indexBuilder.setId("1").setSource(doc01).request()).actionGet().isCreated());
 		assertTrue(client.index(indexBuilder.setId("2").setSource(doc02).request()).actionGet().isCreated());

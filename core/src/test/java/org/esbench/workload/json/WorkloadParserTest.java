@@ -56,7 +56,7 @@ public class WorkloadParserTest {
 	@Test
 	public void parseConfiguration01() throws JsonProcessingException, IOException {
 		WorkloadParser parser = new WorkloadParser();
-		Reader reader = new StringReader(ResourcesUtils.loadAsString("configuration/config01.json"));
+		Reader reader = new StringReader(ResourcesUtils.loadAsString("workloads/config01.json"));
 		Workload config = parser.parse(reader);
 		assertNotNull(config);
 		assertEquals(config.getIndiceTypes().size(), 1);
@@ -70,7 +70,7 @@ public class WorkloadParserTest {
 	@Test
 	public void parseConfiguration02() throws IOException {
 		WorkloadParser parser = new WorkloadParser();
-		Reader reader = new StringReader(ResourcesUtils.loadAsString("configuration/config02.json"));
+		Reader reader = new StringReader(ResourcesUtils.loadAsString("workloads/config02.json"));
 		Workload config = parser.parse(reader);
 		assertNotNull(config);
 		assertEquals(config.getVersion(), WorkloadConstants.CURRENT_VERSION);

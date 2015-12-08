@@ -6,7 +6,6 @@ import static org.testng.Assert.assertEquals;
 
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
 import org.esbench.elastic.stats.FieldInfo;
-import org.esbench.elastic.stats.analyzer.Ipv4StatsAnalyzer;
 import org.esbench.generator.field.meta.IPv4FieldMetadata;
 import org.esbench.generator.field.utils.AddressUtils;
 import org.testng.annotations.DataProvider;

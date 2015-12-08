@@ -4,7 +4,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
@@ -35,7 +34,6 @@ import org.testng.annotations.Test;
 public class MasterNodeInsertActionIntegrationTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MasterNodeInsertActionIntegrationTest.class);
 	Properties userDefined;
-	Properties defaults;
 	DefaultProperties defaultProperties;
 
 	@BeforeClass
@@ -46,18 +44,15 @@ public class MasterNodeInsertActionIntegrationTest {
 	@Test
 	public void validateMaster() throws IOException, InterruptedException {
 		DocumentSender masterSenderMock = mock(DocumentSender.class);
-		startMaster(masterSenderMock);
-
 		SendValidationAnswer masterAnswer = new SendValidationAnswer();
 		doAnswer(masterAnswer).when(masterSenderMock).send(Matchers.<DocumentFactory<String>> any(), any(InsertProperties.class), anyInt());
+		startMaster(masterSenderMock);
 
 		DocumentSender slaveSenderMock = mock(DocumentSender.class);
 		SendValidationAnswer slaveAnswer = new SendValidationAnswer();
 		doAnswer(slaveAnswer).when(slaveSenderMock).send(Matchers.<DocumentFactory<String>> any(), any(InsertProperties.class), anyInt());
-
-		verifyZeroInteractions(masterSenderMock);
-
 		startSlave(slaveSenderMock);
+
 		slaveAnswer.executeLatch.await(1, TimeUnit.MINUTES);
 		verify(masterAnswer, slaveAnswer);
 	}
@@ -83,7 +78,7 @@ public class MasterNodeInsertActionIntegrationTest {
 		private SimpleDocumentFactory factory;
 		private InsertProperties props;
 		private Integer from;
-		private CountDownLatch executeLatch = new CountDownLatch(1);
+		private final CountDownLatch executeLatch = new CountDownLatch(1);
 
 		@Override
 		public Void answer(InvocationOnMock invocation) throws Throwable {
@@ -100,7 +95,7 @@ public class MasterNodeInsertActionIntegrationTest {
 		DocumentSenderFactory mockedFactory = mock(DocumentSenderFactory.class);
 		when(mockedFactory.newInstance(any(DefaultProperties.class))).thenReturn(mockedSender);
 		SlaveNodeInsertAction node = new SlaveNodeInsertAction(mockedFactory);
-		DefaultProperties props = new DefaultProperties(new Properties(), defaults);
+		DefaultProperties props = new DefaultProperties("default.properties");
 		execute(node, props);
 	}
 

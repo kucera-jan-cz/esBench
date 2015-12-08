@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EmbeddedElasticSearchServer {
+	private static final String NODE_LOCAL_PROP = "node.local";
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedElasticSearchServer.class);
 	private static final String CLUSTER_NAME_PROP = "cluster.name";
 	private static final String INDEX_GATEWAY_TYPE_PROP = "index.gateway.type";
@@ -25,12 +26,14 @@ public class EmbeddedElasticSearchServer {
 	private static final String DEFAULT_CLUSTER = "cluster";
 
 	private final Node node;
+	private final String clusterName;
 
 	public EmbeddedElasticSearchServer() {
 		this(DEFAULT_DATA_DIR, DEFAULT_CLUSTER);
 	}
 
-	public EmbeddedElasticSearchServer(String dataDirectory, String cluster) {
+	public EmbeddedElasticSearchServer(String dataDirectory, String cluster, Object... settingsParams) {
+		this.clusterName = cluster;
 		Path parentDataDir = Paths.get(dataDirectory);
 		try {
 			Files.createDirectories(parentDataDir);
@@ -41,8 +44,10 @@ public class EmbeddedElasticSearchServer {
 					.put(INDEX_GATEWAY_TYPE_PROP, "none")
 					.put(PATH_DATA_PROP, dataDir.toString())
 					.put(CLUSTER_NAME_PROP, cluster)
+					.put(NODE_LOCAL_PROP, "true")
+					.put(settingsParams)
 					.build();
-			node = nodeBuilder().local(true).settings(settings).node();
+			node = nodeBuilder().settings(settings).node();
 		} catch (IOException e) {
 			LOGGER.error("Failed to create temporary directory", e);
 			throw new IllegalStateException("Can't initialize cluster", e);
@@ -53,6 +58,10 @@ public class EmbeddedElasticSearchServer {
 	public Client getClient() {
 		// node.client().admin().cluster().prepareHealth().setWaitForGreenStatus().get();
 		return node.client();
+	}
+
+	public String getClusterName() {
+		return clusterName;
 	}
 
 	public void shutdown() {

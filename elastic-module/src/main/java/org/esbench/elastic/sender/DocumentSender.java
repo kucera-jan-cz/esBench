@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.esbench.generator.document.DocumentFactory;
 
 /**
- * Based on given {@link InsertProperties} sends documents using {@link DocumentFactory}. 
+ * Based on given {@link InsertProperties} sends documents using {@link DocumentFactory}.
  */
 public interface DocumentSender {
 	/**

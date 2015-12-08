@@ -8,6 +8,10 @@ import org.esbench.core.DefaultProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Display resolved DefaultProperties to logger's output.
+ * Helps user to check that all properties are resolved as he expects.
+ */
 public class ListPropertiesAction implements EsBenchAction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ListPropertiesAction.class);
 

@@ -1,4 +1,4 @@
-package org.esbench.elastic.sender.exceptions;
+package org.esbench.elastic.exceptions;
 
 import java.io.IOException;
 

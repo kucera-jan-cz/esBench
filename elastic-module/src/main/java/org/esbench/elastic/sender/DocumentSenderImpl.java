@@ -9,24 +9,21 @@ import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
-import org.esbench.elastic.sender.exceptions.InsertionFailure;
+import org.esbench.core.LogbackReporter;
+import org.esbench.elastic.exceptions.InsertionFailure;
 import org.esbench.elastic.utils.BulkListener;
 import org.esbench.generator.document.DocumentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.Slf4jReporter;
+import com.codahale.metrics.ScheduledReporter;
 import com.codahale.metrics.Timer;
 
 public class DocumentSenderImpl implements DocumentSender {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DocumentSenderImpl.class);
-	static final MetricRegistry metrics = new MetricRegistry();
-	final Slf4jReporter reporter = Slf4jReporter.forRegistry(metrics)
-			.outputTo(LOGGER)
-			.convertRatesTo(TimeUnit.SECONDS)
-			.convertDurationsTo(TimeUnit.MILLISECONDS)
-			.build();
+	private final MetricRegistry metrics = new MetricRegistry();
+	private final ScheduledReporter reporter = new LogbackReporter(metrics, LOGGER);
 	private final Client client;
 
 	public DocumentSenderImpl(Client client) {
@@ -35,7 +32,7 @@ public class DocumentSenderImpl implements DocumentSender {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.esbench.elastic.sender.DocumentSender#send(org.esbench.generator.document.DocumentFactory, org.esbench.elastic.sender.InsertProperties)
 	 */
 	@Override
@@ -45,7 +42,7 @@ public class DocumentSenderImpl implements DocumentSender {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.esbench.elastic.sender.DocumentSender#send(org.esbench.generator.document.DocumentFactory, org.esbench.elastic.sender.InsertProperties, int)
 	 */
 	@Override

@@ -55,7 +55,7 @@ public class DocumentSenderIntegrationTest extends AbstractSharedElasticSearchIn
 		DefaultProperties defaults = new DefaultProperties(inputProps, resourceProps);
 		InsertProperties insProperties = new InsertProperties(defaults);
 
-		String workloadAsText = ResourceUtils.asString("configuration/config02.json");
+		String workloadAsText = ResourceUtils.asString("workloads/config02.json");
 		DocumentFactory<String> factory = action.getFactory(insProperties, new StringReader(workloadAsText));
 
 		DocumentSender sender = new DocumentSenderImpl(client);

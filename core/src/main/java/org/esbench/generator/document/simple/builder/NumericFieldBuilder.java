@@ -10,7 +10,10 @@ import org.esbench.generator.field.meta.NumericFieldMetadata;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
-public class NumericFieldBuilder {
+public final class NumericFieldBuilder {
+	private NumericFieldBuilder() {
+
+	}
 
 	public static JsonBuilder newInstance(NumericFieldMetadata meta, FieldFactory<? extends Number> factory) {
 		NumericConsumer writer = newWriter(meta);

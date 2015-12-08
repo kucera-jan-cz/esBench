@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Based on given {@link ExtendedStats} and FieldInfo create FieldMetadata. Analyzer process lowest and highest value in index
  * and use them as range for DateFieldMetadata/NumericFieldMetadata. The choice which type of FieldMetadata is determined by
- * allowed format of field. If field is only numeric (like epoch_miliseconds}, analyzer produces only NumericFieldMetadata.  
+ * allowed format of field. If field is only numeric (like epoch_miliseconds}, analyzer produces only NumericFieldMetadata.
  */
 public class DateStatsAnalyzer implements ExtendedStatsAnalyzer<FieldMetadata> {
 
@@ -67,8 +67,8 @@ public class DateStatsAnalyzer implements ExtendedStatsAnalyzer<FieldMetadata> {
 	/**
 	 * From given esPatterns choose one which can be translated to JDK format.
 	 * @param info for debuggin information about analyzed field
-	 * @param esPatterns supported elasticsearch date formats in String representation 
-	 * @return String format compatible with JDK Instant, null when none of esPatterns are supported by esBench 
+	 * @param esPatterns supported elasticsearch date formats in String representation
+	 * @return String format compatible with JDK Instant, null when none of esPatterns are supported by esBench
 	 */
 	private String jodaToJDK(FieldInfo info, String[] esPatterns) {
 		for(String pattern : esPatterns) {

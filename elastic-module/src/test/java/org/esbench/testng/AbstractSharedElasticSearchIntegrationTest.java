@@ -40,4 +40,8 @@ public class AbstractSharedElasticSearchIntegrationTest {
 	protected Client getClient() {
 		return embeddedServer.getClient();
 	}
+
+	protected String getClusterName() {
+		return embeddedServer.getClusterName();
+	}
 }

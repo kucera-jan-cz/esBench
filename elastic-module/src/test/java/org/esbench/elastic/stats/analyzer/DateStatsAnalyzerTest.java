@@ -18,8 +18,6 @@ import org.elasticsearch.common.joda.FormatDateTimeFormatter;
 import org.elasticsearch.common.joda.Joda;
 import org.elasticsearch.search.aggregations.metrics.stats.extended.ExtendedStats;
 import org.esbench.elastic.stats.FieldInfo;
-import org.esbench.elastic.stats.analyzer.DateStatsAnalyzer;
-import org.esbench.elastic.stats.analyzer.DateStatsAnalyzerConstants;
 import org.esbench.generator.field.FieldConstants;
 import org.esbench.generator.field.meta.DateFieldMetadata;
 import org.esbench.generator.field.meta.NumericFieldMetadata;
@@ -29,7 +27,7 @@ import org.testng.annotations.Test;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class DateStatsAnalyzerTest {
-	private DateStatsAnalyzer parser = new DateStatsAnalyzer();
+	private final DateStatsAnalyzer parser = new DateStatsAnalyzer();
 
 	@DataProvider
 	public Object[][] parsePatternDataProvider() {

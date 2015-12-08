@@ -11,20 +11,20 @@ import org.esbench.core.DefaultProperties;
  */
 public class InsertProperties {
 	// General insert definition
-	static final String DOCS = "insert.docs";
-	static final String THREADS = "insert.threads";
-	static final String ITERATIONS = "insert.iterations";
-	static final String CACHE_LIMIT = "insert.cache.value_limit";
+	public static final String DOCS = "insert.docs";
+	public static final String THREADS = "insert.threads";
+	public static final String ITERATIONS = "insert.iterations";
+	public static final String CACHE_LIMIT = "insert.cache.value_limit";
 
 	// Loading workload
-	static final String WORKLOAD_INDEX = "workload.index";
-	static final String WORKLOAD_TYPE = "workload.type";
+	public static final String WORKLOAD_INDEX = "workload.index";
+	public static final String WORKLOAD_TYPE = "workload.type";
 
 	// Bulk configuration
-	static final String BULK_ACTIONS = "insert.bulk.actions";
-	static final String BULK_THREADS = "insert.bulk.threads";
+	public static final String BULK_ACTIONS = "insert.bulk.actions";
+	public static final String BULK_THREADS = "insert.bulk.threads";
 
-	static final String CLUSTER_NODES = "insert.cluster.nodes";
+	public static final String CLUSTER_NODES = "insert.cluster.nodes";
 
 	private final int numOfThreads;
 	private final int numOfIterations;

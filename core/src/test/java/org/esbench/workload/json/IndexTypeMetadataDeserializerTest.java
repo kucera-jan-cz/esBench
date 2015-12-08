@@ -24,7 +24,7 @@ public class IndexTypeMetadataDeserializerTest {
 
 	@Test
 	public void deserialize() throws IOException {
-		String json = ResourcesUtils.loadAsString("configuration/test02.json");
+		String json = ResourcesUtils.loadAsString("workloads/test02.json");
 		IndexTypeMetadata meta = mapper.readValue(json, IndexTypeMetadata.class);
 		LOGGER.info("{}", meta);
 	}
