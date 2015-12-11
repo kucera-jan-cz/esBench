@@ -17,9 +17,9 @@ esbench insert --index=perf_games --type=game --insert.docs=10000 --insert.threa
 ## Getting Started
 A. Download latest release of esBench
 ```
- wget https://github.com/kucera-jan-cz/esBench/releases/download/v0.0.2-alpha/esbech-0.0.2-alpha.zip
- unzip esbech-0.0.2-alpha.zip
- cd esbech-0.0.2-SNAPSHOT/
+ wget https://github.com/kucera-jan-cz/esBench/releases/download/v0.0.2/esbech-0.0.2.zip
+ unzip esbech-0.0.2.zip
+ cd esbech-0.0.2/
 ```
 B. Insert testing documents to your localhost Elasticsearch cluster named myCluster
 ```
