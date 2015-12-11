@@ -1,6 +1,6 @@
-# esBench
+# esBench <img src="https://raw.githubusercontent.com/kucera-jan-cz/esBench/master/esbench_logo.png"  width="30" height="30" />
 
-![alt text](https://travis-ci.org/kucera-jan-cz/esBench.svg?branch=master "Logo Title Text 1")
+[![Build Status](https://travis-ci.org/kucera-jan-cz/esBench.svg?branch=master)](https://travis-ci.org/kucera-jan-cz/esBench)
 
 **esBench** is performance and unit test tool for generating Elasticsearch documents based on existing data. 
 The common use cases are:
@@ -15,17 +15,17 @@ esbench insert --index=perf_games --type=game --insert.docs=10000 --insert.threa
 ````
 
 ## Getting Started
-1. Download latest release of esBench
+A. Download latest release of esBench
 ```
  wget https://github.com/kucera-jan-cz/esBench/releases/download/v0.0.2-alpha/esbech-0.0.2-alpha.zip
  unzip esbech-0.0.2-alpha.zip
  cd esbech-0.0.2-SNAPSHOT/
 ```
-2. Insert testing documents to your localhost Elasticsearch cluster named myCluster
+B. Insert testing documents to your localhost Elasticsearch cluster named myCluster
 ```
 ./bin/esbench.sh insert --cluster.name=myCluster --index=board_games --type=game --insert.docs=1000 --workload=examples/board_games.json
 ```
-3. Collect workload (esBench metadata about existing index) from your localhost ElasticSearch named myCluster to file my_workload.json
+C. Collect workload (esBench metadata about existing index) from your localhost ElasticSearch named myCluster to file my_workload.json
 ```
 ./bin/esbench.sh collect --cluster.name=myCluster --index=board_games --type=game --workload=workloads/my_workload.json
 ```
