@@ -3,7 +3,7 @@
 set SCRIPT_PATH=%~dp0
 for %%I in ("%SCRIPT_PATH%..") do set BENCH_HOME=%%~dpfI
 
-set BENCH_CLASSPATH="%BENCH_HOME%\lib\elastic-module.jar"
+set BENCH_CLASSPATH="%BENCH_HOME%\lib\*"
 
 if DEFINED JAVA_HOME GOTO home
 set JAVA_EXE="java"

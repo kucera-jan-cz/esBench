@@ -24,6 +24,9 @@
 				<configuration>
 					<descriptor>src/assembly/dist.xml</descriptor>
 					<finalName>esbech-${project.version}</finalName>
+					<archiverConfig>
+						<compress>false</compress>
+					</archiverConfig>
 				</configuration>
 				<executions>
 					<execution>
