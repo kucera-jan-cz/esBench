@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.esBench</groupId>
 		<artifactId>esBench-pom</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.2</version>
 	</parent>
 	<artifactId>core</artifactId>
 	<description>Core library for building JSON documents for performance and integration testing.</description>

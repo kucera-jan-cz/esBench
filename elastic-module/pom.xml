@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.esBench</groupId>
 		<artifactId>esBench-pom</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.2</version>
 	</parent>
 	<artifactId>elastic-module</artifactId>
 	<description>ElasticSearch tool for generating JSON documents and collecting workload</description>
@@ -97,7 +97,7 @@
 				<version>2.4.2</version>
 				<executions>
 					<execution>
-						<phase>install</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
