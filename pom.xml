@@ -1,11 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.esBench</groupId>
+	<groupId>com.github.kucera-jan-cz.esBench</groupId>
 	<artifactId>esBench-pom</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<description>ElasticSearch tool for building ES documents for performance and integration testing.</description>
 	<packaging>pom</packaging>
-
+	<name>esBench-pom</name>
+	<url>https://github.com/kucera-jan-cz/esBench</url>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git@github.com:kucera-jan-cz/esBench.git</connection>
+		<developerConnection>scm:git:git@github.com:kucera-jan-cz/esBench.git</developerConnection>
+		<url>git@github.com:kucera-jan-cz/esBench.git</url>
+	</scm>
+	<developers>
+		<developer>
+			<name>Jan Kucera</name>
+			<organizationUrl>https://github.com/kucera-jan-cz/esBench</organizationUrl>
+		</developer>
+	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -22,6 +40,19 @@
 		<hazelcast.version>3.5.4</hazelcast.version>
 		<metrics-core.version>3.1.2</metrics-core.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>sonatype-release</id>
+			<name>Sonatype Repository</name>
+			<url>http://oss.sonatype.org/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -273,20 +304,16 @@
 		<module>core</module>
 		<module>elastic-module</module>
 		<module>core-test</module>
-		<module>distribution</module>
 	</modules>
-	<profiles>
-		<profile>
-			<id>sonar</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<sonar.jdbc.driver>org.postgresql.Driver</sonar.jdbc.driver>
-				<sonar.host.url>http://192.168.1.110:9000</sonar.host.url>
-				<sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
-				<sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
-			</properties>
-		</profile>
-	</profiles>
+	<profiles></profiles>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh-release</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
 </project>
