@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.kucera-jan-cz.esBench</groupId>
 	<artifactId>esBench-pom</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<description>ElasticSearch tool for building ES documents for performance and integration testing.</description>
 	<packaging>pom</packaging>
 	<name>esBench-pom</name>
