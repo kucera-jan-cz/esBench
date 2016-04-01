@@ -13,4 +13,4 @@ else
     JAVA=`which java`
 fi
 
-exec "$JAVA" -cp $BENCH_CLASSPATH "org.esbench.cmd.EsBenchCommandLine" "$@"
+exec "$JAVA" -cp "$BENCH_CLASSPATH" "org.esbench.cmd.EsBenchCommandLine" "$@"
